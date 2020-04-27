@@ -1,3 +1,6 @@
+# also ignore a directory for storing database locally
+_dbData/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

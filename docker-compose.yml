@@ -1,0 +1,113 @@
+version: '3.8'
+
+services:
+    # config for the users and patients database
+    users-db:
+        image: postgres
+        container_name: users-db
+
+        environment:
+            - POSTGRES_DB=users
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+
+        volumes:
+            - ./_dbData/postgres-user-data:/var/lib/postgresql/data
+    
+        networks: 
+            network1: 
+                ipv4_address: 172.28.1.1
+    
+    # config for the treatments database
+    treatments-db:
+        image: postgres
+        container_name: treatments-db
+
+        environment:
+            - POSTGRES_DB=treatments
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        
+        volumes:
+            - ./_dbData/postgres-treatments-data:/var/lib/postgresql/data
+            
+        networks: 
+            network1: 
+                ipv4_address: 172.28.1.2
+    
+    # config for app keys and notifications database
+    app-db:
+        image: postgres
+        container_name: app-db
+        
+        environment:
+            - POSTGRES_DB=app
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        
+        volumes:
+            - ./_dbData/postgres-app-data:/var/lib/postgresql/data
+            
+        networks: 
+            network1: 
+                ipv4_address: 172.28.1.3
+        
+    # config for building web image
+    web:
+        build: ./Webapp/
+        image: web
+        command: python manage.py runserver 0.0.0.0:8000
+        container_name: webapp-server
+
+        depends_on:
+            - users-db
+            - treatments-db
+            - app-db
+                
+        ports:
+            - "8000:8000"
+            
+        networks: 
+            network1: 
+                ipv4_address: 172.28.1.4
+    
+    # config for building device API image
+    device-api:
+        build: ./DeviceAPI/
+        image: device-api
+        container_name: device-api-server
+
+        depends_on:
+            - treatments-db
+            - app-db
+            
+        ports:
+            - "8001:8001"
+            
+        networks: 
+            network1: 
+                ipv4_address: 172.28.1.5
+
+    # config for building app API image
+    app-api:
+        build: ./AppAPI/
+        image: app-api
+        container_name: app-api-server
+        
+        depends_on:
+            - app-db
+
+        ports:
+            - "8002:8001"
+
+        networks: 
+            network1: 
+                ipv4_address: 172.28.1.6
+
+networks:
+    network1:
+        ipam: 
+            driver: default
+            
+            config:
+                - subnet: 172.28.0.0/16
