@@ -74,10 +74,34 @@ WSGI_APPLICATION = 'MedboxWeb.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': {},
+    
+    'users-db': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'users',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '172.28.1.1',
+        'PORT': '5432',
+    },
+    
+    'treatments-db': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'treatments',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '172.28.1.2',
+        'PORT': '5432',
+    },
+    
+    'app-db': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'app',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '172.28.1.3',
+        'PORT': '5432',
+    },
 }
 
 
