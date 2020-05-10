@@ -8,3 +8,7 @@ WORKDIR /usr/src/app
 COPY ./django-requirements.txt ./
 
 RUN pip install -r django-requirements.txt && rm django-requirements.txt
+
+RUN adduser --disabled-password --gecos '' --shell /bin/bash user \
+ && chown -R user:user /usr/src/app
+USER user
