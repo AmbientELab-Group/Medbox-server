@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def register(request):
-    return HttpResponse('<h1> Registration page </h1>')
+    return render(request, 'web/auth/register.html', {})

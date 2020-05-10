@@ -1,5 +1,5 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def dashboard(request):
-    return HttpResponse('<h1>Account dashboard page </h1>')
+    return render(request, 'web/account/dashboard.html', {})
 

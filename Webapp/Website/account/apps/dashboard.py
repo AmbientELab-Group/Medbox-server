@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def dashboard(request):
-    return HttpResponse('<h1>Account apps dashboard page </h1>') 
+    return render(request, 'web/account/apps/dashboard.html', {})

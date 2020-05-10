@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def importPage(request):
-    return HttpResponse('<h1>Treatment import page </h1>')  
+    return render(request, 'web/treatment/import.html', {})

@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def status(request):
-    return HttpResponse('<h1> Device status page </h1>') 
+    return render(request, 'web/devices/dispensor/status.html', {})

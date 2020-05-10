@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def edit(request):
-    return HttpResponse('<h1>Treatment edit page page </h1>')  
+    return render(request, 'web/treatment/edit.html', {})

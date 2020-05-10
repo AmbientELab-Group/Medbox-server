@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def adherence(request):
-    return HttpResponse('<h1>Adherence report page </h1>')  
+   return render(request, 'web/treatment/adherence.html', {})

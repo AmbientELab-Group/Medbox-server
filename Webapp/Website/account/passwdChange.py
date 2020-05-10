@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def passwdChange(request):
-    return HttpResponse('<h1> Account password change </h1>')
+    return render(request, 'web/account/passwordChange.html', {})

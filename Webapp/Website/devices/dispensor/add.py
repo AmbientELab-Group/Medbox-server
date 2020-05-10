@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def add(request):
-    return HttpResponse('<h1>Device add page </h1>') 
+    return render(request, 'web/devices/dispensor/add.html', {})

@@ -1,5 +1,5 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def edit(request):
-    return HttpResponse('<h1>Account edit page </h1>')
+    return render(request, 'web/account/edit.html', {})
 

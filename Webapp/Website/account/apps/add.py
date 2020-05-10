@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def add(request):
-    return HttpResponse('<h1>Account app addition page </h1>') 
+    return render(request, 'web/account/apps/add.html', {})

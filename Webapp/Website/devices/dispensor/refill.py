@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 def refill(request):
-    return HttpResponse('<h1> Device refill page page </h1>') 
+    return render(request, 'web/devices/dispensor/refill.html', {})
