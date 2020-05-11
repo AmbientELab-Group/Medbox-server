@@ -1,5 +1,5 @@
 """
-Medbox web application URL routing config.
+Medbox server main routing config.
 """
 
 __author__ = "Krzysztof Adamkiewicz"
@@ -12,4 +12,6 @@ from django.urls import path, include
 urlpatterns = [
     path('web/', include('Website.urls')),
     path('admin/', admin.site.urls),
+    path('api/device/', include('DeviceAPI.urls')),
+    path('api/app/', include('AppAPI.urls'))
 ]
