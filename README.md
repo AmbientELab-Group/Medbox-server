@@ -62,59 +62,93 @@ and then remove the image by running:
 docker rmi [IMAGE ID]
 ```
 
-### Building base images
-Once docker is running you will need to build the base images used in this projects.
-If you are running on macOS or linux then your are lucky. Just execute the provided shell script.
+### Initializind database
+Once docker is running you will need to perform the first build.
+First you need to build all imagess, just execute:
 
 ```
-./build-base.sh
+docker-compose build
 ```
 
-It will perform the build automatically. 
+You can skip this step if images are already built (if you erased your database and
+yout want to rebuild everything.
 
-If you are using windows you will need to execute the following commands manually:
-
-```
-docker build Base/django-base/ --tag django-base
-docker build Base/falcon-base/ --tag falcon-base
-```
-
-Not much more complicated but this most likely will change in the future.
-
-You will also need to execute those commands any time you change anything in /Base directory.
-So base images can be rebuilt.
-
-Once you are done with this step you should have the following images on your system:
+Them you need to initialise database, otherwise django will fail.
+In order to do that you have to run:
 
 ```
-[krzys@starship Medbox-server]$ docker images
-REPOSITORY          TAG                 IMAGE ID            CREATED              SIZE
-falcon-base         latest              1e92397b1227        38 seconds ago       954MB
-django-base         latest              4cca58b89179        About a minute ago   976MB
-python              3.8-buster          a6be143418fc        3 days ago           933MB
+docker-compose up docker-compose up mainDB
 ```
+
+Then once the database is up and running, press CTRL+C to exit and then run
+
+```
+docker-compose down
+```
+
+Next step is to perform migrations and setup your admin account.
+
+In oder to do that first bring the system up:
+
+```
+docker-compose up
+```
+
+You should get the following output from the server:
+
+```
+webapp-server | Watching for file changes with StatReloader
+webapp-server | Performing system checks...
+webapp-server | 
+webapp-server | System check identified no issues (0 silenced).
+webapp-server | 
+webapp-server | You have 18 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): Website, admin, auth, contenttypes, sessions.
+webapp-server | Run 'python manage.py migrate' to apply them.
+webapp-server | May 13, 2020 - 15:57:07
+webapp-server | Django version 2.2.12, using settings 'MedboxWeb.settings'
+webapp-server | Starting development server at http://0.0.0.0:8000/
+webapp-server | Quit the server with CONTROL-C.
+```
+
+If you get any error something is wrong. Contact the chief project wizard (@Bill2462).
+
+Then open the another console and see if containers are running. You should see something like that:
+
+```
+[krzys@starship Medbox-server]$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+4354a1d70d78        webserver           "python manage.py ru…"   4 minutes ago       Up 4 minutes        0.0.0.0:8000->8000/tcp   webapp-server
+c7d618bcd1fa        postgres            "docker-entrypoint.s…"   4 minutes ago       Up 4 minutes        5432/tcp                 medbox-server_mainDB_1
+```
+
+If you have those two containers then everything is ok and you can apply the migrations.
+
+In order to do that open a shell to webserver container:
+
+```
+[krzys@starship Medbox-server]$ docker exec -ti [CONTAINER ID]  bash
+user@4354a1d70d78:/usr/src/app$ 
+```
+
+Then apply migrations by running the following command:
+
+```
+user@4354a1d70d78:/usr/src/app$ python3 manage.py migrate
+```
+
+Then create a superuser by running:
+
+```
+user@4354a1d70d78:/usr/src/app$ python3 manage.py createsuperuser
+```
+
+Email and password are up to you (they don't have to be real.
+
+And that's it. Now you can go to localhost:8000/admin and use entered credentials to access the admin panel.
 
 ## Workflow
 
 Ok so now about how to make changes and test them.
-
-### Building images
-
-In order to rebuild the base images please refer to *Building base images*.
-
-If you want to build everyting else then run the following command:
-
-```
-[krzys@starship Medbox-server]$ docker-compose build
-```
-
-It will build the following images:
-
- - device-api
- - app-api
- - web
-
-Note: You need to build base images before executing this command.
 
 ### Running the services
 
@@ -127,16 +161,10 @@ In order to run all services, execute:
 After this yoy should have the followinf containers running:
 
 ```
-[krzys@starship Medbox-server]$ docker ps --all
-CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES
-09d4f286804f        web                 "python manage.py ru…"   1 second ago        Up Less than a second   0.0.0.0:8000->8000/tcp   webapp-server
-16b0e0d899b2        app-api             "gunicorn -b 0.0.0.0…"   1 second ago        Up Less than a second   0.0.0.0:8002->8001/tcp   app-api-server
-a5a929c8b956        device-api          "gunicorn -b 0.0.0.0…"   1 second ago        Up Less than a second   0.0.0.0:8001->8001/tcp   device-api-server
-85598781cf49        postgres            "docker-entrypoint.s…"   2 seconds ago       Up 1 second             5432/tcp                 app-db
-13f2e6659277        postgres            "docker-entrypoint.s…"   2 seconds ago       Up 1 second             5432/tcp                 users-db
-a2ed36f53b8d        postgres            "docker-entrypoint.s…"   2 seconds ago       Up 1 second             5432/tcp                 treatments-db
-
-
+[krzys@starship Medbox-server]$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+4354a1d70d78        webserver           "python manage.py ru…"   10 minutes ago      Up 10 minutes       0.0.0.0:8000->8000/tcp   webapp-server
+c7d618bcd1fa        postgres            "docker-entrypoint.s…"   10 minutes ago      Up 10 minutes       5432/tcp                 medbox-server_mainDB_1
 ```
 
 If you want to exit run:
@@ -217,13 +245,7 @@ Once you are done type \q to exit the shell.
 
 ### Acessing the website
 In order to access all the services that are running inside the containers you just need to start everything with  `docker-compose up`
-and then you can access all services at localhost.
-
-Here is where all the stuff will be available:
-
- - Django app: localhost:8000
- - Device API: localhost:8001
- - App API: localhost:8002
+and then you can access all services at localhost:8000.d
  
 Website can be accessed directly from the web browser. 
 
