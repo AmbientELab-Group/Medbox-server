@@ -37,26 +37,26 @@ urlpatterns = [
     path('', login),
     
     # account management stuff
-    path('auth/login', login), # login page
-    path('auth/logout', logout), # logout link, go here to logout
-    path('auth/register', register), # register a new user
+    path('auth/login', login, name='login-page'), # login page
+    path('auth/logout', logout, name='logout-page'), # logout link, go here to logout
+    path('auth/register', register, name='registration-page'), # register a new user
     
     # account related pages
-    path('account/dashboard', account_dashboard), # user dashboard page, you land there after login
-    path('account/edit', account_edit), # user account edit page
-    path('account/passwd-change', account_passwordChange), # user account password change page
-    path('account/apps/dashboard', account_apps_dashboard), # paired applications dashboard
-    path('account/apps/add', account_apps_add), # add new application dashboard
+    path('account/dashboard', account_dashboard, name='user-dashboard'), # user dashboard page, you land there after login
+    path('account/edit', account_edit, name='user-account-edit'), # user account edit page
+    path('account/passwd-change', account_passwordChange, name='user-password-change'), # user account password change page
+    path('account/apps/dashboard', account_apps_dashboard, name='user-apps-dashboard'), # paired applications dashboard
+    path('account/apps/add', account_apps_add, name='user-apps-add'), # add new application dashboard
     
     # treatments
-    path('treatment/dashboard', treatment_dashboard), # dashboard for the treatments 
-    path('treatment/edit', treatment_edit), # page for the treatment edits
-    path('treatment/import', treatment_import), # page for the importing treatment
-    path('treatment/adherence', treatment_adherence), # page for adherence monitoring
+    path('treatment/dashboard', treatment_dashboard, name='treatment-dashboard'), # dashboard for the treatments 
+    path('treatment/edit', treatment_edit, name='treatment-edit'), # page for the treatment edits
+    path('treatment/import', treatment_import, name='treatment-import'), # page for the importing treatment
+    path('treatment/adherence', treatment_adherence, name='treatment-adherence'), # page for adherence monitoring
     
     # device management
-    path('devices/dispensor/dashboard', dispensor_dashboard), # dashboard page for all dispensors
-    path('devices/dispensor/add', dispensor_add), # page for adding new dispensors
-    path('devices/dispensor/status', dispensor_status), # page for displaying the status of new dispensors
-    path('devices/dispensor/refill', dispensor_refill) # page for refilling the dispensor
+    path('devices/dispensor/dashboard', dispensor_dashboard, name='devices-dispensor-dashboard'), # dashboard page for all dispensors
+    path('devices/dispensor/add', dispensor_add, name='devices-dispensor-add'), # page for adding new dispensors
+    path('devices/dispensor/status', dispensor_status, name='devices-dispensor-status'), # page for displaying the status of new dispensors
+    path('devices/dispensor/refill', dispensor_refill, name='devices-dispensor-refill') # page for refilling the dispensor
 ]

@@ -1,5 +1,37 @@
 {% load static %}
 
-<center><h1> Login page template! </h1></center>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<center><img src="{% static "web/test.png" %}" alt="My image"></center>
+    <title>Welcome to the awesome login page!</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static "web/login/login.css" %}" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <!--form code -->
+    <div class="text-center signForm">
+    <form class="form-signin" action="login" method="post">
+      {% csrf_token %}
+      <img class="mb-4" src="{% static "web/login/logoPlaceholder.png" %}" alt="" width="229" height="195">
+      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+      <label for="loginEmail" class="sr-only">Email address</label>
+      <input type="email" name="email" id="email" class="form-control" placeholder="Your emailed address" required autofocus>
+      <label for="loginPassword" class="sr-only">Password</label>
+      <input type="password" name="password" id="password" class="form-control" placeholder="Your password" required>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+  </div>
+
+  </body>
+</html>
