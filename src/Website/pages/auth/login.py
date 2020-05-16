@@ -1,5 +1,8 @@
 """
 Login page view.
+
+TODO: Switch to forms.
+WARNING: Unless we switch to forms, this might be potentially unsafe.
 """
 
 __author__ = "Krzysztof Adamkiewicz"

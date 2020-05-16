@@ -14,12 +14,35 @@
 
     <body>
     
-    <h4><a href="{% url 'logout-page' %}">Logout </a></h4>
-    
     {% include "web/components/messages.html" %}
     
-
-    <center><h1> Registration page template! </h1></center>
-
+    <center><h1>Register</h1></center> </br>
+    
+    <form action="register" method="post">
+    {% csrf_token %}
+    
+    {{ form.non_field_errors }}
+    
+    {{ form.email.errors }}
+    <label for="{{ form.email.id_for_label }}">Email</label></br>
+    {{ form.email }}
+    
+    {{ form.firstName.errors }}
+    <label for="{{ form.firstName.id_for_label }}">First Name</label></br>
+    {{ form.firstName }}
+    
+    {{ form.lastName.errors }}
+    <label for="{{ form.lastName.id_for_label }}">Last Name</label></br>
+    {{ form.lastName }}
+    
+    {{ form.password1.errors }}
+    <label for="{{ form.password1.id_for_label }}">Password</label></br>
+    {{ form.password1 }}
+    
+    {{ form.password2.errors }}
+    <label for="{{ form.password2.id_for_label }}">Repeat password</label></br>
+    {{ form.password2 }}</br>
+    
+    <button type="submit">Register</button>
     </body>
 </html>
