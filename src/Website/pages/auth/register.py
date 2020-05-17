@@ -28,15 +28,10 @@ class RegistrationForm(forms.ModelForm):
         cleanedData = super().clean()
         password1 = cleanedData.get('password1')
         password2 = cleanedData.get('password2')
-        email = cleanedData.get('email')
         
         # verify if passwords do match
         if password1 != password2:
              raise forms.ValidationError('Passwords do not match!')
-
-        # verify if login has not been taken
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError('Email already in use!')
             
 def register(request):
     if request.method == 'POST':
@@ -52,7 +47,7 @@ def register(request):
             
             # redirect to login page
             messages.success(request, 'Registration successfull! Now please login.')
-            return redirect('user-dashboard')
+            return redirect('login-page')
     
     else:
         form = RegistrationForm(request.POST)
