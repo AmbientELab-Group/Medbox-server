@@ -17,7 +17,29 @@
     {% include "web/components/navbar.html" %}
     {% include "web/components/messages.html" %}
     
-    <center><h1> Account edit webpage. </h1></center>
-
+    <center><h1> Account edit webpage. </h1></center></br>
+    
+    <form action="edit" method="post">
+    {% csrf_token %}
+    
+    {{ form.non_field_errors }}
+    
+    {{ form.email.errors }}</br>
+    <label for="{{ form.email.id_for_label }}">Email</label></br>
+    {{ form.email }}</br>
+    
+    {{ form.first_name.errors }}</br>
+    <label for="{{ form.first_name.id_for_label }}">First Name</label></br>
+    {{ form.first_name }}</br>
+    
+    {{ form.last_name.errors }}</br>
+    <label for="{{ form.last_name.id_for_label }}">Last Name</label></br>
+    {{ form.last_name }}</br>
+    
+    <button type="submit">Update profile</button>
+    </form>
+    
+    <h4><a href="{% url 'user-password-change' %}">Change password</a></h4><br>
+    
     </body>
 </html>
