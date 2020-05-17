@@ -26,22 +26,23 @@ class RegistrationForm(forms.Form):
         cleanedData = super().clean()
         password1 = cleanedData.get('password1')
         password2 = cleanedData.get('password2')
+        email = cleanedData.get('email')
         
+        # verify if passwords do match
         if password1 != password2:
              raise forms.ValidationError('Passwords do not match!')
 
+        # verify if login has not been taken
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('Email already in use!')
+            
 def register(request):
     if request.method == 'POST':
         # populate a form from a request
         form = RegistrationForm(request.POST)
         
+        # if form is valid then register new user and redirect to the login page
         if form.is_valid():
-            # verify if login has not been taken
-            if User.objects.filter(email=form.cleaned_data.get('email')).exists():
-                messages.error(request, 'Email already in use!')
-                return render(request, 'web/auth/register.html', {'form': form})
-            
-            # register new user
             get_user_model().objects.create_user(
                 email=form.cleaned_data.get('email'),
                 password=form.cleaned_data.get('password1'),
