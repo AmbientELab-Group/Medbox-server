@@ -26,6 +26,18 @@ class User(AbstractUser):
     # add userID field
     userID = models.CharField(max_length=200)
 
+    # user role
+    ROLE_CHOICES = [
+        ('CRT', 'Caretaker'),
+        ('DR', 'Doctor')
+    ]
+    
+    role = models.CharField(
+        max_length=3,
+        choices=ROLE_CHOICES,
+        default='CRT',
+    )
+
     # object manager
     objects = UserManager()
     
