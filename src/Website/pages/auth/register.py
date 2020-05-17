@@ -12,13 +12,15 @@ from Website.models import User
 from django import forms
 from django.contrib.auth import get_user_model
 
-class RegistrationForm(forms.Form):
+class RegistrationForm(forms.ModelForm):
     """
     Form used for registration.
     """
-    email = forms.EmailField(label='Email', max_length=100)
-    firstName = forms.CharField(label='First name', max_length=1000)
-    lastName = forms.CharField(label='Last name', max_length=1000)
+    class Meta:
+        model = User
+        fields = ('email', 'first_name', 'last_name')
+    
+    # add additional fields for passwords
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput())
     password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput())
     
@@ -43,11 +45,10 @@ def register(request):
         
         # if form is valid then register new user and redirect to the login page
         if form.is_valid():
-            get_user_model().objects.create_user(
-                email=form.cleaned_data.get('email'),
-                password=form.cleaned_data.get('password1'),
-                first_name=form.cleaned_data.get('firstName'),
-                last_name=form.cleaned_data.get('lastName'))
+            newUser = form.save(commit=False)
+            newUser.set_password(form.cleaned_data.get('password1'))
+            newUser.save()
+            form.save_m2m()
             
             # redirect to login page
             messages.success(request, 'Registration successfull! Now please login.')
