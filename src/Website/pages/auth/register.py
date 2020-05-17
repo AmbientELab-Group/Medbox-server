@@ -10,7 +10,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from Website.models import User
 from django import forms
-from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
 
 class RegistrationForm(forms.ModelForm):
     """
@@ -32,6 +32,12 @@ class RegistrationForm(forms.ModelForm):
         # verify if passwords do match
         if password1 != password2:
              raise forms.ValidationError('Passwords do not match!')
+        
+        if (password1 is None) or (password2 is None):
+            raise forms.ValidationError('Password field is empty!')
+        
+        # check if password meet's all criteria
+        validate_password(password1)
             
 def register(request):
     if request.method == 'POST':

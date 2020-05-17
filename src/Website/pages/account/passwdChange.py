@@ -10,6 +10,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.contrib import messages
+from django.contrib.auth.password_validation import validate_password
 
 class PasswordChangeForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -29,7 +30,14 @@ class PasswordChangeForm(forms.Form):
         # verify if passwords do match
         if newPassword1 != newPassword2:
             raise forms.ValidationError('Passwords do not match!')
-         
+        
+        if (newPassword1 is None) or (newPassword2 is None):
+            raise forms.ValidationError('Password field is empty!')
+        
+        # check if password meet's all criteria
+        validate_password(newPassword1, self.user)
+        
+        validate_password
         # check if user's password is valid
         if not self.user.check_password(oldPassword):
             raise forms.ValidationError('Old password is not correct!')
