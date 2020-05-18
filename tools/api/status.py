@@ -6,29 +6,47 @@ status_api = Blueprint('status_api', __name__)
 
 @status_api.route("/api/app/status/device-list", methods=['POST'])
 def deviceList():
-    if request.json["TOKEN"] != TOKEN:
+    if request.json["token"] != TOKEN:
         response = {
-            'status': 'INVALID_TOKEN'
+            'request_status': 'INVALID_TOKEN'
         }
         return jsonify(response)
     
     response = {
-        'status': 'OK',
-        'devices': DEVICES
+        'request_status': 'OK',
+        'devices': [
+                {
+                    'device_name': DEVICE1_NAME,
+                    'device_id': DEVICE1_ID
+                },
+                {
+                    'device_name': DEVICE2_NAME,
+                    'device_id': DEVICE2_ID
+                }
+            ]
     }
     return jsonify(response)
     
 @status_api.route("/api/app/status/device-status", methods=['POST'])
 def deviceStatus():
-    if request.json["TOKEN"] != TOKEN:
+    if request.json["token"] != TOKEN:
         response = {
-            'status': 'INVALID_TOKEN'
+            'request_status': 'INVALID_TOKEN'
         }
         return jsonify(response)
     
-    if request.json["DEVICE"] == DEVICE1_ID:
+    # device statuses:
+    # OK - Everything is OK
+    # LOW_MEDS - Please replace container
+    # OUT_OF_MEDS - Out of meds
+    # LOW_BATTERY - Low battery
+    # DEAD_BATTERY - Dead battery
+    # NO_CONNECTION - Connectivity issues
+    # LATE_MEDS_CONTAINER_FULL - Late meds container is full
+    # DEVICE_BROKEN - Device is broken.
+    if request.json["device"] == DEVICE1_ID:
         response = {
-            'status': 'OK',
+            'request_status': 'OK',
             'device_status': 'OK',
             'battery_level': 50,
             'last_seen': '2020-04-25 12:14:34',
@@ -46,9 +64,9 @@ def deviceStatus():
         }
         return jsonify(response)
 
-    elif request.json["DEVICE"] == DEVICE2_ID:
+    elif request.json["device"] == DEVICE2_ID:
         response = {
-            'status': 'OK',
+            'request_status': 'OK',
             'device_status': 'LOW_MEDS',
             'battery_level': 50,
             'last_seen': '2020-04-24 12:14:34',
@@ -65,68 +83,56 @@ def deviceStatus():
 
     else:
         response = {
-            'status': 'DEVICE_NOT_FOUND',
+            'request_status': 'DEVICE_NOT_FOUND',
             'notifications': []
         }
         return jsonify(response)
 
 @status_api.route("/api/app/status/adherence", methods=['POST'])
 def adherenceStatus():
-    if request.json["TOKEN"] != TOKEN:
+    if request.json["token"] != TOKEN:
         response = {
-            'status': 'INVALID_TOKEN'
+            'request_status': 'INVALID_TOKEN'
         }
         return jsonify(response)
     
-    if request.json["DEVICE"] == DEVICE1_ID:
+    if request.json["device"] == DEVICE1_ID:
         response = {
-            'status': 'OK',
+            'request_status': 'OK',
             'adherence':[
-                ('2020-04-1', 10),
-                ('2020-04-2', 10),
-                ('2020-04-3', 10),
-                ('2020-04-4', 10),
-                ('2020-04-5', 10),
-                ('2020-04-6', 10),
-                ('2020-04-7', 10),
-                ('2020-04-8', 0),
-                ('2020-04-9', 10),
-                ('2020-04-10', 8),
-                ('2020-04-11', 8),
-                ('2020-04-12', 7),
-                ('2020-04-13', 10),
-                ('2020-04-14', 10),
-                ('2020-04-15', 10)
+                {'time': '2020-04-1', 'score': 0},
+                {'time': '2020-04-2', 'score': 10},
+                {'time': '2020-04-3', 'score': 10},
+                {'time': '2020-04-4', 'score': 6},
+                {'time': '2020-04-6', 'score': 3},
+                {'time': '2020-04-7', 'score': 4},
+                {'time': '2020-04-9', 'score': 8},
+                {'time': '2020-04-10', 'score': 9},
+                {'time': '2020-04-11', 'score': 10}
             ]
         }
         return jsonify(response)
 
-    elif request.json["DEVICE"] == DEVICE2_ID:
+    elif request.json["device"] == DEVICE2_ID:
         response = {
-            'status': 'OK',
+            'request_status': 'OK',
             'adherence':[
-                ('2020-04-1', 10),
-                ('2020-04-2', 10),
-                ('2020-04-3', 5),
-                ('2020-04-4', None),
-                ('2020-04-5', None),
-                ('2020-04-6', 10),
-                ('2020-04-7', 10),
-                ('2020-04-8', 0),
-                ('2020-04-9', 10),
-                ('2020-04-10', 8),
-                ('2020-04-11', 8),
-                ('2020-04-12', 7),
-                ('2020-04-13', 10),
-                ('2020-04-14', 10),
-                ('2020-04-15', 10)
+                {'time': '2020-04-1', 'score': 0},
+                {'time': '2020-04-2', 'score': 10},
+                {'time': '2020-04-3', 'score': 10},
+                {'time': '2020-04-4', 'score': 6},
+                {'time': '2020-04-6', 'score': 3},
+                {'time': '2020-04-7', 'score': 4},
+                {'time': '2020-04-9', 'score': 8},
+                {'time': '2020-04-10', 'score': 9},
+                {'time': '2020-04-11', 'score': 10}
             ]
         }
         return jsonify(response)
 
     else:
         response = {
-            'status': 'DEVICE_NOT_FOUND',
+            'request_status': 'DEVICE_NOT_FOUND',
             'notifications': []
         }
         return jsonify(response)
