@@ -1,9 +1,6 @@
 from flask import Blueprint
 from flask import request, jsonify
-
-# define code and token
-SECURITY_CODE = 424242
-TOKEN = 'SEJFWEJFWEJFQ[OJFWPOJF2E41414'
+from .defs import *
 
 auth_api = Blueprint('auth_api', __name__)
 

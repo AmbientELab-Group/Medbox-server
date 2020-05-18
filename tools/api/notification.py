@@ -1,11 +1,8 @@
 from flask import Blueprint
 from flask import request, jsonify
-from .auth import TOKEN
+from .defs import *
 
 notification_api = Blueprint('notification_api', __name__)
-
-DEVICE1_ID = '9JJD0WUFEW'
-DEVICE2_ID = 'OIEHFEH233'
 
 device1Notifications = [
     {
