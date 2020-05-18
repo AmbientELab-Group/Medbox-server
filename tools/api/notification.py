@@ -57,24 +57,14 @@ def getNotificationsByDevice():
         }
         return jsonify(response)
 
-    try:
-        deviceID = request.json["DEVICE"]
-    
-    except KeyError:
-        response = {
-            'status': 'INVALID_REQUEST',
-            'notifications': []
-        }
-        return jsonify(response)
-
-    if deviceID == DEVICE1_ID:
+    if request.json["DEVICE"] == DEVICE1_ID:
         response = {
             'status': 'OK',
             'notifications': device1Notifications
         }
         return jsonify(response)
 
-    elif deviceID == DEVICE2_ID:
+    elif request.json["DEVICE"] == DEVICE2_ID:
         response = {
             'status': 'OK',
             'notifications': device2Notifications
@@ -97,24 +87,14 @@ def getLatestNotificationsByDevice():
         }
         return jsonify(response)
 
-    try:
-        deviceID = request.json["DEVICE"]
-    
-    except KeyError:
-        response = {
-            'status': 'INVALID_REQUEST',
-            'notifications': []
-        }
-        return jsonify(response)
-
-    if deviceID == DEVICE1_ID:
+    if request.json["DEVICE"] == DEVICE1_ID:
         response = {
             'status': 'OK',
             'notifications': device1Notifications[:2]
         }
         return jsonify(response)
 
-    elif deviceID == DEVICE2_ID:
+    elif request.json["DEVICE"] == DEVICE2_ID:
         response = {
             'status': 'OK',
             'notifications': [device2Notifications[0]]
