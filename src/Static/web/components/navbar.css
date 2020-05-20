@@ -10,4 +10,9 @@ body {
   font-size: 2rem;
   padding-right: 1rem;
   padding-left: 1rem;
+  font-weight: 600;
+}
+
+.logout {
+	color: rgba(211,0,0,.65) !important;
 }
