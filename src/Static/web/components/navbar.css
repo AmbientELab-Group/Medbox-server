@@ -1,0 +1,13 @@
+body {
+  padding-bottom: 20px;
+}
+
+.navbar {
+  margin-bottom: 20px;
+}
+
+.navbar-expand-lg .navbar-nav .nav-link {
+  font-size: 2rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
