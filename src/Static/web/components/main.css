@@ -1,0 +1,26 @@
+h1.header {
+	font-weight: 700;
+	font-size: 3rem;
+	margin-top: 2rem;
+	line-height: 3rem;
+	}
+}
+
+body {
+	padding-bottom: 20px;
+	width: 100%;
+}
+
+.centerContainer {
+	max-width: 1085px;
+	margin: 0px auto;
+}
+
+label {
+	font-size: 1.5rem;
+	font-weight: 600;
+}
+
+a.link {
+	line-height: 7rem;
+}

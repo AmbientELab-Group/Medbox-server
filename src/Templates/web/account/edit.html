@@ -12,11 +12,14 @@
   </head>
 
     <body>
+	
 
     {% include "web/components/navbar.html" %}
     {% include "web/components/messages.html" %}
+	
+	<div class="centerContainer">
     
-    <center><h1> Account edit webpage. </h1></center></br>
+    <h1 class="header">Account Settings</h1>
     
     <form action="edit" method="post">
     {% csrf_token %}
@@ -24,7 +27,7 @@
     {{ form.non_field_errors }}
     
     {{ form.email.errors }}</br>
-    <label for="{{ form.email.id_for_label }}">Email</label></br>
+    <label for="{{ form.email.id_for_label }}">E-mail Address</label></br>
     {{ form.email }}</br>
     
     {{ form.first_name.errors }}</br>
@@ -35,10 +38,11 @@
     <label for="{{ form.last_name.id_for_label }}">Last Name</label></br>
     {{ form.last_name }}</br>
     
-    <button type="submit">Update profile</button>
+    <button class= "btn btn-dark mt-4" type="submit">Update profile</button>
     </form>
     
-    <h4><a href="{% url 'user-password-change' %}">Change password</a></h4><br>
+    <h4><a class="link" href="{% url 'user-password-change' %}">Change Password</a></h4><br>
+</div>
     
     </body>
 </html>
