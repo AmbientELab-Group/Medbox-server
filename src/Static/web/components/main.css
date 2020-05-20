@@ -24,3 +24,11 @@ label {
 a.link {
 	line-height: 7rem;
 }
+
+ul.errorlist {
+	margin-left: 0;
+	color: rgba(211,100,0,.65);
+	list-style: none;
+	padding-left: 0;
+	margin-bottom: 0;
+}
