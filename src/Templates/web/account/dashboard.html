@@ -15,10 +15,16 @@
     
     {% include "web/components/navbar.html" %}
     {% include "web/components/messages.html" %}
+	
+	<div class="centerContainer">
     
-    <center><h1> Account dashboard webpage. </h1></center></br>
+    <h1 class="header">Dashboard</h1>
+	
+    <form action="{% url 'user-account-edit' %}">
+		<button class= "btn btn-dark mt-4" href>Edit Account</button>
+    </form>
     
-    <h4><a href="{% url 'user-account-edit' %}">Edit account</a></h4><br>
-    
+</div>
+	
     </body>
 </html>
