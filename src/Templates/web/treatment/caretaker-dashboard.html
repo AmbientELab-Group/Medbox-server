@@ -16,7 +16,15 @@
     {% include "web/components/navbar.html" %}
     {% include "web/components/messages.html" %}
     
-    <center><h1> Treatments dashboard template! </h1></center> 
-
+    {% if treatments %}
+    <ul>
+        {% for treatment in treatments %}
+        <li>
+            <h4>{{treatment.patientFirstName}} {{treatment.patientLastName}}</h4>
+            <a class="link"  href="{% url 'treatment-edit' treatmentID=treatment.id %}">Edit</a>
+        </li>
+    {% endfor %}
+    </ul>
+    
     </body>
 </html>
