@@ -23,17 +23,17 @@ class TreatmentSettings(forms.ModelForm):
 
 @login_required(login_url='login-page')
 def edit(request, treatmentID):
+    # check if treatment ID is a valid string
+    if (not (treatmentID.isdigit())) and treatmentID != 'new':
+         return redirect('treatment-edit', treatmentID='new')
+     
     # acquire treatment object instance
     treatmentInstance = None
     try:
-        if treatmentID.isdigit():
-            treatmentInstance = Treatment.objects.get(id=int(treatmentID))
-        # there value is a string that is other than 'new' then just redirect to new
-        elif treatmentID != 'new':
-             redirect('treatment-edit', treatmentID='new')
+        treatmentInstance = Treatment.objects.get(id=int(treatmentID))
     except ObjectDoesNotExist:
         messages.error(request, 'Invalid ID')
-        redirect('treatment-edit', treatmentID='new')
+        return redirect('treatment-edit', treatmentID='new')
     
     if request.method == 'POST':
         if treatmentInstance:

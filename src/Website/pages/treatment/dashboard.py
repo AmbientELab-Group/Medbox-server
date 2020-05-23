@@ -51,4 +51,5 @@ def _dashboardDoctor(request):
     else:
         # create empty search form
         form = SearchForm()
+    
     return render(request, 'web/treatment/doctor-dashboard.html', {'form': form, 'treatment': []})
