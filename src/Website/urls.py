@@ -4,10 +4,9 @@ Medbox website application URL routing config.
 
 __author__ = "Krzysztof Adamkiewicz"
 __status__ = "development"
-__date__ = "10.5.2020" 
+__date__ = "10.5.2020"
 
 from django.urls import path
-
 from . import pages
 
 urlpatterns = [
@@ -27,8 +26,11 @@ urlpatterns = [
     path('account/apps/add', pages.account.apps.add, name='user-apps-add'), # add new application dashboard
     
     # treatments
-    path('treatment/dashboard', pages.treatment.dashboard, name='treatment-dashboard'), # dashboard for the treatments 
+    path('treatment/dashboard', pages.treatment.dashboard, name='treatment-dashboard'), # dashboard for the treatments
     path('treatment/edit/<str:treatmentID>', pages.treatment.edit, name='treatment-edit'), # page for the treatment edits
+    path('treatment/edit/<str:treatmentID>/medicine/add', pages.treatment.medicine.add, name='treatment-medicine-add'), # page for adding new medicine
+    path('treatment/edit/<str:treatmentID>/medicine/<str:medicineID>/edit', pages.treatment.medicine.edit, name='treatment-medicine-edit'), # page for editing medicine
+    path('treatment/edit/<str:treatmentID>/medicine/<str:medicineID>/delete', pages.treatment.medicine.delete, name='treatment-medicine-delete'), # page for deliting medicine
     path('treatment/import', pages.treatment.importPage, name='treatment-import'), # page for the importing treatment
     path('treatment/adherence', pages.treatment.adherence, name='treatment-adherence'), # page for adherence monitoring
     

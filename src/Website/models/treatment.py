@@ -53,7 +53,7 @@ def onDeleteMedicineDosing(sender, instance, using, **kwargs):
     """
     Remove all unnecessary adherence time objects.
     """
-    for adherenceTime in instance.adherenceTimes:
+    for adherenceTime in instance.adherenceTimes.all():
         try:
             if not adherenceTime.isPredefined:
                 adherenceTime.delete()
