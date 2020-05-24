@@ -32,6 +32,8 @@
     <button class= "btn btn-dark mt-4" type="submit">Save settings</button>
     </form>
     
+    <h4><a class="link" href="{% url 'treatment-export-token' treatmentID=treatmentID %}">Export token</a></h4><br>
+    
     <h4><a class="link" href="{% url 'treatment-medicine-edit' treatmentID=treatmentID medicineID='new' %}">Add new medicine</a></h4><br>
 
     {% if medicines %}

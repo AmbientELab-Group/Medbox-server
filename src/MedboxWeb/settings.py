@@ -130,3 +130,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "Static")
 ]
+
+# lifetime of the treatment token in hours
+TREATMENT_TOKEN_LIFETIME = 168

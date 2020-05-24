@@ -1,4 +1,4 @@
-{% load static %}
+ {% load static %}
 
 <!doctype html>
 <html lang="en">
@@ -16,20 +16,10 @@
     {% include "web/components/navbar.html" %}
     {% include "web/components/messages.html" %}
     
-    <form method="post">
-    {% csrf_token %}
     
-    {{ form.non_field_errors }}
-    {{ form.tokenPart1.errors }}
-    {{ form.tokenPart2.errors }}
-    {{ form.tokenPart3.errors }}
-    {{ form.tokenPart4.errors }}
-    <br>
+    <h2> Your token is: {{ token }}</h2><br>
     
-    {{ form.tokenPart1 }} - {{ form.tokenPart2 }} - {{ form.tokenPart3 }} - {{ form.tokenPart4 }}<br>
+    <h4><a class="link" href="{% url 'treatment-edit' treatmentID=treatmentID %}">Go back</a></h4><br>
     
-    <button class= "btn btn-dark mt-4" type="submit">Import</button>
-    </form>
-
     </body>
 </html>
