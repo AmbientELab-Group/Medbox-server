@@ -53,5 +53,5 @@ def edit(request, treatmentID):
             form = TreatmentSettings(instance=treatmentInstance)
             
         return render(request, 'web/treatment/edit.html', {'form': form,
-                      'medicines': treatmentInstance.medicines.all(),
+                      'medicines': treatmentInstance.medicines.all() if treatmentInstance else [],
                       'treatmentID': treatmentID})
