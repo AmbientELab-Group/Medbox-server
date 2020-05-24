@@ -7,6 +7,7 @@ __status__ = "development"
 __date__ = "23.5.2020"
 
 from django import forms
+from datetime import datetime
 
 class MedicineForm(forms.Form):
     """
@@ -25,5 +26,5 @@ class MedicineForm(forms.Form):
     timeOfTaking = forms.TimeField(widget=forms.TimeInput)
     
     # dates of medicine taking
-    takenTo = forms.DateField(widget=forms.SelectDateWidget)
-    takenFrom = forms.DateField(required=False, widget=forms.SelectDateWidget) 
+    takenTo = forms.DateField(required=False, widget=forms.SelectDateWidget)
+    takenFrom = forms.DateField(initial=datetime.now().date(), widget=forms.SelectDateWidget) 
