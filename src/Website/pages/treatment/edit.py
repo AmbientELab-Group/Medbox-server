@@ -25,33 +25,32 @@ class TreatmentSettings(forms.ModelForm):
 def edit(request, treatmentID):
     # check if treatment ID is a valid string
     if (not (treatmentID.isdigit())) and treatmentID != 'new':
-         return redirect('treatment-edit', treatmentID='new')
+        messages.error(request, 'Invalid treatment ID')
+        return redirect('treatment-dashboard')
      
+    # if we are adding new treatment then add an empty object with empty name and surname and
+    # redirect to it's database
+    if treatmentID == 'new':
+        newTreatment = Treatment(patientFirstName="", patientLastName="")
+        newTreatment.save()
+        return redirect('treatment-edit', treatmentID=newTreatment.id)
+
     # acquire treatment object instance
-    treatmentInstance = None
     try:
-        if treatmentID.isdigit():
-            treatmentInstance = Treatment.objects.get(id=int(treatmentID))
+        treatmentInstance = Treatment.objects.get(id=int(treatmentID))
     except ObjectDoesNotExist:
-        messages.error(request, 'Invalid ID')
-        return redirect('treatment-edit', treatmentID='new')
+        messages.error(request, 'Invalid treatment ID')
+        return redirect('treatment-dashboard')
     
     if request.method == 'POST':
-        if treatmentInstance:
-            form = TreatmentSettings(request.POST, instance=treatmentInstance)
-        else:
-            form = TreatmentSettings(request.POST)
-        
+        form = TreatmentSettings(request.POST, instance=treatmentInstance)
         if form.is_valid():
             form.save()
             messages.success(request, 'Treatment updated succesfully!')
             return redirect('treatment-edit', treatmentID=treatmentID)
     else:
-        if treatmentID == 'new':
-            form = TreatmentSettings()
-        else:
-            form = TreatmentSettings(instance=treatmentInstance)
+        form = TreatmentSettings(instance=treatmentInstance)
             
-        return render(request, 'web/treatment/edit.html', {'form': form,
-                      'medicines': treatmentInstance.medicines.all() if treatmentInstance else [],
-                      'treatmentID': treatmentID})
+    return render(request, 'web/treatment/edit.html', {'form': form,
+                    'medicines': treatmentInstance.medicines.all(),
+                    'treatmentID': treatmentID})

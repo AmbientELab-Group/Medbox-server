@@ -27,10 +27,9 @@ urlpatterns = [
     
     # treatments
     path('treatment/dashboard', pages.treatment.dashboard, name='treatment-dashboard'), # dashboard for the treatments
-    path('treatment/edit/<str:treatmentID>', pages.treatment.edit, name='treatment-edit'), # page for the treatment edits
-    path('treatment/edit/<str:treatmentID>/medicine/add', pages.treatment.medicine.add, name='treatment-medicine-add'), # page for adding new medicine
-    path('treatment/edit/<str:treatmentID>/medicine/<str:medicineID>/edit', pages.treatment.medicine.edit, name='treatment-medicine-edit'), # page for editing medicine
-    path('treatment/edit/<str:treatmentID>/medicine/<str:medicineID>/delete', pages.treatment.medicine.delete, name='treatment-medicine-delete'), # page for deliting medicine
+    path('treatment/<str:treatmentID>/edit', pages.treatment.edit, name='treatment-edit'), # page for the treatment edits
+    path('treatment/<str:treatmentID>/medicine/<str:medicineID>/edit', pages.treatment.medicine.edit, name='treatment-medicine-edit'), # page for editing medicine
+    path('treatment/<str:treatmentID>/medicine/<str:medicineID>/delete', pages.treatment.medicine.delete, name='treatment-medicine-delete'), # page for deliting medicine
     path('treatment/import', pages.treatment.importPage, name='treatment-import'), # page for the importing treatment
     path('treatment/adherence', pages.treatment.adherence, name='treatment-adherence'), # page for adherence monitoring
     

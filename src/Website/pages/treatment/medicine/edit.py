@@ -10,8 +10,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from Website.models import Treatment, MedicineDosing
+from Website.models import Treatment, MedicineDosing, Medicine, AdherenceTime
 from .form import MedicineForm
+from datetime import datetime
 
 @login_required(login_url='login-page')
 def edit(request, treatmentID, medicineID):
@@ -28,11 +29,34 @@ def edit(request, treatmentID, medicineID):
         return redirect('treatment-dashboard')
     
     # verify if medicine ID is a digit
-    if not (medicineID.isdigit()):
+    if (not (medicineID.isdigit())) and medicineID != 'new':
         messages.error(request, 'Invalid medicine ID!')
         return redirect('treatment-edit', treatmentID=treatmentID)
     
-    # get medicine dosing object
+    # if we are creating a new medicine object then add an empty one and redirect to
+    # medicine edit page with new medicineID
+    if medicineID == 'new':
+        medicine = Medicine(name="")
+        medicine.save()
+        
+        adherenceTime = AdherenceTime(time="00:00:00")
+        adherenceTime.save()
+        
+        medicineDosing = MedicineDosing(medicine=medicine,
+                                        doses=[1],
+                                        emergency=False,
+                                        takenFrom=datetime.now().date())
+        medicineDosing.save()
+        medicineDosing.adherenceTimes.add(adherenceTime)
+        medicineDosing.save()
+                                            
+        treatmentInstance.medicines.add(medicineDosing)
+        treatmentInstance.save()
+        
+        return redirect('treatment-medicine-edit', treatmentID=treatmentID,
+                        medicineID=medicineDosing.id)
+    
+    # get medicine dosing object instance
     try:
         medicineDosing = MedicineDosing.objects.get(id=int(medicineID))
     except ObjectDoesNotExist:
