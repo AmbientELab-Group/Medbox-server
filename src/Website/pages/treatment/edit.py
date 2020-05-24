@@ -30,7 +30,8 @@ def edit(request, treatmentID):
     # acquire treatment object instance
     treatmentInstance = None
     try:
-        treatmentInstance = Treatment.objects.get(id=int(treatmentID))
+        if treatmentID.isdigit():
+            treatmentInstance = Treatment.objects.get(id=int(treatmentID))
     except ObjectDoesNotExist:
         messages.error(request, 'Invalid ID')
         return redirect('treatment-edit', treatmentID='new')
