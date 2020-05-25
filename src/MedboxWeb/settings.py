@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework'
 ]
 
 AUTH_USER_MODEL = 'Website.User'
@@ -53,6 +54,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ]
+}
 
 ROOT_URLCONF = 'MedboxWeb.urls'
 
@@ -133,3 +140,6 @@ STATICFILES_DIRS = [
 
 # lifetime of the treatment token in hours
 TREATMENT_TOKEN_LIFETIME = 168
+
+# lifetime of the pairing codes in minutes
+PAIRING_CODE_LIFETIME = 5
