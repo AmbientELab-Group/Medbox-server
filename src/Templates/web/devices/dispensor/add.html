@@ -12,25 +12,26 @@
   </head>
 
 <body>
-    
     {% include "web/components/navbar.html" %}
     {% include "web/components/messages.html" %}
+	<div class="centerContainer">    
+	    <h1 class="header">Pair a Dispenser</h1>
+		
+		<form method="post">
+	    {% csrf_token %}
     
-    <form method="post">
-    {% csrf_token %}
+	    {{ form.non_field_errors }}
     
-    {{ form.non_field_errors }}
+	    {{ form.code.errors }}</br>
+	    <label for="{{ form.code.id_for_label }}">Code</label></br>
+	    {{ form.code }}</br>
     
-    {{ form.code.errors }}</br>
-    <label for="{{ form.code.id_for_label }}">Code</label></br>
-    {{ form.code }}</br>
+	    {{ form.name.errors }}</br>
+	    <label for="{{ form.code.id_for_label }}">Name</label></br>
+	    {{ form.name }}</br>
     
-    {{ form.name.errors }}</br>
-    <label for="{{ form.code.id_for_label }}">Name</label></br>
-    {{ form.name }}</br>
-    
-    <button class= "btn btn-dark mt-4" type="submit">Code</button>
-    </form>
-
+	    <button class= "btn btn-dark mt-4" type="submit">Pair</button>
+	    </form>
+	</div>
 </body>
 </html>
