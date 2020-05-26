@@ -16,18 +16,25 @@
     {% include "web/components/navbar.html" %}
     {% include "web/components/messages.html" %}
     
-    <h4><a class="link" href="{% url 'treatment-import' %}">Import token</a></h4><br>
+    <div class="centerContainer">
+		
+		<h1 class="header">Treatments</h1>
     
-    {% if pairedTreatments %}
-    <ul>
-        {% for treatment in pairedTreatments %}
-        <li>
-            <h4>{{treatment.patientFirstName}} {{treatment.patientLastName}}</h4>
-            <a class="link"  href="{% url 'treatment-edit' treatmentID=treatment.id %}">Edit</a>
-        </li>
-    {% endfor %}
-    </ul>
-    {% endif %}
-
+	    {% if pairedTreatments %}
+		<h3 class="title mt-5">Patients</h3>
+	    <ul>
+	        {% for treatment in pairedTreatments %}
+	        <li>
+	            <h4>{{treatment.patientFirstName}} {{treatment.patientLastName}}</h4>
+	            <a class="link"  href="{% url 'treatment-edit' treatmentID=treatment.id %}">Edit</a>
+	        </li>
+	    {% endfor %}
+	    </ul>
+	    {% endif %}
+		
+	    <form action="{% url 'treatment-import' %}">
+			<button class= "btn btn-dark mt-4" href>Import Treatment</button>
+	    </form>
+	</div>
     </body>
 </html>

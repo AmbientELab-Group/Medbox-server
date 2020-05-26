@@ -16,10 +16,14 @@
     {% include "web/components/navbar.html" %}
     {% include "web/components/messages.html" %}
     
+    <div class="centerContainer">
+		<h1 class="header">Export Token</h1>
+		
+	    <h2 class="mt-5"> Your token is: {{ token }}</h2><br>
     
-    <h2> Your token is: {{ token }}</h2><br>
-    
-    <h4><a class="link" href="{% url 'treatment-edit' treatmentID=treatmentID %}">Go back</a></h4><br>
-    
+	    <form action="{% url 'treatment-edit' treatmentID=treatmentID %}">
+			<button class= "btn btn-dark mt-4" href>Go back</button>
+	    </form>
+    </div>
     </body>
 </html>

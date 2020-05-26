@@ -15,21 +15,27 @@
     
     {% include "web/components/navbar.html" %}
     {% include "web/components/messages.html" %}
-    
-    <form method="post">
-    {% csrf_token %}
-    
-    {{ form.non_field_errors }}
-    {{ form.tokenPart1.errors }}
-    {{ form.tokenPart2.errors }}
-    {{ form.tokenPart3.errors }}
-    {{ form.tokenPart4.errors }}
-    <br>
-    
-    {{ form.tokenPart1 }} - {{ form.tokenPart2 }} - {{ form.tokenPart3 }} - {{ form.tokenPart4 }}<br>
-    
-    <button class= "btn btn-dark mt-4" type="submit">Import</button>
-    </form>
+	
+    <div class="centerContainer">
+		
+		<h1 class="header">Import Treatment</h1>
+		
+    	<h3 class="title mt-5">Type in the code</h3>
+		
+		<form method="post">
+		{% csrf_token %}
 
+		{{ form.non_field_errors }}
+		{{ form.tokenPart1.errors }}
+		{{ form.tokenPart2.errors }}
+		{{ form.tokenPart3.errors }}
+		{{ form.tokenPart4.errors }}
+		<br>
+
+		{{ form.tokenPart1 }} - {{ form.tokenPart2 }} - {{ form.tokenPart3 }} - {{ form.tokenPart4 }}<br>
+
+		<button class= "btn btn-dark mt-4" type="submit">Import</button>
+		</form>
+	</div>
     </body>
 </html>

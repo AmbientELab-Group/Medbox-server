@@ -21,8 +21,8 @@ label {
 	font-weight: 600;
 }
 
-a.link {
-	line-height: 7rem;
+h4.pt {
+	padding-top: 3.5rem;
 }
 
 ul.errorlist {
