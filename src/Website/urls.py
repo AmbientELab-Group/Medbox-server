@@ -74,6 +74,10 @@ urlpatterns = [
     path('devices/dispensor/add', pages.devices.dispensor.add,
          name='devices-dispensor-add'),
     
+    # page for deleting dispensors
+    path('devices/dispensor/<str:dispensorID>/delete',
+         pages.devices.dispensor.delete, name='devices-dispensor-delete'),
+    
     # page for displaying the status of new dispensors
     path('devices/dispensor/status', pages.devices.dispensor.status,
          name='devices-dispensor-status'),
