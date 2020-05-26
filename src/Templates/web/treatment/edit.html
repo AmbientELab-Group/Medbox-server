@@ -36,8 +36,8 @@
 	    <button class= "btn btn-dark mt-4" type="submit">Save settings</button>
 	    </form>
 
-	    {% if medicines %}
-		<h3 class="title mt-5">Medicines</h3>
+	    <h3 class="title mt-5">Medicines</h3>
+		{% if medicines %}
 	    <ul>
 	        {% for medicineDosing in medicines %}
 	        <li>
