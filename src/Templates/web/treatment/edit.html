@@ -8,8 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <!-- Bootstrap core CSS -->
-    <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
+    {% include "web/components/common_css_bundle.html" %}
   </head>
 
     <body>
@@ -17,7 +16,38 @@
     {% include "web/components/navbar.html" %}
     {% include "web/components/messages.html" %}
     
-    <center><h1> Treatment edit page template! </h1></center> 
+    <form method="post">
+    {% csrf_token %}
+    
+    {{ form.non_field_errors }}
+    
+    {{ form.patientFirstName.errors }}</br>
+    <label for="{{ form.patientFirstName.id_for_label }}">Patient First Name</label></br>
+    {{ form.patientFirstName }}</br>
+    
+    {{ form.patientLastName.errors }}</br>
+    <label for="{{ form.patientLastName.id_for_label }}">Patient Last Name</label></br>
+    {{ form.patientLastName }}</br>
+    
+    <button class= "btn btn-dark mt-4" type="submit">Save settings</button>
+    </form>
+    
+    <h4><a class="link" href="{% url 'treatment-export-token' treatmentID=treatmentID %}">Export token</a></h4><br>
+    
+    <h4><a class="link" href="{% url 'treatment-medicine-edit' treatmentID=treatmentID medicineID='new' %}">Add new medicine</a></h4><br>
 
+    {% if medicines %}
+    <ul>
+        {% for medicineDosing in medicines %}
+        <li>
+            <h4> {{medicineDosing.medicine.name}}    
+            <a href="{% url 'treatment-medicine-edit' medicineID=medicineDosing.id treatmentID=treatmentID %}">Edit</a>
+            <a href="{% url 'treatment-medicine-delete' medicineID=medicineDosing.id treatmentID=treatmentID %}"> Delete</a>
+            </h4>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    
     </body>
 </html>

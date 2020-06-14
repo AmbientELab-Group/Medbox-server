@@ -8,16 +8,30 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <!-- Bootstrap core CSS -->
-    <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
+    {% include "web/components/common_css_bundle.html" %}
   </head>
 
-    <body>
+<body>
     
     {% include "web/components/navbar.html" %}
     {% include "web/components/messages.html" %}
 
-    <center><h1> Devices dashboard template! </h1></center> 
+    <div class="centerContainer">
+    	<h1 class="header">Devices</h1>
+	</div>
+	
+	<h4><a class="link" href="{% url 'devices-dispensor-add' %}">Pair a dispensor</a></h4><br>
+    
+    {% if pairedDevices %}
+    <ul>
+        {% for device in pairedDevices %}
+        <li>
+            <h4>{{ device.name }} </h4>
+            <a class="link"  href="{% url 'devices-dispensor-delete' dispensorID=device.serialNumber %}">delete</a>
+        </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
 
-    </body>
+</body>
 </html>

@@ -16,7 +16,18 @@
     {% include "web/components/navbar.html" %}
     {% include "web/components/messages.html" %}
     
-    <center><h1> Adherence monitoring page template! </h1></center> 
+    <h4><a class="link" href="{% url 'treatment-import' %}">Import token</a></h4><br>
+    
+    {% if pairedTreatments %}
+    <ul>
+        {% for treatment in pairedTreatments %}
+        <li>
+            <h4>{{treatment.patientFirstName}} {{treatment.patientLastName}}</h4>
+            <a class="link"  href="{% url 'treatment-edit' treatmentID=treatment.id %}">Edit</a>
+        </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
 
     </body>
 </html>

@@ -1,4 +1,4 @@
-{% load static %}
+ {% load static %}
 
 <!doctype html>
 <html lang="en">
@@ -8,8 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <!-- Bootstrap core CSS -->
-    <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
+    {% include "web/components/common_css_bundle.html" %}
   </head>
 
     <body>
@@ -17,7 +16,10 @@
     {% include "web/components/navbar.html" %}
     {% include "web/components/messages.html" %}
     
-    <center><h1> Treatments dashboard template! </h1></center> 
-
+    
+    <h2> Your token is: {{ token }}</h2><br>
+    
+    <h4><a class="link" href="{% url 'treatment-edit' treatmentID=treatmentID %}">Go back</a></h4><br>
+    
     </body>
 </html>

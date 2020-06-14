@@ -1,0 +1,14 @@
+.navbar {
+  margin-bottom: 20px;
+}
+
+.navbar-expand-lg .navbar-nav .nav-link {
+  font-size: 2rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  font-weight: 600;
+}
+
+.logout {
+	color: rgba(211,0,0,.65) !important;
+}

@@ -7,3 +7,6 @@ __status__ = "development"
 __date__ = "12.5.2020" 
 
 from .user import User
+from .treatment import AdherenceTime, MedicineDosing, onDeleteMedicineDosing, Treatment
+from .medicine import Medicine
+from .treatmentToken import TreatmentToken
