@@ -7,6 +7,15 @@ notification_api = Blueprint('notification_api', __name__)
 device1Notifications = [
     {
         'device_ID': DEVICE1_ID,
+        'device_name': DEVICE1_NAME,
+        'time': '2020-6-11 20:11:00',
+        'notification_title': 'Medication dispensed', 
+        'notification': '',
+        'severity': 'INFO'
+    },
+    {
+        'device_ID': DEVICE1_ID,
+        'device_name': DEVICE1_NAME,
         'time': '2020-3-12 21:12:13',
         'notification_title': 'Medication dispensed', 
         'notification': '',
@@ -14,6 +23,7 @@ device1Notifications = [
     },
     {
         'device_ID': DEVICE1_ID,
+        'device_name': DEVICE1_NAME,
         'time': '2020-3-9 21:12:13',
         'notification_title': 'Batteries running out!',
         'notification': 'You have 5 days of batteries left!',
@@ -21,6 +31,7 @@ device1Notifications = [
     },
     {
         'device_ID': DEVICE1_ID,
+        'device_name': DEVICE1_NAME,
         'time': '2020-3-8 21:12:13',
         'notification_title': 'Emergency medications dispensed!',
         'notification': '',
@@ -30,7 +41,8 @@ device1Notifications = [
             
 device2Notifications = [
     {
-        'device': DEVICE2_ID,
+        'device_ID': DEVICE2_ID,
+        'device_name': DEVICE2_NAME,
         'time': '2020-3-12 21:22:13',
         'notification_title': 'Medication dispensed', 
         'notification': '',

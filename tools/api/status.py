@@ -100,15 +100,15 @@ def adherenceStatus():
         response = {
             'request_status': 'OK',
             'adherence':[
-                {'time': '2020-04-1', 'score': 0},
-                {'time': '2020-04-2', 'score': 10},
-                {'time': '2020-04-3', 'score': 10},
-                {'time': '2020-04-4', 'score': 6},
-                {'time': '2020-04-6', 'score': 3},
-                {'time': '2020-04-7', 'score': 4},
-                {'time': '2020-04-9', 'score': 8},
-                {'time': '2020-04-10', 'score': 9},
-                {'time': '2020-04-11', 'score': 10}
+                {'time': '2020-06-1', 'score': 0},
+                {'time': '2020-06-2', 'score': 6},
+                {'time': '2020-06-3', 'score': 3},
+                {'time': '2020-06-4', 'score': 6},
+                {'time': '2020-06-5', 'score': 3},
+                {'time': '2020-06-6', 'score': 4},
+                {'time': '2020-06-7', 'score': 8},
+                {'time': '2020-06-8', 'score': 2},
+                {'time': '2020-05-25', 'score': 4}
             ]
         }
         return jsonify(response)
@@ -117,15 +117,15 @@ def adherenceStatus():
         response = {
             'request_status': 'OK',
             'adherence':[
-                {'time': '2020-04-1', 'score': 0},
-                {'time': '2020-04-2', 'score': 10},
-                {'time': '2020-04-3', 'score': 10},
-                {'time': '2020-04-4', 'score': 6},
-                {'time': '2020-04-6', 'score': 3},
-                {'time': '2020-04-7', 'score': 4},
-                {'time': '2020-04-9', 'score': 8},
-                {'time': '2020-04-10', 'score': 9},
-                {'time': '2020-04-11', 'score': 10}
+                {'time': '2020-06-1', 'score': 10},
+                {'time': '2020-06-2', 'score': 10},
+                {'time': '2020-06-3', 'score': 10},
+                {'time': '2020-06-4', 'score': 6},
+                {'time': '2020-06-5', 'score': 3},
+                {'time': '2020-06-6', 'score': 4},
+                {'time': '2020-06-7', 'score': 8},
+                {'time': '2020-06-8', 'score': 9},
+                {'time': '2020-05-31', 'score': 10}
             ]
         }
         return jsonify(response)
