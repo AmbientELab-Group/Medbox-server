@@ -37,7 +37,7 @@ clutter your list of images.
 First list all containers to get the container ID.
 
 ```
-[krzys@starship Medbox-server]$ docker ps --all
+[krzys@starship Medbox-server]$ sudo docker ps --all
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                          PORTS               NAMES
 b792a79316f3        hello-world         "/hello"            2 minutes ago       Exited (0) About a minute ago                       wonderful_elion
 ```
@@ -45,13 +45,13 @@ b792a79316f3        hello-world         "/hello"            2 minutes ago       
 and remove it by running:
 
 ```
-docker rm [CONTAINER ID]
+sudo docker rm [CONTAINER ID]
 ```
 
 Then list all your images to get the image ID 
 
 ```
-[krzys@starship Medbox-server]$ docker images
+[krzys@starship Medbox-server]$ sudo docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 hello-world         latest              bf756fb1ae65        3 months ago        13.3kB
 ```
@@ -59,7 +59,7 @@ hello-world         latest              bf756fb1ae65        3 months ago        
 and then remove the image by running:
 
 ```
-docker rmi [IMAGE ID]
+sudo docker rmi [IMAGE ID]
 ```
 
 ### Initializind database
@@ -117,7 +117,7 @@ If you get any error something is wrong. Contact the chief project wizard (@Bill
 Then open the another console and see if containers are running. You should see something like that:
 
 ```
-[krzys@starship Medbox-server]$ docker ps
+[krzys@starship Medbox-server]$ sudo docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
 4354a1d70d78        webserver           "python manage.py ru…"   4 minutes ago       Up 4 minutes        0.0.0.0:8000->8000/tcp   webapp-server
 c7d618bcd1fa        postgres            "docker-entrypoint.s…"   4 minutes ago       Up 4 minutes        5432/tcp                 medbox-server_mainDB_1
@@ -128,7 +128,7 @@ If you have those two containers then everything is ok and you can apply the mig
 In order to do that open a shell to webserver container:
 
 ```
-[krzys@starship Medbox-server]$ docker exec -ti [CONTAINER ID]  bash
+[krzys@starship Medbox-server]$ sudo docker exec -ti [CONTAINER ID]  bash 
 user@4354a1d70d78:/usr/src/app$ 
 ```
 
@@ -157,13 +157,13 @@ Ok so now about how to make changes and test them.
 In order to run all services, execute:
 
 ```
-[krzys@starship Medbox-server]$ docker-compose up
+[krzys@starship Medbox-server]$sudo docker-compose up
 ```
 
 After this yoy should have the followinf containers running:
 
 ```
-[krzys@starship Medbox-server]$ docker ps
+[krzys@starship Medbox-server]$sudo docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
 4354a1d70d78        webserver           "python manage.py ru…"   10 minutes ago      Up 10 minutes       0.0.0.0:8000->8000/tcp   webapp-server
 c7d618bcd1fa        postgres            "docker-entrypoint.s…"   10 minutes ago      Up 10 minutes       5432/tcp                 medbox-server_mainDB_1
@@ -172,7 +172,7 @@ c7d618bcd1fa        postgres            "docker-entrypoint.s…"   10 minutes ag
 If you want to exit run:
 
 ```
-[krzys@starship Medbox-server]$ docker-compose down
+[krzys@starship Medbox-server]$sudo docker-compose down
 ```
 
 You have to run this in a separate console window but still inside the project directory. This command will kill all containers
@@ -183,12 +183,12 @@ and remove them.
 Generally in order to apply your changes you should use the following workflow:
 
 ```
-docker-compose down
+sudo docker-compose down
 
 # make modifications
 
-docker-compose build
-docker-compose up
+sudo docker-compose build
+sudo docker-compose up
 
 # test modifications
 ```
@@ -199,17 +199,17 @@ will be lost after you execute docker-compose down so all source code should be 
 
 ### Opening shell
 If there is a need to manually run some scripts inside the container (for example manage.py for django) you can do that by opening
-a terminal in the container. In order to do that first make sure that container is running (by running `docker-compose up`), then check the container
-ID using `docker ps` command and finally run the following command:
+a terminal in the container. In order to do that first make sure that container is running (by running `sudo docker-compose up`), then check the container
+ID using `sudo docker ps` command and finally run the following command:
 
 ```
-docker exec -ti [CONTAINER ID] bash
+sudo docker exec -ti [CONTAINER ID] bash
 ```
 
 For example:
 
 ```
-[krzys@starship Medbox-server]$ docker ps
+[krzys@starship Medbox-server]$ sudo docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES
 09d4f286804f        web                 "python manage.py ru…"   1 second ago        Up Less than a second   0.0.0.0:8000->8000/tcp   webapp-server
 16b0e0d899b2        app-api             "gunicorn -b 0.0.0.0…"   1 second ago        Up Less than a second   0.0.0.0:8002->8001/tcp   app-api-server
@@ -236,7 +236,7 @@ If you want you can access the database by running the SQL console.
 In order to open it you neeed to first make sure that the container is running and then run:
 
 ```
-docker exec -ti [DB CONTAINER ID ] psql -U [DATABASE USER]
+sudo docker exec -ti [DB CONTAINER ID ] psql -U [DATABASE USER]
 ```
 
 Then you get access to the Postgres shell.
@@ -246,8 +246,8 @@ Here is a quick tutorial on how to use this: https://tomcam.github.io/postgres/
 Once you are done type \q to exit the shell.
 
 ### Acessing the website
-In order to access all the services that are running inside the containers you just need to start everything with  `docker-compose up`
-and then you can access all services at localhost:8000.d
+In order to access all the services that are running inside the containers you just need to start everything with  `sudo docker-compose up`
+and then you can access all services at localhost:8000.
  
 Website can be accessed directly from the web browser. 
 
