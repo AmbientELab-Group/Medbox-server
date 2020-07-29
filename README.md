@@ -64,10 +64,12 @@ docker rmi [IMAGE ID]
 
 ### Initializind database
 Once docker is running you will need to perform the first build.
-First you need to build all imagess, just execute:
+First you need to build all imagess, just execute (you may need to run 
+`chmod -R 777 .` 
+before to give proper permissions):
 
 ```
-docker-compose build
+sudo docker-compose build
 ```
 
 You can skip this step if images are already built (if you erased your database and
@@ -77,13 +79,13 @@ Them you need to initialise database, otherwise django will fail.
 In order to do that you have to run:
 
 ```
-docker-compose up docker-compose up mainDB
+sudo docker-compose up mainDB
 ```
 
 Then once the database is up and running, press CTRL+C to exit and then run
 
 ```
-docker-compose down
+sudo docker-compose down
 ```
 
 Next step is to perform migrations and setup your admin account.
@@ -91,7 +93,7 @@ Next step is to perform migrations and setup your admin account.
 In oder to do that first bring the system up:
 
 ```
-docker-compose up
+sudo docker-compose up
 ```
 
 You should get the following output from the server:
