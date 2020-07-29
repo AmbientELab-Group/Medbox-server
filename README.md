@@ -14,6 +14,29 @@ depending on your platform of choice.
 First you need to install docker (https://docs.docker.com/get-docker/)
 and docker-compose (https://docs.docker.com/compose/install/).
 
+Note about linux:
+
+Docker by default has to be running as root. This is bad since you will probably open a root shell because typing your
+long and secure password each time you want to rebuild an image is annoying. And when you have root shell opened like that
+and you, by mistake, leave your computer unlocked, your evil (insert something evil that you fear) can type `rm -rf --no-preserve-root /` and send your data to hell. Or even worst they can make your computer randomly play (insert your most hated music) at full volume and after smashing your keyboard into pieces during
+hopeless attempts to find why is it doing that you will reinstall the entire OS and attempt to piece together the remains of your sanity.
+To avoid such problems you can add yourself to a group called docker.
+
+In any sane linux distro this is done using this command:
+
+```
+sudo groupadd docker
+sudo usermod -aG docker $USER
+```
+
+Then login and logout and you will be able to use docker without root.
+
+Also you should make docker service start with the OS so you won't be pulling your hair out when docker will stop working after reboot.
+
+```
+sudo systemctl enable docker
+```
+
 You will also need git (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) 
 so you can publish your work back to this repository.
 
@@ -37,7 +60,7 @@ clutter your list of images.
 First list all containers to get the container ID.
 
 ```
-[krzys@starship Medbox-server]$ sudo docker ps --all
+[krzys@starship Medbox-server]$ docker ps --all
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                          PORTS               NAMES
 b792a79316f3        hello-world         "/hello"            2 minutes ago       Exited (0) About a minute ago                       wonderful_elion
 ```
@@ -45,7 +68,7 @@ b792a79316f3        hello-world         "/hello"            2 minutes ago       
 and remove it by running:
 
 ```
-sudo docker rm [CONTAINER ID]
+docker rm [CONTAINER ID]
 ```
 
 Then list all your images to get the image ID 
@@ -59,33 +82,37 @@ hello-world         latest              bf756fb1ae65        3 months ago        
 and then remove the image by running:
 
 ```
-sudo docker rmi [IMAGE ID]
+docker rmi [IMAGE ID]
 ```
 
-### Initializind database
+### Initializing database
 Once docker is running you will need to perform the first build.
-First you need to build all imagess, just execute (you may need to run 
-`chmod -R 777 .` 
-before to give proper permissions):
+
+First you need to change permissions of all files in the project:
+
+```chmod -R 777 .```
+
+Which feels wrong but it works so don't question it.
+
+Then you need to build all imagess, this is done using:
 
 ```
-sudo docker-compose build
+docker-compose build
 ```
+If you erased your database or your are setting this up for the first time  you need to initialise database,
+otherwise django will spit out some confusing messages about database faliure. Look's like it's trying to talk
+to database before it's initialized.
 
-You can skip this step if images are already built (if you erased your database and
-yout want to rebuild everything.
-
-Them you need to initialise database, otherwise django will fail.
 In order to do that you have to run:
 
 ```
-sudo docker-compose up mainDB
+docker-compose up mainDB
 ```
 
 Then once the database is up and running, press CTRL+C to exit and then run
 
 ```
-sudo docker-compose down
+docker-compose down
 ```
 
 Next step is to perform migrations and setup your admin account.
@@ -93,7 +120,7 @@ Next step is to perform migrations and setup your admin account.
 In oder to do that first bring the system up:
 
 ```
-sudo docker-compose up
+docker-compose up
 ```
 
 You should get the following output from the server:
@@ -112,12 +139,12 @@ webapp-server | Starting development server at http://0.0.0.0:8000/
 webapp-server | Quit the server with CONTROL-C.
 ```
 
-If you get any error something is wrong. Contact the chief project wizard (@Bill2462).
+If you get any error something is wrong. Contact the chief project magician (@Bill2462).
 
-Then open the another console and see if containers are running. You should see something like that:
+Then open another console and see if containers are running. You should see something like that:
 
 ```
-[krzys@starship Medbox-server]$ sudo docker ps
+[krzys@starship Medbox-server]$ docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
 4354a1d70d78        webserver           "python manage.py ru…"   4 minutes ago       Up 4 minutes        0.0.0.0:8000->8000/tcp   webapp-server
 c7d618bcd1fa        postgres            "docker-entrypoint.s…"   4 minutes ago       Up 4 minutes        5432/tcp                 medbox-server_mainDB_1
@@ -128,7 +155,7 @@ If you have those two containers then everything is ok and you can apply the mig
 In order to do that open a shell to webserver container:
 
 ```
-[krzys@starship Medbox-server]$ sudo docker exec -ti [CONTAINER ID]  bash 
+[krzys@starship Medbox-server]$ docker exec -ti [CONTAINER ID]  bash 
 user@4354a1d70d78:/usr/src/app$ 
 ```
 
@@ -144,7 +171,7 @@ Then create a superuser by running:
 user@4354a1d70d78:/usr/src/app$ python3 manage.py createsuperuser
 ```
 
-Email and password are up to you (they don't have to be real.
+Email and password are up to you (they don't have to be real).
 
 And that's it. Now you can go to localhost:8000/admin and use entered credentials to access the admin panel.
 
@@ -157,10 +184,10 @@ Ok so now about how to make changes and test them.
 In order to run all services, execute:
 
 ```
-[krzys@starship Medbox-server]$sudo docker-compose up
+[krzys@starship Medbox-server]$ docker-compose up
 ```
 
-After this yoy should have the followinf containers running:
+After this yoy should have the following containers running:
 
 ```
 [krzys@starship Medbox-server]$sudo docker ps
@@ -172,44 +199,46 @@ c7d618bcd1fa        postgres            "docker-entrypoint.s…"   10 minutes ag
 If you want to exit run:
 
 ```
-[krzys@starship Medbox-server]$sudo docker-compose down
+[krzys@starship Medbox-server]$ docker-compose down
 ```
 
 You have to run this in a separate console window but still inside the project directory. This command will kill all containers
-and remove them.
+and remove them. This is to ensure that containers are truely stateless. Storing data inside container will make it very hard to debug.
+If that requirement is not met, the person responsible will be sent to programming hell.
 
 ### Applying your changes
 
 Generally in order to apply your changes you should use the following workflow:
 
 ```
-sudo docker-compose down
+docker-compose down
 
 # make modifications
 
-sudo docker-compose build
-sudo docker-compose up
+docker-compose build
+docker-compose up
 
 # test modifications
 ```
 
 Databases are stored inside the volumens so the tables are preserved. However all edits made to the files inside the containers
-will be lost after you execute docker-compose down so all source code should be stored in the project directory.
+will be lost after you execute docker-compose down so all source code must be stored in the project directory.
 
 
 ### Opening shell
+
 If there is a need to manually run some scripts inside the container (for example manage.py for django) you can do that by opening
 a terminal in the container. In order to do that first make sure that container is running (by running `sudo docker-compose up`), then check the container
 ID using `sudo docker ps` command and finally run the following command:
 
 ```
-sudo docker exec -ti [CONTAINER ID] bash
+docker exec -ti [CONTAINER ID] bash
 ```
 
 For example:
 
 ```
-[krzys@starship Medbox-server]$ sudo docker ps
+[krzys@starship Medbox-server]$ docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES
 09d4f286804f        web                 "python manage.py ru…"   1 second ago        Up Less than a second   0.0.0.0:8000->8000/tcp   webapp-server
 16b0e0d899b2        app-api             "gunicorn -b 0.0.0.0…"   1 second ago        Up Less than a second   0.0.0.0:8002->8001/tcp   app-api-server
@@ -236,7 +265,7 @@ If you want you can access the database by running the SQL console.
 In order to open it you neeed to first make sure that the container is running and then run:
 
 ```
-sudo docker exec -ti [DB CONTAINER ID ] psql -U [DATABASE USER]
+docker exec -ti [DB CONTAINER ID ] psql -U [DATABASE USER]
 ```
 
 Then you get access to the Postgres shell.
