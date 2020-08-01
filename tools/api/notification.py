@@ -30,7 +30,7 @@ device1Notifications = [
             
 device2Notifications = [
     {
-        'device': DEVICE2_ID,
+        'device_ID': DEVICE2_ID,
         'time': '2020-3-12 21:22:13',
         'notification_title': 'Medication dispensed', 
         'notification': '',
