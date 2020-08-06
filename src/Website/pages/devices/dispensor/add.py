@@ -10,7 +10,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django import forms
-from DeviceAPI.models import Device, DevicePairingKey
+from DeviceAPI.models import Device
 from Website.models import User
 
 class CodeForm(forms.Form):
@@ -33,7 +33,7 @@ def add(request):
             code = form.cleaned_data.get('code')
             
             # lookup the code
-            keys = DevicePairingKey.objects.filter(key__exact=code)
+            keys = Device.objects.filter(pairingKey__exact=code)
             if keys.count() == 0:
                 messages.error(request, 'Invalid code!')
                 return redirect('devices-dispensor-add')
