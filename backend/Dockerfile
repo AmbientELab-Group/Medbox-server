@@ -7,13 +7,10 @@ WORKDIR /usr/src/app
 
 COPY ./requirements.txt ./
 
-RUN pip install -r requirements.txt && rm requirements.txt
+RUN pip3 install -r requirements.txt && rm requirements.txt
 
 RUN adduser --disabled-password --gecos '' --shell /bin/bash user \
  && chown -R user:user /usr/src/app
 USER user
 
-COPY ./ ./
-
-# uncompress the bootstrap into static files directory
-RUN tar -xzf Static/bootstrap.tar.gz -C Static/ && rm Static/bootstrap.tar.gz
+COPY ./src ./

@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-    # config for the primary database
+    # config for database container
     mainDB:
         image: postgres
         environment:
@@ -12,15 +12,22 @@ services:
         volumes:
             - ./_dbData/mainDB:/var/lib/postgresql/data
 
-    # config for building a web image
-    web:
-        build: ./src
-        image: webserver
+    # config for backend container
+    backend:
+        build: ./backend
+        image: backend-server
         command: python manage.py runserver 0.0.0.0:8000
-        container_name: webapp-server
+        container_name: backend-server
 
         depends_on:
             - mainDB
                 
         ports:
             - "8000:8000"
+
+    # config for frontend server container
+    frontend:
+        build: ./frontend
+        image: frontend-server
+        ports:
+            - "80:80"
