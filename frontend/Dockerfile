@@ -1,4 +1,20 @@
-FROM httpd:2.4.46
+# pull official base image
+FROM node:14.8.0-alpine
 
-COPY ./src /usr/local/apache2/htdocs
-COPY ./my-httpd.conf /usr/local/apache2/conf/httpd.conf
+# set working directory
+WORKDIR /app
+
+# add `/app/node_modules/.bin` to $PATH
+ENV PATH /app/node_modules/.bin:$PATH
+
+# install app dependencies
+COPY package.json .
+COPY package-lock.json .
+RUN npm install --silent
+RUN npm install react-scripts@3.4.1 -g --silent
+
+# add app
+COPY . ./
+
+# start app
+CMD ["npm", "start"]
