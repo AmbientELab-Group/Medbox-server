@@ -1,3 +1,6 @@
+# ignores vscode config files
+.vscode
+
 # also ignore a directory for storing database locally
 _dbData/
 
