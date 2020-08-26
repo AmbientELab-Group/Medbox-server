@@ -1,6 +1,6 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Docerized Scripts
+## Dockerized Scripts
 
 ### `docker-compose build`
 
