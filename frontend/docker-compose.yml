@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-
   frontend:
     container_name: frontend-dev
     build:
@@ -16,3 +15,8 @@ services:
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true
     tty: true
+
+# to make it visible on inspection
+volumes: 
+  app:
+  node_modules:
