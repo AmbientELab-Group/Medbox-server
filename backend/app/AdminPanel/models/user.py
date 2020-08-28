@@ -38,8 +38,17 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
-    # object manager
+    # model manager
     objects = UserManager()
+
+    # associated personal treatments
+    treatments = models.ManyToManyField("AppAPI.Treatment")
+
+    # associated devices
+    devices = models.ManyToManyField("DeviceAPI.Device")
     
+    # custom predefined times
+    predefinedTimes = models.ManyToManyField("AppAPI.PredefinedTime")
+
     def __str__(self):
         return self.email

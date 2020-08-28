@@ -8,13 +8,14 @@ __date__ = "25.5.2020"
 
 from django.db import models
 from django.contrib.auth import get_user_model
+import uuid as UUID
 
 class Device(models.Model):
     """
     Model of the device.
     """
-    # unique serial number of the device
-    serialNumber = models.UUIDField(primary_key=True, editable=False)
+    # universal identifier
+    uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
     
     # name given to the device by user
     name = models.CharField(max_length=100, blank=True, default='')
@@ -30,3 +31,6 @@ class Device(models.Model):
 
     # token used to authenticated API calls from the device
     apiToken = models.CharField(max_length=42, default='')
+
+    # containers mounted to this box
+    containers = models.ManyToManyField("Container")
