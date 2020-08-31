@@ -25,5 +25,8 @@ class Chamber(models.Model):
     # indicates if the chamber is empty
     isFull = models.BooleanField(default=True)
 
-    # time of administration its content
-    realAdministrationTime = models.DateTimeField(null=True)
+    # time of administration of its content
+    realAdministrationTime = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"At position: {self.position}, admin. time: {self.realAdministrationTime}"

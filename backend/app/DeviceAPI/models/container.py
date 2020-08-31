@@ -24,4 +24,7 @@ class Container(models.Model):
     position = models.PositiveSmallIntegerField()
 
     # time this container was refilled at
-    lastRefill = models.DateTimeField(default=timezone.now)
+    lastRefill = models.DateTimeField(default=timezone.now, blank=True)
+
+    def __str__(self):
+        return f"At position: {self.position}, last refilled: {self.lastRefill}"

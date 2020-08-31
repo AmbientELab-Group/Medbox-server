@@ -21,3 +21,6 @@ class Medicine(models.Model):
 
     # producer of the medicine, not required for now
     producer = models.CharField(max_length=100, default="", blank=True)
+
+    def __str__(self):
+        return f"{self.name} : {self.producer}"

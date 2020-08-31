@@ -21,3 +21,6 @@ class Treatment(models.Model):
 
     # doses associated with this treatment
     doses = models.ManyToManyField("Dose")
+
+    def __str__(self):
+        return f"{self.name}"

@@ -29,8 +29,11 @@ class Device(models.Model):
     # pairing key expiration date
     pairingKeyExpiresAt = models.DateTimeField(null=True)
 
-    # token used to authenticated API calls from the device
+    # token used to authenticated API calls from this device
     apiToken = models.CharField(max_length=42, default='')
 
     # containers mounted to this box
     containers = models.ManyToManyField("Container")
+
+    def __str__(self):
+        return f"'{self.name}' with id: {self.uuid}"

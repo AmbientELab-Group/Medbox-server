@@ -27,3 +27,6 @@ class Dose(models.Model):
 
     # specifies if the dose is scheduled or available on demand
     onDemand = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.medicine} at: {self.plannedAdministrationTime}"

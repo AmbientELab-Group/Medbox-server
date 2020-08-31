@@ -21,3 +21,6 @@ class PredefinedTime(models.Model):
 
     # administration time
     time = models.DateTimeField()
+
+    def __str__(self):
+        return f"'{self.name}' at: {self.time}"
