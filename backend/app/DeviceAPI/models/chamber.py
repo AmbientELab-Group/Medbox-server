@@ -16,8 +16,8 @@ class Chamber(models.Model):
     # universal identifier
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
 
-    # reference to doses stored in this chamber
-    doses = models.ManyToManyField("AppAPI.Dose")
+    # reference to container this chamber belongs to
+    container = models.ForeignKey("Container", on_delete=models.CASCADE, related_name="chambers")
 
     # position in the container
     position = models.PositiveSmallIntegerField()

@@ -16,8 +16,11 @@ class Dose(models.Model):
     # universal identifier
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
 
+    # reference to chamber this dose is stored in
+    chamber = models.ForeignKey("DeviceAPI.Chamber", on_delete=models.SET_NULL, related_name="doses", null=True)
+
     # reference to medicine to administer
-    medicine = models.ForeignKey("Medicine", on_delete=models.PROTECT)
+    medicine = models.ForeignKey("Medicine", on_delete=models.PROTECT, related_name="doses")
 
     # administration time
     plannedAdministrationTime = models.DateTimeField()

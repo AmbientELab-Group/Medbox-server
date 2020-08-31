@@ -17,8 +17,8 @@ class Container(models.Model):
     # universal identifier
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
 
-    # reference to chambers of this container
-    chambers = models.ManyToManyField("Chamber")
+    # reference to device this container belongs to
+    device = models.ForeignKey("Device", on_delete=models.CASCADE, related_name="containers")
 
     # position in the container
     position = models.PositiveSmallIntegerField()
