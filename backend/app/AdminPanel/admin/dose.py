@@ -16,7 +16,8 @@ class DoseAdmin(admin.ModelAdmin):
         "medicine_name",
         "plannedAdministrationTime", 
         "numberOfPills",
-        "onDemand"
+        "onDemand",
+        "chamber"
     )
     list_filter = (
         "plannedAdministrationTime", 
@@ -29,7 +30,8 @@ class DoseAdmin(admin.ModelAdmin):
                 "plannedAdministrationTime", 
                 "numberOfPills",
                 "onDemand",
-                "medicine"
+                "medicine",
+                "chamber"
             )
         }),
     )

@@ -13,6 +13,7 @@ class ChamberAdmin(admin.ModelAdmin):
     model = Chamber
     list_display = (
         "uuid",
+        "container",
         "position",
         "isFull",
         "realAdministrationTime"
@@ -25,9 +26,9 @@ class ChamberAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             "fields": (
+                "container",
                 "position",
                 "isFull",
-                "doses"
             )
         }),
     )

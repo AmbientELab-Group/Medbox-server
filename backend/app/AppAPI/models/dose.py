@@ -23,7 +23,7 @@ class Dose(models.Model):
     medicine = models.ForeignKey("Medicine", on_delete=models.PROTECT, related_name="doses")
 
     # administration time
-    plannedAdministrationTime = models.DateTimeField()
+    plannedAdministrationTime = models.DateTimeField(null=True, blank=True)
 
     # size of the dose
     numberOfPills = models.FloatField()

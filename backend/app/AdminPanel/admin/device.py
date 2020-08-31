@@ -14,19 +14,20 @@ class DeviceAdmin(admin.ModelAdmin):
     list_display = (
         "uuid",
         "name",
+        "owner",
         "pairingKey",
         "pairingKeyExpiresAt",
         "apiToken",
     )
     list_filter = (
         "name",
+        "owner"
     )
     fieldsets = (
         (None, {
             "fields": (
                 "name",
-                "users",
-                "containers"
+                "owner"
             )
         }),
     )

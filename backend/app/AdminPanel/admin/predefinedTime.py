@@ -14,7 +14,8 @@ class PredefinedTimeAdmin(admin.ModelAdmin):
     list_display = (
         "uuid",
         "name",
-        "time"
+        "time",
+        "owner"
     )
     list_filter = (
         "name",
@@ -24,7 +25,8 @@ class PredefinedTimeAdmin(admin.ModelAdmin):
         (None, {
             "fields": (
                 "name", 
-                "time"
+                "time",
+                "owner"
             )
         }),
     )

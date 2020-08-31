@@ -13,19 +13,21 @@ class ContainerAdmin(admin.ModelAdmin):
     model = Container
     list_display = (
         "uuid",
+        "device",
         "position",
         "lastRefill"
     )
     list_filter = (
+        "device",
         "position",
         "lastRefill"
     )
     fieldsets = (
         (None, {
             "fields": (
+                "device",
                 "position",
                 "lastRefill",
-                "chambers"
             )
         }),
     )
