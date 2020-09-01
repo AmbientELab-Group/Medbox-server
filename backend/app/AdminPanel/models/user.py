@@ -27,9 +27,6 @@ import uuid as UUID
 #     date_joined
 
 class User(AbstractUser):
-    """
-    User model.
-    """
     # universal identifier
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
     
