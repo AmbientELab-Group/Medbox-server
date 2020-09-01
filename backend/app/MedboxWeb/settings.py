@@ -31,16 +31,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'AdminPanel.apps.AdminpanelConfig',
-    'AppAPI.apps.AppapiConfig',
-    'DeviceAPI.apps.DeviceapiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework'
+    'rest_framework',
+    'AdminPanel.apps.AdminpanelConfig',
+    'AppAPI.apps.AppapiConfig',
+    'DeviceAPI.apps.DeviceapiConfig',
 ]
 
 AUTH_USER_MODEL = 'AdminPanel.User'
