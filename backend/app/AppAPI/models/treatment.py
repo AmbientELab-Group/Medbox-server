@@ -23,8 +23,5 @@ class Treatment(models.Model):
     # custom name of the treatment
     name = models.CharField(max_length=100, default="")
 
-    # doses associated with this treatment
-    doses = models.ManyToManyField("Dose")
-
     def __str__(self):
         return f"{self.name}"

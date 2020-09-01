@@ -25,7 +25,6 @@ class TreatmentAdmin(admin.ModelAdmin):
             "fields": (
                 "name",
                 "patient", 
-                "doses"
             )
         }),
     )

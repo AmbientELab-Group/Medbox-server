@@ -15,7 +15,9 @@ from .treatment import TreatmentAdmin
 from .predefinedTime import PredefinedTimeAdmin
 from .chamber import ChamberAdmin
 from .container import ContainerAdmin
+from .containerVersion import ContainerVersionAdmin
 from .device import DeviceAdmin
+from .deviceVersion import DeviceVersionAdmin
 from ..models import *
 
 # register admin site
@@ -29,7 +31,9 @@ admin.site.register(PredefinedTime, PredefinedTimeAdmin)
 
 # Device models
 admin.site.register(Device, DeviceAdmin)
+admin.site.register(DeviceVersion, DeviceVersionAdmin)
 admin.site.register(Container, ContainerAdmin)
+admin.site.register(ContainerVersion, ContainerVersionAdmin)
 admin.site.register(Chamber, ChamberAdmin)
 
 

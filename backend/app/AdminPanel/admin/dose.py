@@ -31,7 +31,8 @@ class DoseAdmin(admin.ModelAdmin):
                 "numberOfPills",
                 "onDemand",
                 "medicine",
-                "chamber"
+                "chamber",
+                "treatment"
             )
         }),
     )

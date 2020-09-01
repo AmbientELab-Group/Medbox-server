@@ -15,7 +15,9 @@ from AppAPI.models.predefinedTime import PredefinedTime
 # DeviceAPI imports
 from DeviceAPI.models.chamber import Chamber
 from DeviceAPI.models.container import Container
+from DeviceAPI.models.containerVersion import ContainerVersion
 from DeviceAPI.models.device import Device
+from DeviceAPI.models.deviceVersion import DeviceVersion
 
 # this module imports
 from .user import User

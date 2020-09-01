@@ -1,5 +1,5 @@
 """
-Admin page for device settings.
+Admin page for device version settings.
 """
 
 __author__ = "Krzysztof Adamkiewicz"
@@ -7,30 +7,24 @@ __status__ = "development"
 __date__ = "11.5.2020" 
 
 from django.contrib import admin
-from ..models import Device
+from ..models import DeviceVersion
 
-class DeviceAdmin(admin.ModelAdmin):
-    model = Device
+class DeviceVersionAdmin(admin.ModelAdmin):
+    model = DeviceVersion
     list_display = (
         "uuid",
         "name",
-        "version",
-        "owner",
-        "pairingKey",
-        "pairingKeyExpiresAt",
-        "apiToken",
+        "capacity"
     )
     list_filter = (
         "name",
-        "version",
-        "owner"
+        "capacity"
     )
     fieldsets = (
         (None, {
             "fields": (
                 "name",
-                "version",
-                "owner"
+                "capacity"
             )
         }),
     )

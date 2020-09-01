@@ -17,5 +17,7 @@ from AppAPI.models.predefinedTime import PredefinedTime
 
 # this module
 from .device import Device
+from .deviceVersion import DeviceVersion
 from .chamber import Chamber
 from .container import Container
+from .containerVersion import ContainerVersion

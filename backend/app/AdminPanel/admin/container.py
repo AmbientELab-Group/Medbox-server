@@ -19,12 +19,14 @@ class ContainerAdmin(admin.ModelAdmin):
     )
     list_filter = (
         "device",
+        "version",
         "position",
         "lastRefill"
     )
     fieldsets = (
         (None, {
             "fields": (
+                "version",
                 "device",
                 "position",
                 "lastRefill",
