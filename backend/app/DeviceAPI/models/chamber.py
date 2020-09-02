@@ -1,5 +1,4 @@
 """
-Model of the chamber.
 Constraints:
     - if realAdministrationTime is not null the chamber has been emptied and isFull needs to be set to False
     - there cannot be any other chamber at the same position in the same container
@@ -36,9 +35,6 @@ def cleanChamber(self):
 
     
 class Chamber(models.Model):
-    """
-    Model of the chamber.
-    """
     # universal identifier
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
 

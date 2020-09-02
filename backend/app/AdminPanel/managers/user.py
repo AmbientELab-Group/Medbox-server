@@ -24,7 +24,6 @@ class UserManager(BaseUserManager):
         if not password:
             raise ValueError('Pasword must not be empty for the user.')
         
-        # Create new user and set password
         user = self.model(email=self.normalize_email(email), **args)
         user.set_password(password)
         user.save()

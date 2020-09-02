@@ -1,5 +1,4 @@
 """
-Model of the medicine.
 Constraints:
     - there are no two same entries in this table (no two matching name AND producer entries)
       if the producer is empty the name has to be unique
@@ -15,9 +14,6 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 
 class Medicine(models.Model):
-    """
-    Model of the medicine.
-    """
     # universal identifier
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
 

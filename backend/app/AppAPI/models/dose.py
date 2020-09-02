@@ -1,5 +1,4 @@
 """
-Model of the dose.
 Constraints:
     - plannedAdministrationTime has to be set in the future
     - numberOfPills has to be positive
@@ -43,9 +42,6 @@ def cleanDose(self):
 
 
 class Dose(models.Model):
-    """
-    Model of the dose.
-    """
     # universal identifier
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
 

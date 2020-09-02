@@ -1,6 +1,3 @@
-"""
-Admin page for container settings.
-"""
 
 __author__ = "Krzysztof Adamkiewicz"
 __status__ = "development"

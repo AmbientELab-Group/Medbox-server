@@ -1,7 +1,3 @@
-"""
-Code that makes edyting users throught admin page possible.
-"""
-
 __author__ = "Krzysztof Adamkiewicz"
 __status__ = "development"
 __date__ = "11.5.2020" 

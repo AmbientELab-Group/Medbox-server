@@ -1,5 +1,4 @@
 """
-Model of the container.
 Constraints:
     - the position of the container has to be in range of device capacity based on device version
     - on creation it needs to create entries for each of its chambers
@@ -36,9 +35,6 @@ def cleanContainer(self):
 
 
 class Container(models.Model):
-    """
-    Model of the container.
-    """
     # universal identifier
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
 

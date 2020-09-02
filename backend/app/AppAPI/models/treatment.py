@@ -1,7 +1,3 @@
-"""
-Model of the treatment.
-"""
-
 __author__ = "Krzysztof Adamkiewicz"
 __status__ = "development"
 __date__ = "20.5.2020" 
@@ -11,9 +7,6 @@ import uuid as UUID
 from django.contrib.auth import get_user_model
 
 class Treatment(models.Model):
-    """
-    Model of the treatment.
-    """
     # universal identifier
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
 

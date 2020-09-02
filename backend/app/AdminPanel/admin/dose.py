@@ -1,7 +1,3 @@
-"""
-Admin page for dose settings.
-"""
-
 __author__ = "Krzysztof Adamkiewicz"
 __status__ = "development"
 __date__ = "11.5.2020" 

@@ -1,6 +1,3 @@
-"""
-Model of the predefined administration times.
-"""
 
 __author__ = "Krzysztof Adamkiewicz"
 __status__ = "development"

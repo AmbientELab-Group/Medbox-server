@@ -11,9 +11,6 @@ from django.contrib.auth import get_user_model
 import uuid as UUID
 
 class Device(models.Model):
-    """
-    Model of the device.
-    """
     # universal identifier
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
 
