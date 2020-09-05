@@ -9,17 +9,6 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.db.models import Q
 
-##############
-# Validators #
-##############
-
-# integrity check
-def cleanTreatment(self):
-    # check name uniqueness
-    if Treatment.objects.filter(Q(patient=self.patient) & Q(name=self.name)).exists():
-        raise ValidationError(_("Treatment with this name already exists, choose different name."), code="duplicated_value")
-
-
 class Treatment(models.Model):
     # universal identifier
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
@@ -31,7 +20,8 @@ class Treatment(models.Model):
     name = models.CharField(max_length=100)
 
     def clean(self):
-        cleanTreatment(self)
+        if Treatment.objects.filter(Q(patient=self.patient) & Q(name=self.name)).exists():
+            raise ValidationError(_("Treatment with this name already exists, choose different name."), code="duplicated_value")
 
     def __str__(self):
         return f"{self.name}"
