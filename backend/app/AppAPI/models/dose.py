@@ -21,7 +21,7 @@ def plannedAdministrationTimeValidator(time):
 
 
 def numberOfPillsValidator(numOfPills):
-    if numOfPills < 1:
+    if numOfPills <= 0:
         raise ValidationError(_("Incorrect number of pills specified."), code="invalid_value")
 
 
