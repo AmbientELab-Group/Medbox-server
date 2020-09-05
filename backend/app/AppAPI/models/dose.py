@@ -15,10 +15,6 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.utils import timezone
 
-##############
-# Validators #
-##############
-
 # new plannedAdministrationTimes need to be in the future
 def plannedAdministrationTimeValidator(time):
     if time < timezone.now():
