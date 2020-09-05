@@ -13,15 +13,6 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.db.models import Q
 
-##############
-# Validators #
-##############
-
-def cleanDevice(self):
-    # check name uniqueness
-    if Device.objects.filter(Q(owner=self.owner) & Q(name=self.name)).exists():
-        raise ValidationError(_("Device with this name already exists, choose different name."), code="duplicated_value")
-
 
 class Device(models.Model):
     # universal identifier
@@ -46,7 +37,9 @@ class Device(models.Model):
     apiToken = models.CharField(max_length=42, default='')
 
     def clean(self):
-        cleanDevice(self);
+        # check name uniqueness
+        if Device.objects.filter(Q(owner=self.owner) & Q(name=self.name)).exists():
+            raise ValidationError(_("Device with this name already exists, choose different name."), code="duplicated_value")
 
     def __str__(self):
         return f"'{self.name}' with id: {self.uuid}"

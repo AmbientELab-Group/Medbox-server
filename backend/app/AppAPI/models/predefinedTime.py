@@ -10,15 +10,6 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.db.models import Q
 
-##############
-# Validators #
-##############
-
-# integrity check
-def cleanPredefinedTime(self):
-    # check name uniqueness
-    if PredefinedTime.objects.filter(Q(owner=self.owner) & Q(name=self.name)).exists():
-        raise ValidationError(_("Predefined time with this name already exists, choose different name."), code="duplicated_value")
 
 class PredefinedTime(models.Model):
     """
@@ -37,7 +28,9 @@ class PredefinedTime(models.Model):
     name = models.CharField(max_length=100)
 
     def clean(self):
-        cleanPredefinedTime(self)
+        # check name uniqueness
+        if PredefinedTime.objects.filter(Q(owner=self.owner) & Q(name=self.name)).exists():
+            raise ValidationError(_("Predefined time with this name already exists, choose different name."), code="duplicated_value")
 
     def __str__(self):
         return f"'{self.name}' at: {self.time}"

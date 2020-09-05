@@ -1,6 +1,6 @@
 """
 Constraints:
-    - if realAdministrationTime is not null the chamber has been emptied and isFull needs to be set to False
+    - if realAdministrationTime is not null the chamber has been emptied and isFull needs to be False
     - there cannot be any other chamber at the same position in the same container
     - the position of the chamber cannot be greater than the capacity of the container
 """
@@ -14,24 +14,6 @@ import uuid as UUID
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.db.models import Q
-
-##############
-# Validators #
-##############
-
-# integrity check
-def cleanChamber(self):
-    # change isFull to false if the dose was administered
-    if self.realAdministrationTime is not None and self.isFull:
-            self.isFull = False
-
-    # make sure there are no two chambers at the same place
-    if Chamber.objects.filter(Q(container=self.container) & Q(position=self.position)).exists():
-        raise ValidationError(_("Two chambers in the same place."), code="integrity_error")
-
-    # validate if the position is in the correct range
-    if self.position < 0 or self.position >= self.container.version.capacity:
-        raise ValidationError(_("Position value outside of container's capacity"), code="invalid_value")
 
     
 class Chamber(models.Model):
@@ -50,9 +32,18 @@ class Chamber(models.Model):
     # time of administration of its content
     realAdministrationTime = models.DateTimeField(null=True, blank=True)
     
-    # validation
     def clean(self):
-        cleanChamber(self)
+        # check if isFull field and realAdministrationTime are in sync
+        if self.realAdministrationTime is not None and self.isFull:
+            raise ValidationError(_("The dose was administered but chamber is still full."), code="integrity_error")
+        
+        # make sure there are no two chambers at the same place
+        if Chamber.objects.filter(Q(container=self.container) & Q(position=self.position)).exists():
+            raise ValidationError(_("Two chambers in the same place."), code="integrity_error")
+
+        # validate if the position is in the correct range
+        if self.position < 0 or self.position >= self.container.capacity:
+            raise ValidationError(_("Position value outside of container's capacity."), code="invalid_value")
 
     def __str__(self):
         return f"At position: {self.position}, admin. time: {self.realAdministrationTime}"

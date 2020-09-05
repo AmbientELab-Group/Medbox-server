@@ -25,16 +25,6 @@ def numberOfPillsValidator(numOfPills):
         raise ValidationError(_("Incorrect number of pills specified."), code="invalid_value")
 
 
-# validate integrity of the whole model
-def cleanDose(self):
-    # check if the onDemand option do not collide with timestamp
-    if self.plannedAdministrationTime == None and self.onDemand == False:
-        raise ValidationError(_("Choose administration time or specify on demand option."), code="integrity_error")
-
-    if self.plannedAdministrationTime != None and self.onDemand == True:
-        raise ValidationError(_("Choose either administration time or on demand option."), code="integrity_error")
-
-
 class Dose(models.Model):
     # universal identifier
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
@@ -58,7 +48,12 @@ class Dose(models.Model):
     onDemand = models.BooleanField(default=False)
 
     def clean(self):
-        cleanDose(self)
+        # check if the onDemand option do not collide with timestamp
+        if self.plannedAdministrationTime == None and self.onDemand == False:
+            raise ValidationError(_("Choose administration time or specify on demand option."), code="integrity_error")
+
+        if self.plannedAdministrationTime != None and self.onDemand == True:
+            raise ValidationError(_("Choose either administration time or on demand option."), code="integrity_error")
 
     def __str__(self):
         return f"{self.medicine} at: {self.plannedAdministrationTime}"
