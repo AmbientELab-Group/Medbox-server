@@ -20,7 +20,6 @@ def plannedAdministrationTimeValidator(time):
         raise ValidationError(_("Choose administration time to be in the future."), code="invalid_value")
 
 
-# numberOfPills has to be positive
 def numberOfPillsValidator(numOfPills):
     if numOfPills < 1:
         raise ValidationError(_("Incorrect number of pills specified."), code="invalid_value")
