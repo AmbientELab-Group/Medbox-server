@@ -14,7 +14,7 @@ class Treatment(models.Model):
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
 
     # reference to the beneficiary of this treatment
-    patient = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="treatments")
+    associatedUser = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="treatments")
 
     # custom name of the treatment
     name = models.CharField(max_length=100)

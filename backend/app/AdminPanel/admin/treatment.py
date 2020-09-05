@@ -10,17 +10,17 @@ class TreatmentAdmin(admin.ModelAdmin):
     list_display = (
         "uuid",
         "name",
-        "patient"
+        "associatedUser"
     )
     list_filter = (
         "name",
-        "patient"
+        "associatedUser"
     )
     fieldsets = (
         (None, {
             "fields": (
                 "name",
-                "patient", 
+                "associatedUser", 
             )
         }),
     )
