@@ -18,7 +18,7 @@ class Medicine(models.Model):
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
 
     # name of the medicine
-    name = models.CharField(max_length=100, default="")
+    name = models.CharField(max_length=100)
 
     # producer of the medicine, not required for now
     producer = models.CharField(max_length=100, default="", blank=True)
