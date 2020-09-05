@@ -38,8 +38,8 @@ class Container(models.Model):
     # universal identifier
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
 
-    # reference to the version of this device
-    version = models.ForeignKey("ContainerVersion", on_delete=models.PROTECT, related_name="containers")
+    # number of chambers in this container
+    capacity = models.PositiveSmallIntegerField()
 
     # reference to device this container belongs to
     device = models.ForeignKey("Device", on_delete=models.CASCADE, related_name="containers")

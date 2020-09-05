@@ -10,7 +10,5 @@ from AppAPI.models.dose import Dose
 from AppAPI.models.predefinedTime import PredefinedTime
 
 from .device import Device
-from .deviceVersion import DeviceVersion
 from .chamber import Chamber
 from .container import Container
-from .containerVersion import ContainerVersion

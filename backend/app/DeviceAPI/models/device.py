@@ -30,8 +30,8 @@ class Device(models.Model):
     # reference to owner of this device
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="ownedDevices")
     
-    # reference to the version of this device
-    version = models.ForeignKey("DeviceVersion", on_delete=models.PROTECT, related_name="devices")
+    # max number of containers which fit into this device
+    capacity = models.PositiveSmallIntegerField()
 
     # name given to the device by user
     name = models.CharField(max_length=100)
