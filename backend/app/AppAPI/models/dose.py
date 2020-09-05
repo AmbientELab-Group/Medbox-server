@@ -15,7 +15,6 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.utils import timezone
 
-# new plannedAdministrationTimes need to be in the future
 def plannedAdministrationTimeValidator(time):
     if time < timezone.now():
         raise ValidationError(_("Choose administration time to be in the future."), code="invalid_value")
