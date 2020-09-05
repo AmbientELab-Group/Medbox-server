@@ -6,6 +6,19 @@ __date__ = "20.5.2020"
 from django.db import models
 import uuid as UUID
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext as _
+from django.db.models import Q
+
+##############
+# Validators #
+##############
+
+# integrity check
+def cleanPredefinedTime(self):
+    # check name uniqueness
+    if PredefinedTime.objects.filter(Q(owner=self.owner) & Q(name=self.name)).exists():
+        raise ValidationError(_("Predefined time with this name already exists, choose different name."), code="duplicated_value")
 
 class PredefinedTime(models.Model):
     """
@@ -18,10 +31,13 @@ class PredefinedTime(models.Model):
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="predefinedTimes")
 
     # administration time
-    time = models.DateTimeField()
+    time = models.TimeField()
 
     # custom name of this time
-    name = models.CharField(max_length=100, default="")
+    name = models.CharField(max_length=100)
+
+    def clean(self):
+        cleanPredefinedTime(self)
 
     def __str__(self):
         return f"'{self.name}' at: {self.time}"
