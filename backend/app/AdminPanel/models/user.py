@@ -10,6 +10,9 @@ import uuid as UUID
 class User(AbstractUser):
     # universal identifier
     uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
+
+    # remove username field
+    username = None
     
     # make email required
     email = models.EmailField("email address", unique=True)
