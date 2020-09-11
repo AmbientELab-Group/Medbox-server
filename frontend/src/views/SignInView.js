@@ -18,7 +18,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Link as RouterLink,
-  Redirect
+  useHistory
 } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import jwt_decode from "jwt-decode";
@@ -26,6 +26,7 @@ import Copyright from "../components/Copyright";
 import { publicAccountFetch } from "../api/publicFetch";
 import ErrorSnack from "../components/ErrorSnack";
 import { useAuth } from "../contexts/AuthContext";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(1, 0, 2),
+    margin: theme.spacing(2, 0, 2),
   },
   submitErrorMessage: {
     color: theme.palette.error.main,
@@ -65,7 +66,6 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center"
   },
   wrapper: {
-    margin: theme.spacing(1),
     position: "relative",
   },
   buttonProgress: {
@@ -77,9 +77,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const SignInView = () => {
+  const classes = useStyles();
+  const {register, handleSubmit, errors} = useForm({mode: "onBlur"});
+  const [ , setAuthState ] = useAuth();
+  const [ submitSuccess, setSubmitSuccess ] = useState();
+  const [ submitError, setSubmitError ] = useState();
+  const [ isLoading, setLoading ] = useState(false);
+  const [ connectionError, setConnectionError ] = useState(false);
+  const [ isPasswordHidden, setPasswordHidden ] = useState(true);
+  const history = useHistory();
 
-
-const SignInView = (props) => {
   const validationSchemas = {
     email: {
       required: "Email is required.",
@@ -105,16 +113,6 @@ const SignInView = (props) => {
     }
   };
 
-  const classes = useStyles();
-  const {register, handleSubmit, errors} = useForm({mode: "onBlur"});
-  const [ , setAuthState ] = useAuth();
-  const [ submitSuccess, setSubmitSuccess ] = useState();
-  const [ submitError, setSubmitError ] = useState();
-  const [ isLoading, setLoading ] = useState(false);
-  const [ redirectOnLogin, setRedirectOnLogin ] = useState(false);
-  const [ connectionError, setConnectionError ] = useState(false);
-  const [ isPasswordHidden, setPasswordHidden ] = useState(true);
-
   const onSubmit = async credentials => {
     try {
       setLoading(true);
@@ -135,17 +133,33 @@ const SignInView = (props) => {
           token: data.refresh,
           expiresAt: refreshDecoded.exp,
         },
-        userInfo: {
-          id: accessDecoded.user_id,
-        }
       };
+
+      try {
+        const resp = await publicAccountFetch.get(`/users/${accessDecoded.user_id}`, {
+          headers: {
+            "Authorization": `Bearer ${data.access}`
+          }
+        });
+
+        const info = resp.data;
+
+        stateData.userInfo = {
+          id: accessDecoded.user_id,
+          email: info.email,
+          firstName: info.first_name,
+          lastName: info.last_name
+        };
+      } catch (error) {
+        console.error(error);
+      }
 
       setAuthState(stateData);
       setSubmitSuccess("Authentication successful!");
       setSubmitError("");
 
-      setTimeout(() => {
-        setRedirectOnLogin(true);
+      setTimeout(async () => {
+        history.push('/dashboard');
       }, 1000);
     } catch (error) {
       setLoading(false);
@@ -154,11 +168,6 @@ const SignInView = (props) => {
         console.error(data.detail);
         setSubmitError(data.detail);
         setSubmitSuccess("");
-        // if (data.errorList) {
-        //     data.errorList.forEach((error) => {
-        //         setError(error.field, "manual", error.message);
-        //     }); 
-        // }
       }
       else if (error.request) {
         console.log("error request");
@@ -173,8 +182,6 @@ const SignInView = (props) => {
   }
 
   return (
-    <>
-    {redirectOnLogin && <Redirect to="/dashboard"/>}
     <Grid container component="main" className={classes.root}>
       <ErrorSnack error={connectionError} setError={setConnectionError}>
         Please check your internet connection and try again...
@@ -227,7 +234,7 @@ const SignInView = (props) => {
                   </IconButton>
                 </InputAdornment>
                 )
-            }}
+              }}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -267,7 +274,6 @@ const SignInView = (props) => {
         </div>
       </Grid>
     </Grid>
-    </>
   );
 }
 

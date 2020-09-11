@@ -10,13 +10,20 @@ from AdminPanel.serializers.user import (
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import permissions
 
-# working example of restricted endpoint, to remove later
+# endpoint for retriving personal information for authenticated user
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
-def user_list(request):
+def user_info(request, pk):
+    try:
+        user = User.objects.get(pk=pk)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
     if request.method == "GET":
-        users = User.objects.all()
-        serializers = UserSerializer(users, many=True)
+        if request.user.uuid != pk:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        serializers = UserSerializer(user)
         return Response(serializers.data)
 
 

@@ -24,9 +24,9 @@ const App = props => {
 					</Route>
 					<Route path="/dashboard" render={() => (
 						isAuthenticated() ? 
-							<DashboardView/>
+						<DashboardView/>
 							:
-							<Redirect to="/signin"/>
+						<Redirect to="/signin"/>
 					)}/>
 					<Route path="/signin" component={SignInView}/>
 					<Route path="/signup" component={SignUpView}/>
