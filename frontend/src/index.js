@@ -2,12 +2,18 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import CssBaseline from "@material-ui/core/CssBaseline"
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { AuthProvider } from "./contexts/AuthContext";
+import { FetchProvider } from "./contexts/FetchContext";
 
 ReactDOM.render(
   <React.StrictMode>
     <CssBaseline />
-      <App />
+      <AuthProvider>
+        <FetchProvider>
+          <App />
+        </FetchProvider>
+      </AuthProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

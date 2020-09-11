@@ -25,6 +25,7 @@ import jwt_decode from "jwt-decode";
 import Copyright from "../components/Copyright";
 import { publicAccountFetch } from "../api/publicFetch";
 import ErrorSnack from "../components/ErrorSnack";
+import { useAuth } from "../contexts/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const SignInView = () => {
+const SignInView = (props) => {
   const validationSchemas = {
     email: {
       required: "Email is required.",
@@ -106,6 +107,7 @@ const SignInView = () => {
 
   const classes = useStyles();
   const {register, handleSubmit, errors} = useForm({mode: "onBlur"});
+  const [ , setAuthState ] = useAuth();
   const [ submitSuccess, setSubmitSuccess ] = useState();
   const [ submitError, setSubmitError ] = useState();
   const [ isLoading, setLoading ] = useState(false);
@@ -121,12 +123,26 @@ const SignInView = () => {
         credentials
       );
 
+      const accessDecoded = jwt_decode(data.access);
+      const refreshDecoded = jwt_decode(data.refresh);
+
+      const stateData = {
+        access: {
+          token: data.access,
+          expiresAt: accessDecoded.exp,
+        },
+        refresh: {
+          token: data.refresh,
+          expiresAt: refreshDecoded.exp,
+        },
+        userInfo: {
+          id: accessDecoded.user_id,
+        }
+      };
+
+      setAuthState(stateData);
       setSubmitSuccess("Authentication successful!");
       setSubmitError("");
-      
-      console.log(data);
-      console.log(jwt_decode(data.access));
-      console.log(jwt_decode(data.refresh));
 
       setTimeout(() => {
         setRedirectOnLogin(true);
@@ -157,8 +173,9 @@ const SignInView = () => {
   }
 
   return (
+    <>
+    {redirectOnLogin && <Redirect to="/dashboard"/>}
     <Grid container component="main" className={classes.root}>
-      {redirectOnLogin && <Redirect to="/dashboard" />}
       <ErrorSnack error={connectionError} setError={setConnectionError}>
         Please check your internet connection and try again...
       </ErrorSnack>
@@ -250,6 +267,7 @@ const SignInView = () => {
         </div>
       </Grid>
     </Grid>
+    </>
   );
 }
 

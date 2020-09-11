@@ -14,6 +14,7 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import MenuIcon from "@material-ui/icons/Menu";
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import { mainListItems, secondaryListItems } from "../components/listItems";
@@ -21,6 +22,7 @@ import Chart from "../components/Chart";
 import Deposits from "../components/Deposits";
 import Orders from "../components/Orders";
 import Copyright from "../components/Copyright"
+import { useAuth } from "../contexts/AuthContext";
 
 const drawerWidth = 240;
 
@@ -106,12 +108,16 @@ const useStyles = makeStyles((theme) => ({
 export default function Dashboard() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const [ ,,, logout ] = useAuth();
   const handleDrawerOpen = () => {
     setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  const handleLogout = () => {
+    logout();
+  }
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
@@ -134,6 +140,9 @@ export default function Dashboard() {
             <Badge badgeContent={4} color="secondary">
               <NotificationsIcon />
             </Badge>
+          </IconButton>
+          <IconButton color="inherit" onClick={handleLogout} aria-label="log out">
+            <MeetingRoomIcon/>
           </IconButton>
         </Toolbar>
       </AppBar>
