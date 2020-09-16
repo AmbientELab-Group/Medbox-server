@@ -7,12 +7,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Copyright from "../components/Copyright";
 import { useHistory } from "react-router-dom";
-import jwt_decode from "jwt-decode";
 import { publicAccountFetch } from "../api/publicFetch";
 import { useForm } from "react-hook-form";
 import ErrorSnack from "../components/ErrorSnack";
-import { useAuth } from "../contexts/AuthContext";
 import SignUpForm from "../components/SignUpForm";
+import { login } from "../contexts/authProvider";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -30,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
 const SignUpView = () => {
     const classes = useStyles();
     const { register, handleSubmit, errors, getValues, setError } = useForm({mode: "onBlur"});
-    const [ , setAuthState ] = useAuth();
     const [ submitSuccess, setSubmitSuccess ] = useState("");
     const [ submitError, setSubmitError ] = useState("");
     const [ isLoading, setLoading ] = useState(false);
@@ -41,34 +39,13 @@ const SignUpView = () => {
         try {
             setLoading(true);
             const { data } = await publicAccountFetch.post(
-            "/signup",
-            credentials
+                "/signup",
+                credentials
             );
-
-            const accessDecoded = jwt_decode(data.access_token);
-            const refreshDecoded = jwt_decode(data.refresh_token);
-
-            const stateData = {
-                access: {
-                    token: data.access_token,
-                    expiresAt: accessDecoded.exp,
-                },
-                refresh: {
-                    token: data.refresh_token,
-                    expiresAt: refreshDecoded.exp,
-                },
-                userInfo: {
-                    id: accessDecoded.user_id,
-                    email: data.email,
-                    firstName: data.first_name,
-                    lastName: data.last_name
-                }
-            };
-
-            setAuthState(stateData);
+            
+            login({access: data.access_token, refresh: data.refresh_token});
             setSubmitSuccess(data.response);
             setSubmitError("");
-
             setTimeout(() => {
                 history.push('/dashboard');
             }, 1000);

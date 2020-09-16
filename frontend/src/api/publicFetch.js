@@ -5,4 +5,8 @@ const publicAccountFetch = axios.create({
   baseURL: API_URL + "/account"
 });
 
-export { publicAccountFetch };
+const publicTokenFetch = axios.create({
+  baseURL: API_URL + "/token"
+});
+
+export { publicAccountFetch, publicTokenFetch };

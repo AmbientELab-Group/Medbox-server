@@ -7,14 +7,13 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
-import jwt_decode from "jwt-decode";
 import Copyright from "../components/Copyright";
 import { publicAccountFetch } from "../api/publicFetch";
 import ErrorSnack from "../components/ErrorSnack";
-import { useAuth } from "../contexts/AuthContext";
 import SignInForm from "../components/SignInForm";
 import { useForm } from "react-hook-form";
-
+import { login } from "../contexts/authProvider";
+ 
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -42,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
 
 const SignInView = () => {
     const classes = useStyles();
-    const [ , setAuthState ] = useAuth();
     const { register, handleSubmit, errors } = useForm({mode: "onBlur"});
     const [ submitSuccess, setSubmitSuccess ] = useState("");
     const [ submitError, setSubmitError ] = useState("");
@@ -57,44 +55,10 @@ const SignInView = () => {
                 "/signin",
                 credentials
             );
-
-            const accessDecoded = jwt_decode(data.access);
-            const refreshDecoded = jwt_decode(data.refresh);
-
-            const stateData = {
-                access: {
-                token: data.access,
-                expiresAt: accessDecoded.exp,
-                },
-                refresh: {
-                token: data.refresh,
-                expiresAt: refreshDecoded.exp,
-                },
-            };
-
-            try {
-                const resp = await publicAccountFetch.get(`/users/${accessDecoded.user_id}`, {
-                    headers: {
-                        "Authorization": `Bearer ${data.access}`
-                    }
-                });
-
-                const info = resp.data;
-
-                stateData.userInfo = {
-                    id: accessDecoded.user_id,
-                    email: info.email,
-                    firstName: info.first_name,
-                    lastName: info.last_name
-                };
-            } catch (error) {
-                console.error(error);
-            }
-
-            setAuthState(stateData);
+            
+            login(data);
             setSubmitSuccess("Authentication successful!");
             setSubmitError("");
-
             setTimeout(async () => {
                 history.push('/dashboard');
             }, 1000);
