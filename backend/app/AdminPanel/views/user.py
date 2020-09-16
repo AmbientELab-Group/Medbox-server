@@ -35,9 +35,6 @@ def sign_up_view(request):
     if serializer.is_valid():
         user = serializer.save()
         data["response"] = "Successfully registered a new user."
-        data["email"] = user.email
-        data["first_name"] = user.first_name
-        data["last_name"] = user.last_name
         refresh = RefreshToken.for_user(user)
         data["refresh_token"] = str(refresh)
         data["access_token"] = str(refresh.access_token)
