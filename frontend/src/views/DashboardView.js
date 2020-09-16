@@ -23,6 +23,7 @@ import Deposits from "../components/Deposits";
 import Orders from "../components/Orders";
 import Copyright from "../components/Copyright"
 import { logout, checkAuth } from "../contexts/authProvider";
+import logo from "../assets/img/logo_transparent.png";
 
 const drawerWidth = 240;
 
@@ -41,18 +42,19 @@ const useStyles = makeStyles((theme) => ({
         ...theme.mixins.toolbar,
     },
     appBar: {
+        color: "white",
         zIndex: theme.zIndex.drawer + 1,
         transition: theme.transitions.create(["width", "margin"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
         }),
     },
     appBarShift: {
         marginLeft: drawerWidth,
         width: `calc(100% - ${drawerWidth}px)`,
         transition: theme.transitions.create(["width", "margin"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
         }),
     },
     menuButton: {
@@ -69,19 +71,19 @@ const useStyles = makeStyles((theme) => ({
         whiteSpace: "nowrap",
         width: drawerWidth,
         transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
         }),
     },
     drawerPaperClose: {
         overflowX: "hidden",
         transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
         }),
         width: theme.spacing(7),
         [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9),
+            width: theme.spacing(9),
         },
     },
     appBarSpacer: theme.mixins.toolbar,
@@ -103,6 +105,10 @@ const useStyles = makeStyles((theme) => ({
     fixedHeight: {
         height: 240,
     },
+    logoutIcon: {
+        paddingRight: 0
+    }
+
 }));
 
 const Dashboard = () => {
@@ -144,22 +150,23 @@ const Dashboard = () => {
                     <NotificationsIcon />
                     </Badge>
                 </IconButton>
-                <IconButton color="inherit" onClick={handleLogout} aria-label="log out">
-                    <MeetingRoomIcon/>
+                <IconButton color="inherit" onClick={handleLogout} aria-label="log out" >
+                    <MeetingRoomIcon className={classes.logoutIcon}/>
                 </IconButton>
                 </Toolbar>
             </AppBar>
             <Drawer
                 variant="permanent"
                 classes={{
-                paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+                    paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
                 }}
                 open={open}
             >
                 <div className={classes.toolbarIcon}>
-                <IconButton onClick={handleDrawerClose}>
-                    <ChevronLeftIcon />
-                </IconButton>
+                    <img src={logo} width={170} alt="Logo"/>
+                    <IconButton onClick={handleDrawerClose}>
+                        <ChevronLeftIcon />
+                    </IconButton>
                 </div>
                 <Divider />
                 <List>{mainListItems}</List>
