@@ -67,7 +67,8 @@ const CustomAppBar = ({ drawerHook, ...rest }) => {
     };
 
     const getTitle = () => {
-        const [title] = location.pathname.split("/").slice(-1);
+        const tokens = location.pathname.split("/");
+        const title = tokens[2] || tokens[1];
         return title;
     };
 
