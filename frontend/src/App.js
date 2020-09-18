@@ -11,9 +11,9 @@ import HomeView from "./views/HomeView";
 import SignInView from "./views/SignInView";
 import SignUpView from	"./views/SignUpView";
 import ProtectedRoute from "./components/ProtectedRoute";
-const DashboardView = lazy(async () => {
+const ProtectedLayout = lazy(async () => {
     const [moduleExports] = await Promise.all([
-        import("./views/DashboardView"),
+        import("./views/ProtectedLayout"),
         new Promise(resolve => setTimeout(resolve, 500))
     ]);
     return moduleExports;
@@ -47,7 +47,7 @@ const App = props => {
                         <HomeView/>
                     </Route>
                     <ProtectedRoute path="/dashboard" redirectPath="/signin">
-                        <DashboardView/>
+                        <ProtectedLayout/>
                     </ProtectedRoute>
                     <Route path="/signin" component={SignInView}/>
                     <Route path="/signup" component={SignUpView}/>

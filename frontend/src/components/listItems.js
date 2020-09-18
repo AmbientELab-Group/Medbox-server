@@ -8,28 +8,29 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import SettingsIcon from '@material-ui/icons/Settings';
+import { Link as RouterLink } from "react-router-dom";
 
 export const mainListItems = (
     <>
-    <ListItem button>
+    <ListItem button component={RouterLink} to="/dashboard">
         <ListItemIcon>
             <DashboardIcon />
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={RouterLink} to="/dashboard/devices">
         <ListItemIcon>
             <AllInboxIcon />
         </ListItemIcon>
         <ListItemText primary="Devices" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={RouterLink} to="/dashboard/treatments">
         <ListItemIcon>
             <LocalHospitalIcon />
         </ListItemIcon>
         <ListItemText primary="Treatments" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={RouterLink} to="/dashboard/settings">
         <ListItemIcon>
             <SettingsIcon />
         </ListItemIcon>

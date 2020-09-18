@@ -11,6 +11,7 @@ const theme = createMuiTheme({
             main: "#358184"
         },
     },
+    drawerWidth: 240
 });
 
 ReactDOM.render(
