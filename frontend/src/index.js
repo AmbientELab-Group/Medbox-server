@@ -8,7 +8,9 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: "#358184"
+            light: "#34c5d0",
+            main: "#358184",
+            dark: "#1f4a4c"
         },
     },
     drawerWidth: 240

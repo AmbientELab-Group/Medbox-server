@@ -8,6 +8,8 @@ import DashboardView from "./DashboardView";
 import { checkAuth } from "../contexts/authProvider";
 import CustomAppBar from "../components/CustomAppBar";
 import CustomDrawer from "../components/CustomDrawer";
+import DevicesView from "./DevicesView";
+import SingleDeviceView from "./SingleDeviceView";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -47,8 +49,11 @@ const ProtectedLayout = () => {
                         <Route exact path={`${routeMatch.path}`}>
                            <DashboardView/>
                         </Route>
-                        <Route path={`${routeMatch.path}/devices`}>
-                            <h1>Devices</h1>
+                        <Route exact path={`${routeMatch.path}/devices`}>
+                            <DevicesView/>
+                        </Route>
+                        <Route path={`${routeMatch.path}/devices/:id`}>
+                            <SingleDeviceView/>
                         </Route>
                         <Route path={`${routeMatch.path}/treatments`}>
                             <h1>Tretments</h1>
