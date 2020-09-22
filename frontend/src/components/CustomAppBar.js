@@ -1,16 +1,17 @@
-import React from 'react';
+import React from "react";
 import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { useMediaQuery } from '@material-ui/core';
 import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import Badge from "@material-ui/core/Badge";
 import IconButton from "@material-ui/core/IconButton";
 import Toolbar from "@material-ui/core/Toolbar";
 import MenuIcon from "@material-ui/icons/Menu";
-import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import { logout } from "../contexts/authProvider";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -57,6 +58,8 @@ const CustomAppBar = ({ drawerHook, ...rest }) => {
     const classes = useStyles();
     const { openDrawer, setDrawerOpen } = drawerHook;
     const location = useLocation();
+    const theme = useTheme();
+    const upSm = useMediaQuery(theme.breakpoints.up("sm"));
 
     const handleDrawerOpen = () => {
         setDrawerOpen(true);
@@ -73,7 +76,7 @@ const CustomAppBar = ({ drawerHook, ...rest }) => {
     };
 
     return (
-        <AppBar position="absolute" className={clsx(classes.appBar, openDrawer && classes.appBarShift)}>
+        <AppBar position="absolute" className={clsx(classes.appBar, openDrawer && upSm && classes.appBarShift)}>
             <Toolbar className={classes.toolbar}>
                 <IconButton
                     edge="start"
@@ -84,7 +87,7 @@ const CustomAppBar = ({ drawerHook, ...rest }) => {
                 >
                     <MenuIcon />
                 </IconButton>
-                <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+                <Typography component="h1" variant="h3" color="inherit" noWrap className={classes.title}>
                     {getTitle()}
                 </Typography>
                 <IconButton color="inherit">

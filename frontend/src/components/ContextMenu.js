@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import Popover from "@material-ui/core/Popover";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import IconButton from "@material-ui/core/IconButton";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import { useHistory } from "react-router-dom";
 
 const ContextMenu = ({editUrl}) => {
     const history = useHistory();
@@ -41,7 +41,10 @@ const ContextMenu = ({editUrl}) => {
             }}
         >
             <List style={{width: 100}}>
-                <ListItem button onClick={()=>history.push(editUrl)}>
+                <ListItem button onClick={()=>{
+                    handleClose();
+                    history.push(editUrl);
+                }}>
                     Edit
                 </ListItem>
                 <ListItem button>

@@ -13,6 +13,26 @@ const theme = createMuiTheme({
             dark: "#1f4a4c"
         },
     },
+    typography: {
+        h1: {
+           fontSize: "3rem" 
+        },
+        h2: {
+            fontSize: "1.625rem"
+        },
+        h3: {
+            fontSize: "1.5rem"
+        },
+        h4: {
+            fontSize: "1.0625rem"
+        },
+        h5: {
+            fontSize: "0.75rem"
+        },
+        h6: {
+            fontSize: "0.625rem"
+        }
+    },
     drawerWidth: 240
 });
 

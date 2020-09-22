@@ -1,7 +1,7 @@
 import React from "react";
+import { Link as RouterLink } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
-import { Link as RouterLink } from "react-router-dom";
 
 const Copyright = () => {
     return (

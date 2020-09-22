@@ -1,9 +1,7 @@
 import React from "react";
-import Container from "@material-ui/core/Container";
+import { useParams } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import DeviceInfoCard from "../components/DeviceInfoCard";
-import { makeStyles } from "@material-ui/core/styles";
-import { useParams } from "react-router-dom";
 
 const boxes = [
     {
@@ -29,25 +27,15 @@ const boxes = [
     }
 ];
 
-const useStyles = makeStyles((theme) => ({
-    container: {
-        paddingTop: theme.spacing(4),
-        paddingBottom: theme.spacing(4),
-    },
-}));
-
 const SingleDeviceView = () => {
-    const classes = useStyles();
     const { id } = useParams();
 
     return (
-        <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={6} lg={6}>
-                    <DeviceInfoCard device={boxes.find((box)=>box.id===id)}/>
-                </Grid>
+        <Grid container spacing={3}>
+            <Grid item xs={12} md={6} lg={6}>
+                <DeviceInfoCard device={boxes.find((box)=>box.id===id)}/>
             </Grid>
-        </Container>
+        </Grid>
     );
 };
 

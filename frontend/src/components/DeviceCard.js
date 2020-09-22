@@ -1,11 +1,15 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import StateIcon from "@material-ui/icons/FiberManualRecord";
 import LoopIcon from "@material-ui/icons/Loop";
-import { Button, Card, CardActions, CardContent, Typography, useMediaQuery, useTheme } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent"; 
+import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import ContextMenu from "./ContextMenu";
-import { useHistory } from "react-router-dom";
 
 const FillBar = withStyles((theme) => ({
     root: {
@@ -101,7 +105,7 @@ const DeviceCard = ({ device }) => {
                 <div className={classes.statusIndicator}>
                     <ConnectionState state={device.state}/>
                 </div>
-                <Typography variant="h5" noWrap>
+                <Typography variant="h3" noWrap>
                     {device.name}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">

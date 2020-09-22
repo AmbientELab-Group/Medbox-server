@@ -1,16 +1,18 @@
 import React, { useEffect } from "react";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { checkAuth } from "../contexts/authProvider";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
-import Copyright from "../components/Copyright"
-import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import DashboardView from "./DashboardView";
-import { checkAuth } from "../contexts/authProvider";
-import CustomAppBar from "../components/CustomAppBar";
-import CustomDrawer from "../components/CustomDrawer";
 import DevicesView from "./DevicesView";
 import SingleDeviceView from "./SingleDeviceView";
-
+import TreatmentsView from "./TreatmentsView";
+import Copyright from "../components/Copyright"
+import CustomAppBar from "../components/CustomAppBar";
+import CustomDrawer from "../components/CustomDrawer";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,12 +28,17 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
     },
+    fab: {
+        position: "fixed",
+        right: "5vw",
+        bottom: "5vh"
+    }
 }));
 
 const ProtectedLayout = () => {
     const classes = useStyles();
     const routeMatch = useRouteMatch();
-    const [openDrawer, setDrawerOpen] = React.useState(true);
+    const [openDrawer, setDrawerOpen] = React.useState(false);
 
     useEffect(() => {
         checkAuth();
@@ -43,7 +50,7 @@ const ProtectedLayout = () => {
             <CustomAppBar drawerHook={{openDrawer, setDrawerOpen}}/>
             <CustomDrawer drawerHook={{openDrawer, setDrawerOpen}}/>
             <main className={classes.content}>
-                <div className={classes.appBarSpacer} />
+                <div className={classes.appBarSpacer}/>
                 <Container maxWidth="lg" className={classes.container}>
                     <Switch>
                         <Route exact path={`${routeMatch.path}`}>
@@ -55,8 +62,11 @@ const ProtectedLayout = () => {
                         <Route path={`${routeMatch.path}/devices/:id`}>
                             <SingleDeviceView/>
                         </Route>
-                        <Route path={`${routeMatch.path}/treatments`}>
-                            <h1>Tretments</h1>
+                        <Route exact path={`${routeMatch.path}/treatments`}>
+                            <TreatmentsView/>
+                        </Route>
+                        <Route path={`${routeMatch.path}/treatments/:id`}>
+                            <SingleDeviceView/>
                         </Route>
                         <Route path={`${routeMatch.path}/settings`}>
                             <h1>Settings</h1>
@@ -69,6 +79,9 @@ const ProtectedLayout = () => {
                         <Copyright />
                     </Box>
                 </Container>
+                <Fab className={classes.fab}>
+                    <AddIcon/>
+                </Fab>
             </main>
         </div>
     );
