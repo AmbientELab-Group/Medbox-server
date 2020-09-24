@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const MainDrawerList = () => {
+const MainDrawerList = ({drawerState}) => {
     const classes = useStyles();
     const [devicesExpanded, setDevicesExpanded] = useState(false);
     const [treatmentsExpanded, setTreatmentsExpanded] = useState(false);
@@ -135,6 +135,7 @@ const MainDrawerList = () => {
         setTreatmentsExpanded(false);
     };
 
+
     return (
         <List component="nav">
             <ListItem button component={RouterLink} to="/dashboard">
@@ -158,7 +159,7 @@ const MainDrawerList = () => {
                     </IconButton>
                 }
             </ListItem>
-            <Collapse in={devicesExpanded} timeout="auto" unmountOnExit>
+            <Collapse in={drawerState && devicesExpanded} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                     { boxes.slice(0, 6).map((box) => (
                         <ListItem 
@@ -198,7 +199,7 @@ const MainDrawerList = () => {
                     </IconButton>
                 }
             </ListItem>
-            <Collapse in={treatmentsExpanded} timeout="auto" unmountOnExit>
+            <Collapse in={drawerState && treatmentsExpanded} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                     { treatments.slice(0, 6).map((treatment) => (
                         <ListItem 

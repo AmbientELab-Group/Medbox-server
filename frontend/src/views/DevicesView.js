@@ -23,6 +23,20 @@ const boxes = [
         state: "connecting",
         owner: "Karen",
         fill: 80
+    },
+    {
+        id: 4,
+        name: "Box4",
+        state: "on",
+        owner: "Randall",
+        fill: 35
+    },
+    {
+        id: 5,
+        name: "Box5",
+        state: "off",
+        owner: "Felix",
+        fill: 73
     }
 ];
 

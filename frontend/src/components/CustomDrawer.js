@@ -66,7 +66,7 @@ const CustomDrawer = ({drawerHook, ...rest}) => {
                 </IconButton>
             </div>
             <Divider />
-            <MainDrawerList/>
+            <MainDrawerList drawerState={openDrawer}/>
         </Drawer>
     )
 }

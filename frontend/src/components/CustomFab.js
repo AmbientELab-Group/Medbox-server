@@ -20,9 +20,12 @@ const StyledTooltip = withStyles((theme) => ({
 const useStyles = makeStyles((theme) => ({
     fab: {
         position: "fixed",
-        right: "5vw",
-        bottom: "5vh"
-    },
+        right: theme.spacing(3),
+        [theme.breakpoints.up("md")]: {
+            right: "5vw",
+        },
+        top: "80vh"
+    }
 }));
 
 const CustomFab = () => {
@@ -74,7 +77,7 @@ const CustomFab = () => {
                 unmountOnExit
             >
                 <StyledTooltip title={desc.title} aria-label={desc.title} placement="left" onClick={()=>console.log("tooltip")}>
-                    <Fab className={classes.fab} color="secondary">
+                    <Fab className={classes.fab} color="primary">
                         {desc.icon}
                     </Fab>
                 </StyledTooltip>

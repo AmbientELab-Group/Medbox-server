@@ -12,6 +12,7 @@ import Copyright from "../components/Copyright"
 import CustomAppBar from "../components/CustomAppBar";
 import CustomDrawer from "../components/CustomDrawer";
 import CustomFab from "../components/CustomFab";
+import SettingsView from "./SettingsView";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,6 +27,11 @@ const useStyles = makeStyles((theme) => ({
     container: {
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
+        minHeight: "calc(100vh - 140px)",
+        position:"relative"
+    },
+    copyright: {
+        padding: theme.spacing(2)
     }
 }));
 
@@ -65,17 +71,17 @@ const ProtectedLayout = () => {
                             <SingleDeviceView/>
                         </Route>
                         <Route path={`${routeMatch.path}/settings`}>
-                            <h1>Settings</h1>
+                            <SettingsView/>
                         </Route>
                         <Route path={`${routeMatch.path}/*`}>
                             <Redirect to={`${routeMatch.url}`}/>
                         </Route>
                     </Switch>
-                    <Box pt={4}>
-                        <Copyright />
-                    </Box>
+                    <CustomFab/>
                 </Container>
-                <CustomFab/>
+                <Box className={classes.copyright}>
+                    <Copyright />
+                </Box>
             </main>
         </div>
     );
