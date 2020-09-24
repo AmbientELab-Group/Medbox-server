@@ -11,8 +11,7 @@ import TreatmentsView from "./TreatmentsView";
 import Copyright from "../components/Copyright"
 import CustomAppBar from "../components/CustomAppBar";
 import CustomDrawer from "../components/CustomDrawer";
-import Fab from "@material-ui/core/Fab";
-import AddIcon from "@material-ui/icons/Add";
+import CustomFab from "../components/CustomFab";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,11 +26,6 @@ const useStyles = makeStyles((theme) => ({
     container: {
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
-    },
-    fab: {
-        position: "fixed",
-        right: "5vw",
-        bottom: "5vh"
     }
 }));
 
@@ -39,6 +33,8 @@ const ProtectedLayout = () => {
     const classes = useStyles();
     const routeMatch = useRouteMatch();
     const [openDrawer, setDrawerOpen] = React.useState(false);
+
+    
 
     useEffect(() => {
         checkAuth();
@@ -79,9 +75,7 @@ const ProtectedLayout = () => {
                         <Copyright />
                     </Box>
                 </Container>
-                <Fab className={classes.fab}>
-                    <AddIcon/>
-                </Fab>
+                <CustomFab/>
             </main>
         </div>
     );

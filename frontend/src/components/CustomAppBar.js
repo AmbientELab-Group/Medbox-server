@@ -35,7 +35,9 @@ const useStyles = makeStyles((theme) => ({
         }),
     },
     menuButton: {
-        marginRight: 36,
+        [theme.breakpoints.up("sm")]: {
+            marginRight: 36,
+        }
     },
     menuButtonHidden: {
         display: "none",
@@ -43,11 +45,6 @@ const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 1,
         textTransform: "capitalize"
-    },
-    content: {
-        flexGrow: 1,
-        height: "100vh",
-        overflow: "auto",
     },
     logoutIcon: {
         paddingRight: 0

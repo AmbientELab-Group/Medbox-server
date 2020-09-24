@@ -95,7 +95,7 @@ const SignInView = () => {
             <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
             </Avatar>
-            <Typography component="h1" variant="h5">
+            <Typography component="h1" variant="h3">
                 Sign in
             </Typography>
             <SignInForm 

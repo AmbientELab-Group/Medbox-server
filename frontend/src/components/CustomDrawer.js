@@ -52,21 +52,22 @@ const CustomDrawer = ({drawerHook, ...rest}) => {
     
     return (
         <Drawer
-                variant={upMd ? "permanent" : "temporary"}
-                classes={{
-                    paper: clsx(classes.drawerPaper, !openDrawer && classes.drawerPaperClose),
-                }}
-                open={openDrawer}
-            >
-                <div className={classes.toolbarIcon}>
-                    <img src={logo} width={170} alt="Logo"/>
-                    <IconButton onClick={handleDrawerClose}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </div>
-                <Divider />
-                <MainDrawerList/>
-            </Drawer>
+            variant={upMd ? "permanent" : "temporary"}
+            classes={{
+                paper: clsx(classes.drawerPaper, !openDrawer && classes.drawerPaperClose),
+            }}
+            open={openDrawer}
+            onClose={handleDrawerClose}
+        >
+            <div className={classes.toolbarIcon}>
+                <img src={logo} width={170} alt="Logo"/>
+                <IconButton onClick={handleDrawerClose}>
+                    <ChevronLeftIcon />
+                </IconButton>
+            </div>
+            <Divider />
+            <MainDrawerList/>
+        </Drawer>
     )
 }
 
