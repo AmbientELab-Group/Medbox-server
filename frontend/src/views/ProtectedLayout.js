@@ -13,6 +13,7 @@ import CustomAppBar from "../components/CustomAppBar";
 import CustomDrawer from "../components/CustomDrawer";
 import CustomFab from "../components/CustomFab";
 import SettingsView from "./SettingsView";
+import { SettingsProvider } from "../contexts/settingsProvider";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -71,7 +72,9 @@ const ProtectedLayout = () => {
                             <SingleDeviceView/>
                         </Route>
                         <Route path={`${routeMatch.path}/settings`}>
-                            <SettingsView/>
+                            <SettingsProvider>
+                                <SettingsView/>
+                            </SettingsProvider>
                         </Route>
                         <Route path={`${routeMatch.path}/*`}>
                             <Redirect to={`${routeMatch.url}`}/>

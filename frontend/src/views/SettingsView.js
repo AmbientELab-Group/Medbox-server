@@ -4,7 +4,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { Button, Toolbar } from "@material-ui/core";
+import Button from "@material-ui/core/Button"
+import Toolbar from "@material-ui/core/Toolbar";
+import settingTabs from "../components/settingsTabs";
+import { Grid } from "@material-ui/core";
+import { useSettings } from "../contexts/settingsProvider";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -27,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        padding: theme.spacing(3)
+        padding: theme.spacing(3),
     },
     buttons: {
         justifyContent: "flex-end"
@@ -41,38 +45,17 @@ const a11yProps = (index) => {
     };
 }
 
-const tabs = [
-    {
-        name: "Profile",
-    },
-    {
-        name: "Devices"
-    },
-    {
-        name: "Notifications"
-    },
-    {
-        name: "Time"
-    },
-    {
-        name: "Dashboard"
-    },
-    {
-        name: "Language"
-    },
-    {
-        name: "Help"
-    }
-]
-
 
 const SettingsView = () => {
     const classes = useStyles();
     const [tab, setTab] = useState(0);
+    const [options] = useSettings();
 
     const handleChange = (event, newTab) => {
         setTab(newTab);
     };
+
+    console.log(options);
 
     return (
         <Paper className={classes.root}>
@@ -84,7 +67,7 @@ const SettingsView = () => {
                 aria-label="Setting tabs"
                 className={classes.tabs}
             >
-                { tabs.map((option, index) => (
+                { settingTabs.map((option, index) => (
                     <Tab 
                         key={option.name} 
                         label={option.name} 
@@ -94,9 +77,13 @@ const SettingsView = () => {
                 ))}
             </Tabs>
             <div className={classes.panel}>
-                <div>
-                    Settings
-                </div>
+                <Grid container>
+                    <Grid item sm={1} md={2}/>
+                    <Grid item sm={10} md={8}>
+                        { settingTabs[tab].component }
+                    </Grid>
+                    <Grid item sm={1} md={2}/>
+                </Grid>
                 <Toolbar className={classes.buttons}>
                     <Button color="primary">
                         Save
@@ -106,27 +93,6 @@ const SettingsView = () => {
                     </Button>
                 </Toolbar>
             </div>
-            {/* <TabPanel value={value} index={0}>
-                Item One
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                Item Two
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-                Item Three
-            </TabPanel>
-            <TabPanel value={value} index={3}>
-                Item Four
-            </TabPanel>
-            <TabPanel value={value} index={4}>
-                Item Five
-            </TabPanel>
-            <TabPanel value={value} index={5}>
-                Item Six
-            </TabPanel>
-            <TabPanel value={value} index={6}>
-                Item Seven
-            </TabPanel> */}
         </Paper>
     );
 }
