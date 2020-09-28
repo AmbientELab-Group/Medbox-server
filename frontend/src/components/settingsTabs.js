@@ -1,5 +1,5 @@
 import { Checkbox, FormControlLabel, makeStyles, Select, Switch, TextField, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import { useSettings } from "../contexts/settingsProvider";
 
@@ -82,10 +82,22 @@ const Notifications = () => {
                     replenish: !options.Notifications.notificationTypes.replenish
                 }
             }
-        })
+        });
     };
 
-    console.log(options);
+    const handleAdministrationToggle = () => {
+        setOptions({
+            ...options,
+            Notifications: {
+                ...options.Notifications,
+                notificationTypes: {
+                    ...options.Notifications.notificationTypes,
+                    administration: !options.Notifications.notificationTypes.administration
+                }
+            }
+        });
+    };
+
 
     return (
         <div className={classes.root}>
@@ -108,10 +120,18 @@ const Notifications = () => {
             <div className={classes.section}>
                 <FormControlLabel
                     control={<Checkbox color="primary"/>}
-                    label="Turn off notifications"
+                    label="Medicines refill warning"
                     labelPlacement="start"
                     checked={Notifications.notificationTypes.replenish}
                     onChange={handleReplenishToggle}
+                    className={clsx(classes.field, classes.checkboxField)}
+                />
+                <FormControlLabel
+                    control={<Checkbox color="primary"/>}
+                    label="Medicine administration time"
+                    labelPlacement="start"
+                    checked={Notifications.notificationTypes.administration}
+                    onChange={handleAdministrationToggle}
                     className={clsx(classes.field, classes.checkboxField)}
                 />
             </div>
@@ -121,10 +141,55 @@ const Notifications = () => {
 
 const Time = () => {
     const classes = useStyles();
+    const [options, setOptions] = useSettings();
+    const { Time } = options;
+
+    const handleZoneAutoToggle = () => {
+        setOptions({
+            ...options,
+            Time: {
+                ...options.Time,
+                isZoneAuto: !options.Time.isZoneAuto
+            }
+        });
+    };
+
+    const handleChange = (event) => {
+        setOptions({
+            ...options,
+            Time: {
+                ...options.Time,
+                timeZone: JSON.parse(event.target.value)
+            }
+        });
+    };
+
 
     return (
         <div className={classes.root}>
-            Time
+            <Typography variant="h3" color="primary" className={classes.sectionHeader}>Time</Typography>
+            <div className={classes.section}>
+                <FormControlLabel
+                    control={
+                        <Switch 
+                            color="primary"
+                            checked={Time.isZoneAuto}
+                            onChange={handleZoneAutoToggle}
+                       />
+                    }
+                    label="Set time zone automatically"
+                    labelPlacement="start"
+                    className={clsx(classes.field, classes.checkboxField)}
+                />
+            </div>
+            <Typography variant="h3" color="primary" className={classes.sectionHeader}>Change time zone</Typography>
+            <div className={classes.section}>
+                <Select native value={JSON.stringify(Time.timeZone)} onChange={handleChange} className={classes.field} disabled={Time.isZoneAuto}>
+                    { Time.timeZones.map((zone, idx) => (
+                        <option key={idx} value={JSON.stringify(zone)}>{zone.rawFormat}</option>
+                    ))}
+                </Select>
+            </div>
         </div>
     );
 }
@@ -142,7 +207,6 @@ const Dashboard = () => {
 const Language = () => {
     const classes = useStyles();
     const [options, setOptions] = useSettings();
-    const { Language } = options;
 
     const handleChange = (event) => {
         setOptions({

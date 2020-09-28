@@ -18,10 +18,13 @@ const useStyles = makeStyles((theme) => ({
         minHeight: "80vh"
     },
     tabs: {
-        borderRight: `1px solid ${theme.palette.divider}`,
+        borderRight: `1px solid ${theme.palette.divider}`
     },
     tab: {
-        padding: theme.spacing(2)
+        padding: theme.spacing(2),
+    },
+    tabWrapper: {
+        alignItems: "flex-start"
     },
     activeTab: {
         color: theme.palette.primary.main
@@ -73,6 +76,7 @@ const SettingsView = () => {
                         label={option.name} 
                         {...a11yProps(index)} 
                         className={clsx(classes.tab, tab === index && classes.activeTab)}
+                        classes={{wrapper: classes.tabWrapper}}
                     />
                 ))}
             </Tabs>

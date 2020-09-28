@@ -18,9 +18,8 @@ const data = {
         }
     },
     Time: {
-        isAuto: true,
-        isZoneAuto: false,
-        time: Date.now,
+        isZoneAuto: true,
+        timeZone: getTimeZones()[173],
         timeZones: getTimeZones()
     },
     Language: {
