@@ -52,13 +52,23 @@ const a11yProps = (index) => {
 const SettingsView = () => {
     const classes = useStyles();
     const [tab, setTab] = useState(0);
-    const [options] = useSettings();
+    const [,, save, discard] = useSettings();
 
     const handleChange = (event, newTab) => {
         setTab(newTab);
     };
 
-    console.log(options);
+    const handleSubmit = () => {
+        console.log("Submitted: ");
+        save();
+        setTab(0);
+    };
+
+    const handleDiscard = () => {
+        console.log("Discarded");
+        discard();
+        setTab(0);
+    };
 
     return (
         <Paper className={classes.root}>
@@ -89,10 +99,10 @@ const SettingsView = () => {
                     <Grid item sm={1} md={2}/>
                 </Grid>
                 <Toolbar className={classes.buttons}>
-                    <Button color="primary">
+                    <Button color="primary" onClick={handleSubmit}>
                         Save
                     </Button>
-                    <Button color="primary">
+                    <Button color="primary" onClick={handleDiscard}>
                         Discard changes
                     </Button>
                 </Toolbar>

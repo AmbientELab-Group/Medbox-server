@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext } from "react";
+import { diff } from "deep-object-diff";
 
 import { getTimeZones } from "@vvo/tzdb";
 const data = {
@@ -37,8 +38,17 @@ const SettingsContext = createContext();
 const SettingsProvider = ({children}) => {
     const [options, setOptions] = useState(data);
 
+    const save = () => {
+        const newData = diff(data, options);
+        console.log(newData);
+    };
+
+    const discard = () => {
+        setOptions(data);
+    };
+
     return (
-        <SettingsContext.Provider value={[options, setOptions]}>
+        <SettingsContext.Provider value={[options, setOptions, save, discard]}>
             {children}
         </SettingsContext.Provider>
     );

@@ -1,6 +1,6 @@
-import { Checkbox, FormControlLabel, makeStyles, Select, Switch, TextField, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React from "react";
 import clsx from "clsx";
+import { Checkbox, FormControlLabel, makeStyles, Select, Switch, TextField, Typography} from "@material-ui/core";
 import { useSettings } from "../contexts/settingsProvider";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,16 +26,26 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = () => {
     const classes = useStyles();
-    const [options] = useSettings();
+    const [options, setOptions] = useSettings();
     const { Profile } = options;
+
+    const handleChange = (event) => {
+        setOptions({
+            ...options,
+            Profile: {
+                ...Profile,
+                [event.target.id]: event.target.value
+            }    
+        });
+    };
 
     return (
         <div className={classes.root}>
             <Typography variant="h3" color="primary" className={classes.sectionHeader}>Profile details</Typography>
             <div className={classes.section}>
                 <TextField id="email" label="Email" defaultValue={Profile.email} disabled className={classes.field} variant="outlined"/>
-                <TextField id="name" label="Name" defaultValue={Profile.name} className={classes.field} variant="outlined"/>
-                <TextField id="surname" label="Surname" defaultValue={Profile.surname} className={classes.field} variant="outlined"/>
+                <TextField id="name" label="Name" value={Profile.name} onChange={handleChange} className={classes.field} variant="outlined"/>
+                <TextField id="surname" label="Surname" value={Profile.surname} onChange={handleChange} className={classes.field} variant="outlined"/>
             </div>
             <Typography variant="h3" color="primary" className={classes.sectionHeader}>Change password</Typography>
             <div className={classes.section}>
@@ -207,6 +217,7 @@ const Dashboard = () => {
 const Language = () => {
     const classes = useStyles();
     const [options, setOptions] = useSettings();
+    const { Language } = options;
 
     const handleChange = (event) => {
         setOptions({
