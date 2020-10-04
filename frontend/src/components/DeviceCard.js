@@ -1,8 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
-import StateIcon from "@material-ui/icons/FiberManualRecord";
-import LoopIcon from "@material-ui/icons/Loop";
 import Button from "@material-ui/core/Button";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Card from "@material-ui/core/Card";
@@ -10,6 +8,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent"; 
 import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import ConnectionState from "./ConnectionState";
 
 const FillBar = withStyles((theme) => ({
     root: {
@@ -25,11 +24,6 @@ const FillBar = withStyles((theme) => ({
 }))(LinearProgress);
 
 const useStyles = makeStyles((theme) => ({
-    statusIndicator: {
-        display: "flex",
-        alignSelf: "flex-end",
-        alignItems: "center",
-    },
     content: {
         display: "flex",
         flexDirection: "column"
@@ -37,18 +31,6 @@ const useStyles = makeStyles((theme) => ({
     actions: {
         display: "flex",
         justifyContent: "flex-end"
-    },
-    onIcon: {
-        color: theme.palette.success.main,
-        marginLeft: 2
-    },
-    offIcon: {
-        color: theme.palette.error.main,
-        marginLeft: 2
-    },
-    pairingIcon: {
-        color: theme.palette.text.secondary,
-        marginLeft: 2
     },
     barFull: {
         backgroundColor: theme.palette.primary.light
@@ -71,40 +53,10 @@ const DeviceCard = ({ device }) => {
     const theme = useTheme();
     const sm = useMediaQuery(theme.breakpoints.up("sm"));
 
-    const ConnectionState = ({ state }) => {
-        switch (state) {
-            case "on":
-                return (
-                    <>
-                        <Typography color="textSecondary">Connected</Typography>
-                        <StateIcon className={classes.onIcon} />
-                    </>
-                );
-            case "connecting":
-                return (
-                    <>
-                        <Typography color="textSecondary">Pairing</Typography>
-                        <LoopIcon className={classes.pairingIcon}/>
-                    </>
-                );
-            case "off":
-            default:
-                return (
-                    <>
-                        <Typography color="textSecondary">Disconnected</Typography>
-                        <StateIcon className={classes.offIcon} />
-                    </>
-                );
-        }
-    };
-
-
     return (
         <Card>
             <CardContent className={classes.content}>
-                <div className={classes.statusIndicator}>
-                    <ConnectionState state={device.state}/>
-                </div>
+                <ConnectionState state={device.state}/>
                 <Typography variant="h3" noWrap>
                     {device.name}
                 </Typography>

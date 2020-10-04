@@ -4,39 +4,109 @@ import DeviceCard from "../components/DeviceCard";
 
 const boxes = [
     {
-        id: 1,
+        id: "1",
         name: "Box123456789qwertyuiop",
-        state: "on",
+        state: {
+            isOn: true,
+            lastSeen: Date.now()
+        },
         owner: "Bob",
-        fill: 20
+        fill: 20,
+        medicines: [
+            { 
+                name: "Medicine X",
+                doseAmount: 12
+            },
+            { 
+                name: "Medicine Y",
+                doseAmount: 4
+            },
+            { 
+                name: "Medicine Z",
+                doseAmount: 25
+            }
+        ],
+        containers: [
+            {
+                id: 1
+            },
+            {
+                id: 2
+            },
+            {
+                id: 3
+            }
+        ],
     },
     {   
-        id: 2,
+        id: "2",
         name: "Box2",
-        state: "off",
+        state: {
+            isOn: false,
+            lastSeen: Date.now()
+        },
         owner: "Jack",
-        fill: 50
+        fill: 50,
+        medicines: [
+            { 
+                name: "Medicine X",
+                doseAmount: 12
+            },
+            { 
+                name: "Medicine Y",
+                doseAmount: 4
+            },
+            { 
+                name: "Medicine Z",
+                doseAmount: 25
+            }
+        ],
+        containers: [
+            {
+                id: 1
+            },
+            {
+                id: 2
+            },
+            {
+                id: 3
+            }
+        ],
     },
     {
-        id: 3,
+        id: "3",
         name: "Box3",
-        state: "connecting",
+        state: {
+            isOn: false,
+            lastSeen: Date.now()
+        },
         owner: "Karen",
-        fill: 80
-    },
-    {
-        id: 4,
-        name: "Box4",
-        state: "on",
-        owner: "Randall",
-        fill: 35
-    },
-    {
-        id: 5,
-        name: "Box5",
-        state: "off",
-        owner: "Felix",
-        fill: 73
+        fill: 80,
+        medicines: [
+            { 
+                name: "Medicine X",
+                doseAmount: 12
+            },
+            { 
+                name: "Medicine Y",
+                doseAmount: 4
+            },
+            { 
+                name: "Medicine Z",
+                doseAmount: 25
+            }
+        ],
+        containers: [
+            {
+                id: 1
+            },
+            {
+                id: 2
+            },
+            {
+                id: 3
+            }
+        ],
     }
 ];
 

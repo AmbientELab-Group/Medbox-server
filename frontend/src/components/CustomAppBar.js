@@ -84,7 +84,7 @@ const CustomAppBar = ({ drawerHook, ...rest }) => {
                 >
                     <MenuIcon />
                 </IconButton>
-                <Typography component="h1" variant="h3" color="inherit" noWrap className={classes.title}>
+                <Typography component="h1" variant="h2" color="inherit" noWrap className={classes.title}>
                     {getTitle()}
                 </Typography>
                 <IconButton color="inherit">
