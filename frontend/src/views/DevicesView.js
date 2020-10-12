@@ -110,8 +110,9 @@ const boxes = [
     }
 ];
 
-const DevicesView = () => (
+const DevicesView = ({devices}) => (
     <Grid container spacing={3}>
+        {console.log(devices[0])}
         { boxes.map(box => (
             <Grid key={box.id} item xs={12}>
                 <DeviceCard device={box}/>

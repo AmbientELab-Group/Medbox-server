@@ -1,5 +1,12 @@
 import React from "react";
-import { useTheme } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+
+
+const useStyles = makeStyles((theme) => ({
+    withShadow: {
+        filter: `drop-shadow(0px 3px 1px rgba(0,0,0,0.2))`
+    }
+}));
 
 const PlaceholderSvg = ({pathProps, textProps, ...rest}) => (
     <svg viewBox="-200 -200 400 400" {...rest}>
@@ -62,6 +69,7 @@ const Diagram = ({container, pathProps, textProps, ...rest}) => {
 
 const ContainerDiagram = ({container}) => {
     const theme = useTheme();
+    const classes = useStyles();
 
     if (container) {
         return (
@@ -69,13 +77,15 @@ const ContainerDiagram = ({container}) => {
                 container={container}
                 pathProps={{"fill": theme.palette.primary.light}} 
                 style={{"padding": theme.spacing(3)}}
+                className={classes.withShadow}
             />
         );
     } else {
         return (
             <PlaceholderSvg 
-                pathProps={{"fill": theme.palette.primary.light}} 
+                pathProps={{"fill": theme.palette.grey[300]}} 
                 style={{"padding": theme.spacing(3)}}
+                className={classes.withShadow}
             />
         );
     }

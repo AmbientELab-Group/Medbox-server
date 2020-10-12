@@ -4,6 +4,7 @@ Constraints:
     based on device version
     - on creation it checks there is a proper amount of chambers associated
     with this object
+    - there cannot be any other container at the same place in the same device
 """
 
 __author__ = "Krzysztof Adamkiewicz"
@@ -14,7 +15,8 @@ from django.db import models
 import uuid as UUID
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
-from ..models import Chamber
+from django.db.models import Q
+from DeviceAPI.models import Chamber
 
 
 class Container(models.Model):
@@ -42,12 +44,36 @@ class Container(models.Model):
     # time this container was refilled at
     lastRefill = models.DateTimeField(null=True, blank=True)
 
+    def fillStatus(self):
+        chambers = self.chambers.filter(container=self)
+        totalCapacity = self.capacity
+        fullChambers = 0
+        for chamb in chambers:
+            if chamb.isFull:
+                fullChambers += 1
+
+        if totalCapacity == 0:
+            return 0
+
+        return round(100 * fullChambers / totalCapacity)
+
     def clean(self):
         # validate if the position is in the correct range
         if self.position < 0 or self.position >= self.device.capacity:
             raise ValidationError(
                 _("Position value outside of container's capacity"),
                 code="invalid_value"
+            )
+
+        # make sure there are no two containers at the same place
+        if Container.objects.filter(
+            ~Q(uuid=self.uuid) &
+            Q(device=self.device) &
+            Q(position=self.position)
+        ).exists():
+            raise ValidationError(
+                _("Two containers at the same place."),
+                code="integrity_error"
             )
 
     def save(self, *args, **kwargs):
@@ -60,4 +86,4 @@ class Container(models.Model):
         super(Container, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"At position: {self.position}, last refilled: {self.lastRefill}"
+        return f"Device: {self.device}, at pos. {self.position}, last refilled: {self.lastRefill}"

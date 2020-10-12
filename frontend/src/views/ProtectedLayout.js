@@ -14,6 +14,8 @@ import CustomDrawer from "../components/CustomDrawer";
 import CustomFab from "../components/CustomFab";
 import SettingsView from "./SettingsView";
 import { SettingsProvider } from "../contexts/settingsProvider";
+import useDevicesData from "../hooks/useDevicesData";
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,7 +42,7 @@ const ProtectedLayout = () => {
     const classes = useStyles();
     const routeMatch = useRouteMatch();
     const [openDrawer, setDrawerOpen] = React.useState(false);
-
+    const devicesHook = useDevicesData();
     
 
     useEffect(() => {
@@ -57,10 +59,10 @@ const ProtectedLayout = () => {
                 <Container maxWidth="lg" className={classes.container}>
                     <Switch>
                         <Route exact path={`${routeMatch.path}`}>
-                           <DashboardView/>
+                            <DashboardView/>
                         </Route>
                         <Route exact path={`${routeMatch.path}/devices`}>
-                            <DevicesView/>
+                            <DevicesView devices={devicesHook}/>
                         </Route>
                         <Route path={`${routeMatch.path}/devices/:id`}>
                             <SingleDeviceView/>

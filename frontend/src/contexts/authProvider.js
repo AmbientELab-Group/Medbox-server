@@ -18,14 +18,15 @@ const createAuthProvider = () => {
 
     const authFetch = async () => {
         const token = await tokenProvider.getAccessToken();
-
-        return axios.create({
+        const axiosInstance = axios.create({
             baseURL: API_URL,
             timeout: 1000,
             headers: {
                 "Authorization": `Bearer ${token}`
             }
-        })
+        });
+
+        return axiosInstance;
     }
 
     const useAuth = () => {

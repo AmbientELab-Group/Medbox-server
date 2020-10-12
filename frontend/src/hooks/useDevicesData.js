@@ -1,8 +1,5 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import Grid from "@material-ui/core/Grid";
-import DeviceInfoCard from "../components/DeviceInfoCard";
-import DeviceContainerInfo from "../components/DeviceContainersInfo";
+import React, { useEffect, useState } from "react";
+import { authFetch } from "../contexts/authProvider";
 
 const boxes = [
     {
@@ -30,21 +27,13 @@ const boxes = [
         ],
         containers: [
             {
-                id: 0,
-                position: 0,
-                capacity: 8,
-                chambers: [
-                    
-                ]
+                id: 1
             },
             {
-                id: 1,
-                position: 1,
-                capacity: 16
+                id: 2
             },
             {
-                id: 2,
-                position: 2
+                id: 3
             }
         ],
     },
@@ -73,8 +62,13 @@ const boxes = [
         ],
         containers: [
             {
-                id: 0,
-                position: 0
+                id: 1
+            },
+            {
+                id: 2
+            },
+            {
+                id: 3
             }
         ],
     },
@@ -101,24 +95,34 @@ const boxes = [
                 doseAmount: 25
             }
         ],
-        containers: [],
+        containers: [
+            {
+                id: 1
+            },
+            {
+                id: 2
+            },
+            {
+                id: 3
+            }
+        ],
     }
 ];
 
-const SingleDeviceView = () => {
-    const { id } = useParams();
-    const device = boxes.find((box)=>box.id===id);
 
-    return (
-        <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={6}>
-                <DeviceInfoCard device={device}/>
-            </Grid>
-            <Grid item xs={12} md={6} lg={6}>
-                <DeviceContainerInfo device={device}/>
-            </Grid>
-        </Grid>
-    );
+const fetchDevices = async (setDevices) => {
+    const req = await (await authFetch()).get("/device/devices");
+    setDevices(req.data);
 };
 
-export default SingleDeviceView;
+const useDeviceData = () => {
+    const [devices, setDevices] = useState();
+
+    useEffect(() => {
+        fetchDevices(setDevices);
+    }, []);
+
+    return [devices, setDevices];
+};
+
+export default useDeviceData;
