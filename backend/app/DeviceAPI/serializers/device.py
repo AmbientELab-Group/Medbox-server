@@ -4,6 +4,10 @@ from rest_framework.validators import UniqueTogetherValidator
 
 
 class DeviceSerializer(serializers.ModelSerializer):
+    owner = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
     class Meta:
         model = Device
         fields = [

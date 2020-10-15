@@ -16,7 +16,6 @@ import uuid as UUID
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.db.models import Q
-from DeviceAPI.models import Chamber
 
 
 class Container(models.Model):
@@ -76,14 +75,5 @@ class Container(models.Model):
                 code="integrity_error"
             )
 
-    def save(self, *args, **kwargs):
-        # create chamber entities when saving new object
-        if not Container.objects.filter(uuid=self.uuid).exists():
-            for pos in range(self.capacity):
-                chamber = Chamber(container=self, position=pos)
-                chamber.save()
-
-        super(Container, self).save(*args, **kwargs)
-
     def __str__(self):
-        return f"Device: {self.device}, at pos. {self.position}, last refilled: {self.lastRefill}"
+        return f"In device: {self.device}, at pos. {self.position}, last refilled: {self.lastRefill}"
