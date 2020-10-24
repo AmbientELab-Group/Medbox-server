@@ -76,4 +76,4 @@ class Container(models.Model):
             )
 
     def __str__(self):
-        return f"In device: {self.device}, at pos. {self.position}, last refilled: {self.lastRefill}"
+        return f"In {self.device}, at pos. {self.position}"

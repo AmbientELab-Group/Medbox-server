@@ -6,6 +6,7 @@ from DeviceAPI.models import Device
 
 
 class DeviceList(generics.ListCreateAPIView):
+    """Endpoint for managing devices."""
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
     permission_classes = [IsAuthenticated]
@@ -19,6 +20,7 @@ class DeviceList(generics.ListCreateAPIView):
 
 
 class DeviceDetail(generics.RetrieveUpdateDestroyAPIView):
+    """Endpoint for managing devices."""
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
     permission_classes = [IsAuthenticated]

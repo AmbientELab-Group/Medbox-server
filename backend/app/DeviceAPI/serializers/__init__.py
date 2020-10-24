@@ -1,3 +1,3 @@
 from .device import DeviceSerializer
-from .container import ContainerSerializer
+from .container import ContainerSerializer, ContainerCreateOnlySerializer
 from .chamber import ChamberSerializer

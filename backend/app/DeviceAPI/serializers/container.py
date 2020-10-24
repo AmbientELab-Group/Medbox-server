@@ -16,28 +16,13 @@ class ContainerSerializer(serializers.ModelSerializer):
             "fillStatus"
         ]
         read_only_fields = [
+            "capacity",
             "fillStatus"
         ]
-        validators = [
-            # assert position uniqueness
-            UniqueTogetherValidator(
-                queryset=Container.objects.all(),
-                fields=["position", "device"]
-            )
-        ]
 
-    # after creating container, create and bind its chambers
-    # auto sets position based on existing containers
+    # assert this serializer is not used for create operation
     def create(self, validated_data):
-        container = Container.objects.create(**validated_data)
-        for pos in range(validated_data.get("capacity")):
-            Chamber.objects.create(container=container, position=pos)
-        return container
-
-    # adds createOnly behavior to capacity field
-    def update(self, instance, validated_data):
-        validated_data.pop("capacity", None)
-        return super().update(instance, validated_data)
+        raise Exception("Create operation called from ContainerSerializer")
 
     # assert position in capacity range
     def validate_position(self, position):
@@ -63,3 +48,34 @@ class ContainerSerializer(serializers.ModelSerializer):
                 _("Container cannot be assigned to this device."),
                 code="forbidden_action"
             )
+
+
+class ContainerCreateOnlySerializer(ContainerSerializer):
+    class Meta:
+        model = Container
+        fields = [
+            "uuid",
+            "capacity",
+            "device",
+            "position",
+            "lastRefill",
+            "fillStatus"
+        ]
+        read_only_fields = [
+            "fillStatus"
+        ]
+        validators = [
+            # assert position uniqueness
+            UniqueTogetherValidator(
+                queryset=Container.objects.all(),
+                fields=["position", "device"]
+            )
+        ]
+
+    # after creating container, create and bind its chambers
+    # auto sets position based on existing containers
+    def create(self, validated_data):
+        container = Container.objects.create(**validated_data)
+        for pos in range(validated_data.get("capacity")):
+            Chamber.objects.create(container=container, position=pos)
+        return container

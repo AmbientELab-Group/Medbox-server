@@ -79,4 +79,4 @@ class Device(models.Model):
             )
 
     def __str__(self):
-        return f"'{self.name}' with id: {self.uuid}"
+        return f"'{self.name}':{self.uuid}"

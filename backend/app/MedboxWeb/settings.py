@@ -47,7 +47,8 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
+    ),
+    "DEFAULT_SCHEMA_CLASSS": "rest_framework.schemas.coreapi.AutoSchema"
 }
 
 SIMPLE_JWT = {

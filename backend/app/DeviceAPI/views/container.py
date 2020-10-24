@@ -1,25 +1,19 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from DeviceAPI.serializers import ContainerSerializer
+from DeviceAPI.serializers import (
+    ContainerSerializer,
+    ContainerCreateOnlySerializer
+)
 from DeviceAPI.models import Container, Device
 from django.db.models import Q
 
 
 class ContainerList(generics.ListCreateAPIView):
     """
-    GET\n
-    / - list all container associated with authorized user (owner/supervisor)\n
-    ?device=\<UUID\> - all containers in the device passed as parameter\n
-    POST\n
-    / - creates container and related chambers to match capacity\n
-    Data:
-        (R) capacity - Num
-        (R) device - UUID
-        (O) position - Num
-        (O) lastRefill - DateTime
+    Endpoint for managing containers.
     """
-    serializer_class = ContainerSerializer
+    serializer_class = ContainerCreateOnlySerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -53,7 +47,7 @@ class ContainerList(generics.ListCreateAPIView):
         deviceObj = Device.objects.get(uuid=device)
         topContainer = containers.filter(device=device).order_by("-position").first()
         position = request.data.get("position")
-        if position is None:
+        if position is None or topContainer is None:
             position = 0
             if topContainer is not None:
                 position = topContainer.position + 1
@@ -78,24 +72,7 @@ class ContainerList(generics.ListCreateAPIView):
 
 class ContainerDetail(generics.RetrieveUpdateDestroyAPIView):
     """
-    GET\n
-    / - retrive container associated with authorized user (owner/supervisor)\n
-    PUT\n
-    / - update container\n
-    Data:
-        (R) capacity - Num
-        (R) position - Num
-        (R) device - UUID
-        (O) lastRefill - DateTime
-    PATCH\n
-    / - partial update container\n
-    Data:
-        (O) capacity - Num
-        (O) position - Num
-        (O) device - UUID
-        (O) lastRefill - DateTime
-    DELETE\n
-    / - delete container
+    Endpoint for managing containers.
     """
     serializer_class = ContainerSerializer
     permission_classes = [IsAuthenticated]
@@ -108,9 +85,37 @@ class ContainerDetail(generics.RetrieveUpdateDestroyAPIView):
         )
         return managedContainers
 
+    # update affected containers positions
+    def perform_update(self, serializer):
+        queryset = self.get_queryset()
+        oldPosition = self.get_object().position
+        newPosition = serializer.validated_data.get("position")
+        device = serializer.validated_data.get("device")
+        if newPosition < oldPosition:
+            affectedContainers = queryset.filter(
+                Q(device=device) &
+                Q(position__lt=oldPosition) &
+                Q(position__gte=newPosition)
+            )
+            for container in affectedContainers:
+                container.position += 1
+                container.save()
+        elif newPosition > oldPosition:
+            affectedContainers = queryset.filter(
+                Q(device=device) &
+                Q(position__gt=oldPosition) &
+                Q(position__lte=newPosition)
+            )
+            for container in affectedContainers:
+                container.position -= 1
+                container.save()
+
+        serializer.save()
+
     # update containers positions when deleting middle one
     def perform_destroy(self, instance):
-        affectedContainers = Container.objects.filter(
+        queryset = self.get_queryset()
+        affectedContainers = queryset.filter(
             Q(device=instance.device) &
             Q(position__gt=instance.position)
         )
