@@ -10,6 +10,7 @@ from AdminPanel.serializers.user import (
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import permissions
 
+
 # endpoint for retriving personal information for authenticated user
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])

@@ -8,11 +8,12 @@ from django.utils.translation import ugettext_lazy as _
 
 from ..models import User
 
+
 class UserAdmin(DjangoUserAdmin):
     model = User
     list_filter = ('email', 'is_staff', 'is_active', 'first_name', 'last_name')
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password', 'supervisedDevices')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
@@ -27,4 +28,3 @@ class UserAdmin(DjangoUserAdmin):
     list_display = ('email', 'first_name', 'last_name', 'is_staff')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
- 

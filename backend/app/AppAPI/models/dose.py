@@ -15,31 +15,60 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.utils import timezone
 
+
 def plannedAdministrationTimeValidator(time):
     if time < timezone.now():
-        raise ValidationError(_("Choose administration time to be in the future."), code="invalid_value")
+        raise ValidationError(
+            _("Choose administration time to be in the future."),
+            code="invalid_value"
+        )
 
 
 def numberOfPillsValidator(numOfPills):
     if numOfPills <= 0:
-        raise ValidationError(_("Incorrect number of pills specified."), code="invalid_value")
+        raise ValidationError(
+            _("Incorrect number of pills specified."),
+            code="invalid_value"
+        )
 
 
 class Dose(models.Model):
     # universal identifier
-    uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
+    uuid = models.UUIDField(
+        primary_key=True,
+        default=UUID.uuid4,
+        editable=False,
+        unique=True
+    )
 
     # reference to the treatment this dose belongs to
-    treatment = models.ForeignKey("Treatment", on_delete=models.CASCADE, related_name="doses")
+    treatment = models.ForeignKey(
+        "Treatment",
+        on_delete=models.CASCADE,
+        related_name="doses"
+    )
 
     # reference to chamber this dose is stored in
-    chamber = models.ForeignKey("DeviceAPI.Chamber", on_delete=models.SET_NULL, related_name="doses", null=True)
+    chamber = models.ForeignKey(
+        "DeviceAPI.Chamber",
+        on_delete=models.SET_NULL,
+        related_name="doses",
+        null=True
+    )
 
     # reference to medicine to administer
-    medicine = models.ForeignKey("Medicine", on_delete=models.PROTECT, related_name="doses")
+    medicine = models.ForeignKey(
+        "Medicine",
+        on_delete=models.PROTECT,
+        related_name="doses"
+    )
 
     # administration time
-    plannedAdministrationTime = models.DateTimeField(null=True, blank=True, validators=[plannedAdministrationTimeValidator])
+    plannedAdministrationTime = models.DateTimeField(
+        null=True,
+        blank=True,
+        validators=[plannedAdministrationTimeValidator]
+    )
 
     # size of the dose
     numberOfPills = models.FloatField(validators=[numberOfPillsValidator])
@@ -49,11 +78,17 @@ class Dose(models.Model):
 
     def clean(self):
         # check if the onDemand option do not collide with timestamp
-        if self.plannedAdministrationTime == None and self.onDemand == False:
-            raise ValidationError(_("Choose administration time or specify on demand option."), code="integrity_error")
+        if self.plannedAdministrationTime is None and self.onDemand is False:
+            raise ValidationError(
+                _("Choose administration time or specify on demand option."),
+                code="integrity_error"
+            )
 
-        if self.plannedAdministrationTime != None and self.onDemand == True:
-            raise ValidationError(_("Choose either administration time or on demand option."), code="integrity_error")
+        if self.plannedAdministrationTime is not None and self.onDemand is True:
+            raise ValidationError(
+                _("Choose either administration time or on demand option."),
+                code="integrity_error"
+            )
 
     def __str__(self):
         return f"{self.medicine} at: {self.plannedAdministrationTime}"

@@ -16,10 +16,19 @@ class PredefinedTime(models.Model):
     Model of the predefined administration times.
     """
     # universal identifier
-    uuid = models.UUIDField(primary_key=True, default=UUID.uuid4, editable=False, unique=True)
+    uuid = models.UUIDField(
+        primary_key=True,
+        default=UUID.uuid4,
+        editable=False,
+        unique=True
+    )
 
     # reference to the owner of this object
-    owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="predefinedTimes")
+    owner = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE,
+        related_name="predefinedTimes"
+    )
 
     # administration time
     time = models.TimeField()
@@ -30,7 +39,10 @@ class PredefinedTime(models.Model):
     def clean(self):
         # check name uniqueness
         if PredefinedTime.objects.filter(Q(owner=self.owner) & Q(name=self.name)).exists():
-            raise ValidationError(_("Predefined time with this name already exists, choose different name."), code="duplicated_value")
+            raise ValidationError(
+                _("Predefined time with this name already exists, choose different name."),
+                code="duplicated_value"
+            )
 
     def __str__(self):
         return f"'{self.name}' at: {self.time}"

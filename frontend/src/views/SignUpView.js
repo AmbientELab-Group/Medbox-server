@@ -1,17 +1,17 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Copyright from "../components/Copyright";
-import { useHistory } from "react-router-dom";
-import { publicAccountFetch } from "../api/publicFetch";
-import { useForm } from "react-hook-form";
 import ErrorSnack from "../components/ErrorSnack";
 import SignUpForm from "../components/SignUpForm";
 import { login } from "../contexts/authProvider";
+import { publicAccountFetch } from "../api/publicFetch";
+import { useForm } from "react-hook-form";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -88,7 +88,7 @@ const SignUpView = () => {
                 <Avatar className={classes.avatar}>
                     <LockOutlinedIcon />
                 </Avatar>
-                <Typography component="h1" variant="h5">
+                <Typography component="h1" variant="h3">
                     Sign up
                 </Typography>
                 <SignUpForm

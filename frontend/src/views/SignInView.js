@@ -1,18 +1,18 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
-import { useHistory } from "react-router-dom";
 import Copyright from "../components/Copyright";
-import { publicAccountFetch } from "../api/publicFetch";
 import ErrorSnack from "../components/ErrorSnack";
 import SignInForm from "../components/SignInForm";
 import { useForm } from "react-hook-form";
 import { login } from "../contexts/authProvider";
+import { publicAccountFetch } from "../api/publicFetch";
  
 
 const useStyles = makeStyles((theme) => ({
@@ -95,7 +95,7 @@ const SignInView = () => {
             <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
             </Avatar>
-            <Typography component="h1" variant="h5">
+            <Typography component="h1" variant="h3">
                 Sign in
             </Typography>
             <SignInForm 

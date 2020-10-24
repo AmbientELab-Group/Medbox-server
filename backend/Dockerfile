@@ -4,7 +4,7 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /usr/src/app
 
-RUN pip3 install --upgrade pip
+RUN python -m pip install --upgrade pip
 COPY ./requirements.txt ./
 RUN pip3 install -r requirements.txt && rm requirements.txt
 

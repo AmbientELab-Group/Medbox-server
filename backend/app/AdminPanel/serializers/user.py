@@ -5,7 +5,13 @@ from AdminPanel.models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["uuid", "email", "first_name", "last_name"]
+        fields = [
+            "uuid",
+            "email",
+            "first_name",
+            "last_name",
+            "supervisedDevices"
+        ]
 
 
 class RegistrationSerializer(serializers.ModelSerializer):

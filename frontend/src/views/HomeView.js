@@ -23,7 +23,7 @@ const HomeView = props => {
         <>
         <AppBar>
             <Toolbar>
-                <Typography className={classes.title} variant="h5">
+                <Typography className={classes.title} variant="h3">
                     Medbox
                 </Typography>
                 <Button 
