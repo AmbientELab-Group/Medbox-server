@@ -1,8 +1,9 @@
 version: '3.8'
 
 services:
-  frontend:
-    container_name: frontend-dev
+  medbox-frontend_server:
+    container_name: medbox-frontend_server
+    image: medbox-frontend_server
     build:
       context: .
       dockerfile: Dockerfile

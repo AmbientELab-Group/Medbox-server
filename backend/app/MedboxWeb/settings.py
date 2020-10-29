@@ -113,7 +113,7 @@ DATABASES = {
         "NAME": "mainDB",
         "USER": os.environ.get("DB_USER"),
         "PASSWORD": os.environ.get("DB_PASSWORD"),
-        "HOST": "mainDB",
+        "HOST": "medbox-database_server",
         "PORT": 5432,
     },
 }
