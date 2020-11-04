@@ -1,25 +1,70 @@
 # Medbox Server Side Software
 
-This is the repository for the Medbox server side services.
+This a main repository for Medbox project server side infrastructure codebase.
 
 ## How do I start working with this?!!
 
 Your are probably asking yourself this question right now.
 So here is a quick guide on how to get your environment up and running.
 
-Note: Shell commands are the same for windows, the prompt will however look different
-depending on your platform of choice.
+## Install required tools.
 
-### Installing tools
-First you need to install docker (https://docs.docker.com/get-docker/)
-and docker-compose (https://docs.docker.com/compose/install/).
+The following tools are required to run this project.
 
-You will also need git (https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) 
-so you can publish your work back to this repository.
+ - docker (https://docs.docker.com/get-docker/)
+ - docker-compose (https://docs.docker.com/compose/install/)
+ - git (https://git-scm.com)
+ 
+If you are running Linux you can easily install all above packages through your distribution's package manager.
 
-If you want more graphical way to manage your work please consider using git kraken.
-It provides a very user friendly way to manage versioning control using git.
-Here is a link: https://www.gitkraken.com/
+If you are running MacOS follow the instructions provide on the website of each one of above packages.
+
+If you are using windows then god help you. Try to follow the instructions provided by docker, they might work.
+
+You might also want to install postman which is an excelent tool for developing and testing API's (https://www.postman.com/downloads/).
+
+
+IMPORTANT NOTE: On linux sometimes you have to manually enable docker daemon:
+
+```
+systemctl enable docker
+```
+
+If you fail to do this docker will stop working after reboot.
+
+## Docker without root
+
+By default you cannot run docker as any user other than root. This is because usually, on a production server you do not want
+unprivileged users messing with your docker containers.
+
+However this is really annoying inside a development environment. You will have to run all docker related commands
+using sudo and enter your password every couple of minuts. This get's annoying very quickly trust me.
+Other option is to open a root shell. This is also a bad idea.
+For example you might leave your computer unattended for 5 minuts and your evil young brother can install a script that
+will randomly play *insert your most hated music here* without any apparent reason and you won't even know what is happening.
+Then after countless hours spent on trying to find out what is happening you will finally give up and erase your drive by throwing your machine into an active
+volcano hoping that this will destroy all evil spirits inside.
+
+To avoid loosing your sanity you can add your user to docker admin group which will allow you to manage containers
+through a normal shell.
+
+Here is how to do this on 
+
+Linux:
+
+```
+sudo groupadd docker
+systemctl restart docker
+sudo gpasswd -a username docker
+```
+
+Replace `username` with your username. You will have to logout and login for changes to take effect.
+
+MacOS: It probably works out of the box.
+
+Windows: Who knows? It's windows, docker probably works out of the box if you manage to install it.
+
+## Testing docker
 
 Once you are done with installation please make sure that docker is working by running:
 
@@ -29,104 +74,181 @@ docker run hello-world
 
 This command should download a hello world example and run it.
 If it does not work please make sure that virtualization is enabled in your BIOS.
-If it still does not work please consult your search engine of choice.
+If it still does not work please consult your search engine of choice or ask other project memebers.
 
-Once you are done with this you can remove the created image and container so it does not
-clutter your list of images.
+## First build
 
-First list all containers to get the container ID.
+Once you have your tools set up you are ready to clone and build the project.
 
-```
-[krzys@starship Medbox-server]$ docker ps --all
-CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                          PORTS               NAMES
-b792a79316f3        hello-world         "/hello"            2 minutes ago       Exited (0) About a minute ago                       wonderful_elion
-```
+### Adding SSH key to your account.
 
-and remove it by running:
+Unfortunately github is dropping support for login & password authentication through git so you have to start by setting up an SSH key.
 
-```
-docker rm [CONTAINER ID]
-```
+Here is how to do this on Linux (simple way):
 
-Then list all your images to get the image ID 
+1. Go to `.ssh` directory in your home folder (yes there is a coma before ssh).
+2. Generate keypair by running : `ssh-keygen -C "your_email@example.com"`. Replace `your_email@example.com` with your email used
+on github. The ssh-keygen will ask you where to put your key and how to name it. By default it is named `id_rsa` and is put inside `.ssh` in
+your home directory. This is fine unless your are planning to use multiple keys for different services. If you are fine with default arrangement then
+press enter without typing anything. Then you will be asked to enter a passphrase for the key. It provides
+additional security but you will have to enter choosen password everytime you use the key. If you do not want any passphrase press enter without typing anything.
+3. Open `id_rsa.pub` in a text editor.
+4. Go to your account settings on github and open tab called `ssh and GPG keys`. Then press button with `add new ssh key` on it.
+5. Enter any name you want and put contents of `id_rsa.pub` file inside `key` field. NEVER DO THAT WITH YOUR PRIVATE KEY (id_rsa). KEEP YOUR PRIVATE KEY SECRET AT ALL TIMES.
 
-```
-[krzys@starship Medbox-server]$ docker images
-REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
-hello-world         latest              bf756fb1ae65        3 months ago        13.3kB
-```
-
-and then remove the image by running:
+After your key is added, you can test your connection by running:
 
 ```
-docker rmi [IMAGE ID]
+ssh -T git@github.com
 ```
 
-### Initializind database
-Once docker is running you will need to perform the first build.
-First you need to build all imagess, just execute:
+You may get a warning like this:
+
+```
+> The authenticity of host 'github.com (IP ADDRESS)' can't be established.
+> RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.
+> Are you sure you want to continue connecting (yes/no)?
+```
+
+In which case say type yes and proceed.
+
+You should get something like this as a response
+
+```
+> Hi username! You've successfully authenticated, but GitHub does not
+> provide shell access.
+```
+
+That means that your key was added succesfully.
+
+### Cloning repository and adding origin
+
+Now you are clear to clone the repository.
+
+To do that please first open terminal in a directory that you want to put it in and then run:
+
+```
+git clone git@github.com:Bill2462/Medbox-server.git
+```
+
+Once this is done you will have a copy of the entire project history tree on your machine.
+
+Now you need to add a remote server so you will be able to publish your changes.
+
+Main server is usually named `origin`.
+
+To add it please run
+
+```
+git remote add origin git@github.com:Bill2462/Medbox-server.git
+```
+
+Once this is done please verify that remote was added correctly by running:
+
+```
+git remote -v
+```
+
+You should see something like this:
+
+```
+origin  git@github.com:Bill2462/Medbox-server.git (fetch)
+origin  git@github.com:Bill2462/Medbox-server.git (push)
+```
+
+### Build all images
+
+Now you are ready to build docker images. First checkout at main development branch by running:
+
+```
+git checkout dev
+```
+
+and then run the build:
 
 ```
 docker-compose build
 ```
 
-You can skip this step if images are already built (if you erased your database and
-yout want to rebuild everything.
+This might take a while depending on your internet connection.
 
-Them you need to initialise database, otherwise django will fail.
-In order to do that you have to run:
+After build is finished list all images:
 
 ```
-docker-compose up docker-compose up mainDB
+docker images
 ```
 
-Then once the database is up and running, press CTRL+C to exit and then run
+The output list should have those two images on it:
+ 
+ - medbox-frontend_server
+ - medbox-backend_server
+
+If you have those images then your build was succesfull.
+
+### Database initialization
+
+Unfortunately you need to initialize the database separately otherwise django will fail.
+
+To do that run:
+
+```
+docker-compose up medbox-database_server
+```
+
+Wait until you get a message that look's something like this:
+
+```
+020-11-04 10:21:12.077 UTC [47] LOG:  database system is ready to accept connections
+```
+
+and then shutdown the server by pressing ctrl+c and then run:
 
 ```
 docker-compose down
 ```
 
-Next step is to perform migrations and setup your admin account.
+### Applying first migrations and creating admin account
 
-In oder to do that first bring the system up:
+Next step is performing migrations and creating new superuser account.
+You will use that account to access the admin panel.
+
+To do that first bring the backend and database service up by running:
 
 ```
-docker-compose up
+docker-compose up medbox-backend_server
 ```
 
 You should get the following output from the server:
 
 ```
-webapp-server | Watching for file changes with StatReloader
-webapp-server | Performing system checks...
-webapp-server | 
-webapp-server | System check identified no issues (0 silenced).
-webapp-server | 
-webapp-server | You have 18 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): Website, admin, auth, contenttypes, sessions.
-webapp-server | Run 'python manage.py migrate' to apply them.
-webapp-server | May 13, 2020 - 15:57:07
-webapp-server | Django version 2.2.12, using settings 'MedboxWeb.settings'
-webapp-server | Starting development server at http://0.0.0.0:8000/
-webapp-server | Quit the server with CONTROL-C.
+medbox-backend_server     | Watching for file changes with StatReloader
+medbox-backend_server     | Performing system checks...
+medbox-backend_server     | 
+medbox-backend_server     | System check identified no issues (0 silenced).
+medbox-backend_server     | 
+medbox-backend_server     | You have 28 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): AdminPanel, AppAPI, DeviceAPI, admin, auth, contenttypes, sessions.
+medbox-backend_server     | Run 'python manage.py migrate' to apply them.
+medbox-backend_server     | November 04, 2020 - 10:23:10
+medbox-backend_server     | Django version 3.0, using settings 'MedboxWeb.settings'
+medbox-backend_server     | Starting development server at http://0.0.0.0:8000/
+medbox-backend_server     | Quit the server with CONTROL-C.
 ```
 
-If you get any error something is wrong. Contact the chief project wizard (@Bill2462).
-
-Then open the another console and see if containers are running. You should see something like that:
+Then you have to list all running containers using:
 
 ```
-[krzys@starship Medbox-server]$ docker ps
-CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
-4354a1d70d78        webserver           "python manage.py ru…"   4 minutes ago       Up 4 minutes        0.0.0.0:8000->8000/tcp   webapp-server
-c7d618bcd1fa        postgres            "docker-entrypoint.s…"   4 minutes ago       Up 4 minutes        5432/tcp                 medbox-server_mainDB_1
+docker ps
 ```
 
-If you have those two containers then everything is ok and you can apply the migrations.
-
-In order to do that open a shell to webserver container:
+Note ID of the backend server container and then open bash shell inside it by running:
 
 ```
-[krzys@starship Medbox-server]$ docker exec -ti [CONTAINER ID]  bash
+docker exec -ti [CONTAINER ID]  bash
+```
+
+After this you should see a command prompt like this:
+
+```
 user@4354a1d70d78:/usr/src/app$ 
 ```
 
@@ -136,118 +258,121 @@ Then apply migrations by running the following command:
 user@4354a1d70d78:/usr/src/app$ python3 manage.py migrate
 ```
 
-Then create a superuser by running:
+Now you can create your admin account by running:
 
 ```
 user@4354a1d70d78:/usr/src/app$ python3 manage.py createsuperuser
 ```
 
-Email and password are up to you (they don't have to be real.
+You will be asked to provide email and password. Email does not have to be real. Please write down your email and password
+as you will need them to access the admin page.
 
-And that's it. Now you can go to localhost:8000/admin and use entered credentials to access the admin panel.
+To exit the shell type exit and press enter.
 
-## Workflow
+## Docker cheatsheet
 
-Ok so now about how to make changes and test them.
-
-### Running the services
-
-In order to run all services, execute:
+To start selected services run:
 
 ```
-[krzys@starship Medbox-server]$ docker-compose up
+docker-compose up [service names listed here]
 ```
 
-After this yoy should have the followinf containers running:
+You need to run this in a directory that has docker-compose.yml file inside.
+
+
+To kill specific services and remove their containers please run:
 
 ```
-[krzys@starship Medbox-server]$ docker ps
-CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
-4354a1d70d78        webserver           "python manage.py ru…"   10 minutes ago      Up 10 minutes       0.0.0.0:8000->8000/tcp   webapp-server
-c7d618bcd1fa        postgres            "docker-entrypoint.s…"   10 minutes ago      Up 10 minutes       5432/tcp                 medbox-server_mainDB_1
+docker-compose down [service names listed here]
 ```
 
-If you want to exit run:
-
-```
-[krzys@starship Medbox-server]$ docker-compose down
-```
-
-You have to run this in a separate console window but still inside the project directory. This command will kill all containers
-and remove them.
-
-### Applying your changes
-
-Generally in order to apply your changes you should use the following workflow:
+To kill all services and dissolve their bodies in acid run:
 
 ```
 docker-compose down
-
-# make modifications
-
-docker-compose build
-docker-compose up
-
-# test modifications
 ```
 
-Databases are stored inside the volumens so the tables are preserved. However all edits made to the files inside the containers
-will be lost after you execute docker-compose down so all source code should be stored in the project directory.
-
-
-### Opening shell
-If there is a need to manually run some scripts inside the container (for example manage.py for django) you can do that by opening
-a terminal in the container. In order to do that first make sure that container is running (by running `docker-compose up`), then check the container
-ID using `docker ps` command and finally run the following command:
+To build an image for a specific service please run:
 
 ```
-docker exec -ti [CONTAINER ID] bash
+docker-compose build [service_name]
 ```
 
-For example:
+If you want to remove some specific images you need to run:
 
 ```
-[krzys@starship Medbox-server]$ docker ps
-CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES
-09d4f286804f        web                 "python manage.py ru…"   1 second ago        Up Less than a second   0.0.0.0:8000->8000/tcp   webapp-server
-16b0e0d899b2        app-api             "gunicorn -b 0.0.0.0…"   1 second ago        Up Less than a second   0.0.0.0:8002->8001/tcp   app-api-server
-a5a929c8b956        device-api          "gunicorn -b 0.0.0.0…"   1 second ago        Up Less than a second   0.0.0.0:8001->8001/tcp   device-api-server
-85598781cf49        postgres            "docker-entrypoint.s…"   2 seconds ago       Up 1 second             5432/tcp                 app-db
-13f2e6659277        postgres            "docker-entrypoint.s…"   2 seconds ago       Up 1 second             5432/tcp                 users-db
-a2ed36f53b8d        postgres            "docker-entrypoint.s…"   2 seconds ago       Up 1 second             5432/tcp                 treatments-db
-
-
-[krzys@starship Medbox-server]$ docker exec -ti b4b79d327e36 bash
-root@b4b79d327e36:/usr/src/app# ls
-Dockerfile  MedboxWeb  db.sqlite3  manage.py
-
-root@b4b79d327e36:/usr/src/app# 
+docker rmi [image_id]
 ```
 
-Type `exit` when you are done.
+If you want to remove a container that is not running please run:
 
-But please remember that any changes stored inside the container are lost.
+```
+docker rm [container_id]
+```
 
-### Accessing database
+If you want to kill a container please run:
 
-If you want you can access the database by running the SQL console.
-In order to open it you neeed to first make sure that the container is running and then run:
+```
+docker kill [container_id]
+```
+
+If you want to list all contaners please run:
+
+```
+docker ps --all
+```
+
+Sometimes docker creates some dangling images during the build process.
+They are not needed, you can save some storage space by removing them using command:
+
+```
+docker image prune
+```
+
+If you want to access database SQL console please run:
 
 ```
 docker exec -ti [DB CONTAINER ID ] psql -U [DATABASE USER]
 ```
 
-Then you get access to the Postgres shell.
+You can find username and password in the environmental variables file inside backend folder.
 
-Here is a quick tutorial on how to use this: https://tomcam.github.io/postgres/
+Here is a quick tutorial on how to use postgres shell: https://tomcam.github.io/postgres/
 
-Once you are done type \q to exit the shell.
+## Workflow
 
-### Acessing the website
-In order to access all the services that are running inside the containers you just need to start everything with  `docker-compose up`
-and then you can access all services at localhost:8000.d
- 
-Website can be accessed directly from the web browser. 
+If you want to start working on something, create a feature branch from dev
 
-API's can be accessed using for example Postman software. (https://www.postman.com/).
+```
+git checkout dev
+git branch your-branch-name
+git checkout your-branch-name
+```
 
+Next publish your branch to the server:
+
+```
+git push origin your-branch-name
+```
+
+Now make changes in the code and commit them to your branch. Remember to make commits regularly,
+write descriptive commit messages and push your commits to the server often. This will help other people in keeping track
+of your work.
+
+To publish your changes you run:
+
+```
+git push origin your-branch-name
+```
+
+Once you are done please create a pull request to branch dev and request a review.
+
+Once code is ok, pull request will be merged to dev.
+
+Do not commit directly to master and try to not commit directly to dev.
+
+DO NOT EVER RUN PUSH WITH --force FLAG. THIS WILL REWRITE HISTORY AND CAUSE PROBLEMS FOR OTHER DEVELOPERS.
+
+If you want to propose a change please talk to the team on the chat and then open an issue describing the change.
+
+If you have any questions please ask on chat.
