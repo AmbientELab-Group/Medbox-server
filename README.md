@@ -17,9 +17,9 @@ The following tools are required to run this project.
  
 If you are running Linux you can easily install all above packages through your distribution's package manager.
 
-If you are running MacOS follow the instructions provide on the website of each one of above packages.
+If you are running macOS follow the instructions provide on the website of each one of above packages.
 
-If you are using windows then god help you. Try to follow the instructions provided by docker, they might work.
+If you are using Windows then god help you. Try to follow the instructions provided by docker, they might work.
 
 You might also want to install postman which is an excelent tool for developing and testing API's (https://www.postman.com/downloads/).
 
@@ -37,12 +37,12 @@ If you fail to do this docker will stop working after reboot.
 By default you cannot run docker as any user other than root. This is because usually, on a production server you do not want
 unprivileged users messing with your docker containers.
 
-However this is really annoying inside a development environment. You will have to run all docker related commands
-using sudo and enter your password every couple of minuts. This get's annoying very quickly trust me.
-Other option is to open a root shell. This is also a bad idea.
-For example you might leave your computer unattended for 5 minuts and your evil young brother can install a script that
+However, this is really annoying inside a development environment. You will have to run all docker related commands
+using sudo and enter your password every couple of minutes. This gets annoying very quickly, trust me.
+The other option is to open a root shell. This is also a bad idea.
+For example you might leave your computer unattended for 5 minutes and your evil young brother can install a script that
 will randomly play *insert your most hated music here* without any apparent reason and you won't even know what is happening.
-Then after countless hours spent on trying to find out what is happening you will finally give up and erase your drive by throwing your machine into an active
+Then, after countless hours spent on trying to find out what is happening, you will finally give up and erase your drive by throwing your machine into an active
 volcano hoping that this will destroy all evil spirits inside.
 
 To avoid loosing your sanity you can add your user to docker admin group which will allow you to manage containers
@@ -60,7 +60,7 @@ sudo gpasswd -a username docker
 
 Replace `username` with your username. You will have to logout and login for changes to take effect.
 
-MacOS: It probably works out of the box.
+macOS: It probably works out of the box.
 
 Windows: Who knows? It's windows, docker probably works out of the box if you manage to install it.
 
@@ -74,7 +74,7 @@ docker run hello-world
 
 This command should download a hello world example and run it.
 If it does not work please make sure that virtualization is enabled in your BIOS.
-If it still does not work please consult your search engine of choice or ask other project memebers.
+If it still does not work please consult your search engine of choice or ask other project members.
 
 ## First build
 
@@ -82,16 +82,16 @@ Once you have your tools set up you are ready to clone and build the project.
 
 ### Adding SSH key to your account.
 
-Unfortunately github is dropping support for login & password authentication through git so you have to start by setting up an SSH key.
+Unfortunately, github is dropping support for login & password authentication through git so you have to start by setting up an SSH key.
 
 Here is how to do this on Linux (simple way):
 
-1. Go to `.ssh` directory in your home folder (yes there is a coma before ssh).
+1. Go to `.ssh` directory in your home folder (yes there is a point before ssh).
 2. Generate keypair by running : `ssh-keygen -C "your_email@example.com"`. Replace `your_email@example.com` with your email used
 on github. The ssh-keygen will ask you where to put your key and how to name it. By default it is named `id_rsa` and is put inside `.ssh` in
-your home directory. This is fine unless your are planning to use multiple keys for different services. If you are fine with default arrangement then
+your home directory. This is fine unless your are planning to use multiple keys for different services. If you are fine with the default arrangement then
 press enter without typing anything. Then you will be asked to enter a passphrase for the key. It provides
-additional security but you will have to enter choosen password everytime you use the key. If you do not want any passphrase press enter without typing anything.
+additional security but you will have to enter the chosen password everytime you use the key. If you do not want any passphrase press enter without typing anything.
 3. Open `id_rsa.pub` in a text editor.
 4. Go to your account settings on github and open tab called `ssh and GPG keys`. Then press button with `add new ssh key` on it.
 5. Enter any name you want and put contents of `id_rsa.pub` file inside `key` field. NEVER DO THAT WITH YOUR PRIVATE KEY (id_rsa). KEEP YOUR PRIVATE KEY SECRET AT ALL TIMES.
@@ -110,7 +110,7 @@ You may get a warning like this:
 > Are you sure you want to continue connecting (yes/no)?
 ```
 
-In which case say type yes and proceed.
+In this case type yes and proceed.
 
 You should get something like this as a response
 
@@ -187,7 +187,7 @@ If you have those images then your build was succesfull.
 
 ### Database initialization
 
-Unfortunately you need to initialize the database separately otherwise django will fail.
+Unfortunately you need to initialize the database separately, otherwise django will fail.
 
 To do that run:
 
@@ -240,7 +240,7 @@ Then you have to list all running containers using:
 docker ps
 ```
 
-Note ID of the backend server container and then open bash shell inside it by running:
+Copy the ID of the backend server container and then open bash shell inside it by running:
 
 ```
 docker exec -ti [CONTAINER ID]  bash
@@ -335,7 +335,7 @@ If you want to access database SQL console please run:
 docker exec -ti [DB CONTAINER ID ] psql -U [DATABASE USER]
 ```
 
-You can find username and password in the environmental variables file inside backend folder.
+You can find username and password in the environmental variables file inside the backend folder.
 
 Here is a quick tutorial on how to use postgres shell: https://tomcam.github.io/postgres/
 
