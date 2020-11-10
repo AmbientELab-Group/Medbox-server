@@ -1,8 +1,3 @@
-
-__author__ = "Krzysztof Adamkiewicz"
-__status__ = "development"
-__date__ = "20.5.2020" 
-
 from django.db import models
 import uuid as UUID
 from django.contrib.auth import get_user_model
@@ -38,7 +33,10 @@ class PredefinedTime(models.Model):
 
     def clean(self):
         # check name uniqueness
-        if PredefinedTime.objects.filter(Q(owner=self.owner) & Q(name=self.name)).exists():
+        if PredefinedTime.objects.filter(
+            Q(owner=self.owner) &
+            Q(name=self.name)
+        ).exists():
             raise ValidationError(
                 _("Predefined time with this name already exists, choose different name."),
                 code="duplicated_value"

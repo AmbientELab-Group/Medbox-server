@@ -1,7 +1,3 @@
-__author__ = "Krzysztof Adamkiewicz"
-__status__ = "development"
-__date__ = "20.5.2020" 
-
 from django.db import models
 import uuid as UUID
 from django.contrib.auth import get_user_model
@@ -20,7 +16,7 @@ class Treatment(models.Model):
     )
 
     # reference to the beneficiary of this treatment
-    associatedUser = models.ForeignKey(
+    associated_user = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE,
         related_name="treatments"
@@ -30,7 +26,10 @@ class Treatment(models.Model):
     name = models.CharField(max_length=100)
 
     def clean(self):
-        if Treatment.objects.filter(Q(patient=self.patient) & Q(name=self.name)).exists():
+        if Treatment.objects.filter(
+            Q(patient=self.patient) &
+            Q(name=self.name)
+        ).exists():
             raise ValidationError(
                 _("Treatment with this name already exists, choose different name."),
                 code="duplicated_value"

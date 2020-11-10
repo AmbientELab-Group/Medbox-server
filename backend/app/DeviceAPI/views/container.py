@@ -9,14 +9,17 @@ from DeviceAPI.models import Container, Device
 from django.db.models import Q
 
 
-class ContainerList(generics.ListCreateAPIView):
+class ContainerListCreateView(generics.ListCreateAPIView):
     """
-    Endpoint for managing containers.
+    This is a view for listing collection of containers and creating new ones.
     """
     serializer_class = ContainerCreateOnlySerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        """
+        Allows to show only owned or managed containers.
+        """
         user = self.request.user
         managedContainers = Container.objects.filter(
             Q(device__owner=user) |
@@ -25,6 +28,11 @@ class ContainerList(generics.ListCreateAPIView):
         return managedContainers
 
     def list(self, request):
+        """
+        This endpoint returns all owned or managed containers for authenticated
+        user. May return only containers associated with a device specified in
+        the request.
+        """
         containers = self.get_queryset()
         deviceUUID = request.query_params.get("device")
         serializer = self.get_serializer(containers, many=True)
@@ -39,9 +47,15 @@ class ContainerList(generics.ListCreateAPIView):
 
         return Response(serializer.data)
 
-    # auto set first available position if position is missing
-    # put container inbetween existing ones otherwise (modifies others)
     def create(self, request):
+        """
+        This endpoint allows to create new containers. If no position is
+        explicitly specified for the new container, it is added on the first
+        available position in a device specified in request. If position is
+        specified in the range of already occupied positions the existing
+        containers are modified to reflect the shift neccesary to insert the
+        new container.
+        """
         containers = self.get_queryset()
         device = request.data.get("device")
         deviceObj = Device.objects.get(uuid=device)
@@ -70,14 +84,18 @@ class ContainerList(generics.ListCreateAPIView):
         return Response(serializer.data)
 
 
-class ContainerDetail(generics.RetrieveUpdateDestroyAPIView):
+class ContainerDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
-    Endpoint for managing containers.
+    This is a view for managing a single container. Contains retrive, update
+    and destroy endpoints.
     """
     serializer_class = ContainerSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        """
+        Allows to show and modify only owned or managed containers.
+        """
         user = self.request.user
         managedContainers = Container.objects.filter(
             Q(device__owner=user) |
@@ -85,8 +103,11 @@ class ContainerDetail(generics.RetrieveUpdateDestroyAPIView):
         )
         return managedContainers
 
-    # update affected containers positions
     def perform_update(self, serializer):
+        """
+        On every update, check end possibly correct positions of
+        affected containers in the same device.
+        """
         queryset = self.get_queryset()
         oldPosition = self.get_object().position
         newPosition = serializer.validated_data.get("position")
@@ -112,8 +133,11 @@ class ContainerDetail(generics.RetrieveUpdateDestroyAPIView):
 
         serializer.save()
 
-    # update containers positions when deleting middle one
     def perform_destroy(self, instance):
+        """
+        On every delete, check and possibly correct positions of
+        affected containers in the same device.
+        """
         queryset = self.get_queryset()
         affectedContainers = queryset.filter(
             Q(device=instance.device) &
