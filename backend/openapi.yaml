@@ -1202,9 +1202,17 @@ paths:
                   type: integer
                   format: int32
                   description: Code, uint32_t
+                device_version:
+                  type: string
+                  description: major.minor.patch
+                firmware_version:
+                  type: string
+                  description: major.minor.patch
               required:
               - serial_number
               - pairing_code
+              - device_version
+              - firmware_version
       responses:
         "200":
           content:
@@ -1315,7 +1323,7 @@ paths:
                   type: integer
                   minimum: 0
                   description: Device status code, 0-OK, other code is error, uint8_t
-                batter_voltage:
+                battery_voltage:
                   type: number
                   format: float
                   description: Battery voltage in volts.
@@ -1326,17 +1334,6 @@ paths:
                 - device_status
       responses:
         "201":
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  action_code:
-                    type: integer
-                    minimum: 0
-                    description: Maintanance instruction for device, 0 = no action, uint8_t. 
-                required:
-                  - action_code
           description: Report created.
         "400":
           description: Bad request.
