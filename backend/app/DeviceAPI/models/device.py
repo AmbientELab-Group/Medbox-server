@@ -26,6 +26,12 @@ class Device(models.Model):
         related_name="ownedDevices"
     )
 
+    # reference to supervisors of this device
+    supervisors = models.ManyToManyField(
+        get_user_model(),
+        related_name="supervisedDevices"
+    )
+
     # max number of containers which fit into this device
     capacity = models.PositiveSmallIntegerField()
 
