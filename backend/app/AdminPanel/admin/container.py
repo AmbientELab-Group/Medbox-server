@@ -1,10 +1,6 @@
-
-__author__ = "Krzysztof Adamkiewicz"
-__status__ = "development"
-__date__ = "11.5.2020" 
-
 from django.contrib import admin
 from ..models import Container
+
 
 class ContainerAdmin(admin.ModelAdmin):
     model = Container
@@ -12,13 +8,13 @@ class ContainerAdmin(admin.ModelAdmin):
         "uuid",
         "device",
         "position",
-        "lastRefill"
+        "last_refill"
     )
     list_filter = (
         "device",
         "capacity",
         "position",
-        "lastRefill"
+        "last_refill"
     )
     fieldsets = (
         (None, {
@@ -26,8 +22,7 @@ class ContainerAdmin(admin.ModelAdmin):
                 "capacity",
                 "device",
                 "position",
-                "lastRefill",
+                "last_refill",
             )
         }),
     )
- 

@@ -10,8 +10,8 @@ class ChamberSerializer(serializers.ModelSerializer):
         fields = [
             "uuid",
             "position",
-            "isFull",
-            "realAdministrationTime"
+            "is_full",
+            "real_administration_time"
         ]
         validators = [
             # make sure there are no two chambers at the same place
@@ -21,9 +21,11 @@ class ChamberSerializer(serializers.ModelSerializer):
             )
         ]
 
-    # assert chamber is empty if administration time exists
-    def validate_isFull(self):
-        if self.realAdministrationTime is not None and self.isFull:
+    def validate_is_full(self):
+        """
+        Check if chamber is empty if administration time exists
+        """
+        if self.real_administration_time is not None and self.is_full:
             raise serializers.ValidationError(
                 _("The dose was administered but chamber is still full."),
                 code="integrity_error"

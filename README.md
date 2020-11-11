@@ -339,6 +339,13 @@ You can find username and password in the environmental variables file inside th
 
 Here is a quick tutorial on how to use postgres shell: https://tomcam.github.io/postgres/
 
+#### TIP
+This is a command you will use most often working with backend:
+```
+docker-compose up medbox-backend_server medbox-database_server
+```
+it correctly spins up DB and backend containers.
+
 ## Workflow
 
 If you want to start working on something, create a feature branch from dev
@@ -376,3 +383,37 @@ DO NOT EVER RUN PUSH WITH --force FLAG. THIS WILL REWRITE HISTORY AND CAUSE PROB
 If you want to propose a change please talk to the team on the chat and then open an issue describing the change.
 
 If you have any questions please ask on chat.
+
+
+## Style guide
+
+- Use flake8 linter.
+- Use correct naming convention. CamelCase for classes - snake_case for everything else.
+- Do not use single quotes - "correct" > 'not so much'
+- Take a look at how existing code is commented and try to follow this practice. Generally try to make use of python doc strings and be explicit about what a given function is trying to achieve. That should be enough in most cases but feel free to add some line comments if you feel like your code is a bit hacky-wacky today
+
+## Database
+
+Normally all you have to do to keep your DB fresh and happy, is to apply migrations after any changes in python models (not necessarily done by you, e.g. sb done some changes in a different commit and since DB is not synced with git you have to sync DB structure manually).
+
+In order to do this you can TRY executing the migrations that came with the commit (make sure backend and DB containers are up):
+```
+docker exec -it medbox-backend_server bash
+./manage.py migrate
+```
+and this MAY work (with Django you never know).
+
+In case it didn't, go ahead and do the full reset using the scripts kindly provided by your colleagues:
+```
+cd /backend
+./resetDB.sh                                                <- before running this only DB container should be up
+docker exec -it medbox-backend_server bash < migrate.sh     <- before running this both server and DB should be up
+```
+Finish the process with creating new superuser:
+```
+docker exec -it medbox-backend_server bash
+./manage.py createsuperuser
+```
+
+#### Warning
+*This procedure will wipe out the whole content of your DB. If you want to persist sth copy it rather before than after.*

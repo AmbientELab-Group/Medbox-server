@@ -6,16 +6,12 @@ Constraints:
     with this object
     - there cannot be any other container at the same place in the same device
 """
-
-__author__ = "Krzysztof Adamkiewicz"
-__status__ = "development"
-__date__ = "20.5.2020"
-
 from django.db import models
 import uuid as UUID
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.db.models import Q
+from DeviceAPI.managers import ContainerManager
 
 
 class Container(models.Model):
@@ -41,14 +37,21 @@ class Container(models.Model):
     position = models.PositiveSmallIntegerField()
 
     # time this container was refilled at
-    lastRefill = models.DateTimeField(null=True, blank=True)
+    last_refill = models.DateTimeField(null=True, blank=True)
 
-    def fillStatus(self):
+    # custom manager
+    objects = ContainerManager()
+
+    def fill_status(self):
+        """
+        Returns number of percents this container is filled in calculated over
+        every chamber inside.
+        """
         chambers = self.chambers.filter(container=self)
         totalCapacity = self.capacity
         fullChambers = 0
         for chamb in chambers:
-            if chamb.isFull:
+            if chamb.is_full:
                 fullChambers += 1
 
         if totalCapacity == 0:

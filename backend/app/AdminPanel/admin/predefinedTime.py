@@ -1,9 +1,6 @@
-__author__ = "Krzysztof Adamkiewicz"
-__status__ = "development"
-__date__ = "11.5.2020" 
-
 from django.contrib import admin
 from ..models import PredefinedTime
+
 
 class PredefinedTimeAdmin(admin.ModelAdmin):
     model = PredefinedTime
@@ -20,10 +17,9 @@ class PredefinedTimeAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             "fields": (
-                "name", 
+                "name",
                 "time",
                 "owner"
             )
         }),
     )
- 

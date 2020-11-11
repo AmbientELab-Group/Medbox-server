@@ -1,17 +1,12 @@
 """
 Constraints:
-    - if realAdministrationTime is not null the chamber has been emptied
-    and isFull needs to be False
+    - if real_administration_time is not null the chamber has been emptied
+    and is_full needs to be False
     - there cannot be any other chamber at the same position in the
     same container
     - the position of the chamber cannot be greater than the capacity
     of the container
 """
-
-__author__ = "Krzysztof Adamkiewicz"
-__status__ = "development"
-__date__ = "20.5.2020"
-
 from django.db import models
 import uuid as UUID
 from django.core.exceptions import ValidationError
@@ -39,23 +34,23 @@ class Chamber(models.Model):
     position = models.PositiveSmallIntegerField()
 
     # indicates if the chamber is empty
-    isFull = models.BooleanField(default=False)
+    is_full = models.BooleanField(default=False)
 
     # time of administration of its content
-    realAdministrationTime = models.DateTimeField(
+    real_administration_time = models.DateTimeField(
         null=True,
         blank=True
     )
 
     def clean(self):
-        # check if isFull field and realAdministrationTime are in sync
-        if self.realAdministrationTime is not None and self.isFull:
+        # check if is_full and real_administration_time fields are in sync
+        if self.real_administration_time is not None and self.is_full:
             raise ValidationError(
                 _("The dose was administered but chamber is still full."),
                 code="integrity_error"
             )
 
-        # make sure there are no two chambers at the same place
+        # make sure there are no two chambers at the same position
         if Chamber.objects.filter(
             ~Q(uuid=self.uuid) &
             Q(container=self.container) &

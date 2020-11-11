@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.utils.translation import gettext as _
 from rest_framework.validators import UniqueTogetherValidator
-from DeviceAPI.models import Device, Container, Chamber
+from DeviceAPI.models import Device, Container
 
 
 class ContainerSerializer(serializers.ModelSerializer):
@@ -12,20 +12,24 @@ class ContainerSerializer(serializers.ModelSerializer):
             "capacity",
             "device",
             "position",
-            "lastRefill",
-            "fillStatus"
+            "last_refil",
+            "fill_status"
         ]
         read_only_fields = [
             "capacity",
-            "fillStatus"
+            "fill_status"
         ]
 
-    # assert this serializer is not used for create operation
     def create(self, validated_data):
+        """
+        Assert this serializer is not used for create operation.
+        """
         raise Exception("Create operation called from ContainerSerializer")
 
-    # assert position in capacity range
     def validate_position(self, position):
+        """
+        Check if position is in capacity range.
+        """
         data = self.context.get("request").data
         deviceUUID = data.get("device")
         if deviceUUID:
@@ -37,8 +41,11 @@ class ContainerSerializer(serializers.ModelSerializer):
                 )
         return position
 
-    # assert only the managed device can be set
     def validate_device(self, device):
+        """
+        Check if user has permissions to assign this container to the
+        provided device.
+        """
         user = self.context.get("request").user
         supervisedDevices = user.supervisedDevices.all()
         if device in supervisedDevices or user == device.owner:
@@ -58,11 +65,11 @@ class ContainerCreateOnlySerializer(ContainerSerializer):
             "capacity",
             "device",
             "position",
-            "lastRefill",
-            "fillStatus"
+            "last_refil",
+            "fill_status"
         ]
         read_only_fields = [
-            "fillStatus"
+            "fill_status"
         ]
         validators = [
             # assert position uniqueness
@@ -72,10 +79,9 @@ class ContainerCreateOnlySerializer(ContainerSerializer):
             )
         ]
 
-    # after creating container, create and bind its chambers
-    # auto sets position based on existing containers
     def create(self, validated_data):
-        container = Container.objects.create(**validated_data)
-        for pos in range(validated_data.get("capacity")):
-            Chamber.objects.create(container=container, position=pos)
+        """
+        Create already with chambers.
+        """
+        container = Container.objects.create_with_chambers(**validated_data)
         return container

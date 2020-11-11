@@ -10,8 +10,7 @@ class DoseSerializer(serializers.ModelSerializer):
             "treatment",
             "chamber",
             "medicine",
-            "plannedAdministrationTime",
-            "numberOfPills",
-            "onDemand"
+            "planned_administration_time",
+            "number_of_pills",
+            "on_demand"
         ]
-

@@ -1,9 +1,6 @@
-__author__ = "Krzysztof Adamkiewicz"
-__status__ = "development"
-__date__ = "11.5.2020" 
-
 from django.contrib import admin
 from ..models import Device
+
 
 class DeviceAdmin(admin.ModelAdmin):
     model = Device
@@ -12,9 +9,9 @@ class DeviceAdmin(admin.ModelAdmin):
         "name",
         "capacity",
         "owner",
-        "pairingKey",
-        "pairingKeyExpiresAt",
-        "apiToken",
+        "pairing_key",
+        "pairing_key_expires_at",
+        "api_token",
     )
     list_filter = (
         "name",
@@ -30,4 +27,3 @@ class DeviceAdmin(admin.ModelAdmin):
             )
         }),
     )
- 

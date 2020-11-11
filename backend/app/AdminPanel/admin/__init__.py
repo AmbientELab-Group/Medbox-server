@@ -1,9 +1,4 @@
-__author__ = "Krzysztof Adamkiewicz"
-__status__ = "development"
-__date__ = "11.5.2020" 
-
 from django.contrib import admin
-
 from .user import UserAdmin
 from .medicine import MedicineAdmin
 from .dose import DoseAdmin
@@ -24,4 +19,3 @@ admin.site.register(PredefinedTime, PredefinedTimeAdmin)
 admin.site.register(Device, DeviceAdmin)
 admin.site.register(Container, ContainerAdmin)
 admin.site.register(Chamber, ChamberAdmin)
-

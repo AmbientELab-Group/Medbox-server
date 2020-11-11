@@ -33,7 +33,7 @@ def add(request):
             code = form.cleaned_data.get('code')
             
             # lookup the code
-            keys = Device.objects.filter(pairingKey__exact=code)
+            keys = Device.objects.filter(pairing_key__exact=code)
             if keys.count() == 0:
                 messages.error(request, 'Invalid code!')
                 return redirect('devices-dispensor-add')

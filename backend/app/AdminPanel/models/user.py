@@ -25,12 +25,6 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
-    # associated supervised devices
-    supervisedDevices = models.ManyToManyField(
-        "DeviceAPI.Device",
-        related_name="supervisors"
-    )
-
     objects = UserManager()
 
     def __str__(self):

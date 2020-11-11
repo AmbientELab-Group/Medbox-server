@@ -1,0 +1,2 @@
+DROP DATABASE "mainDB";
+CREATE DATABASE "mainDB";

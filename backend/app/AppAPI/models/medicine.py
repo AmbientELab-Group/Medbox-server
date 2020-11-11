@@ -1,13 +1,8 @@
 """
 Constraints:
-    - there are no two same entries in this table (no two matching name AND producer entries)
-      if the producer is empty the name has to be unique
+    - there are no two same entries in this table (no two matching name AND
+      producer entries) if the producer is empty the name has to be unique
 """
-
-__author__ = "Krzysztof Adamkiewicz"
-__status__ = "development"
-__date__ = "20.5.2020" 
-
 from django.db import models
 import uuid as UUID
 from django.core.exceptions import ValidationError
@@ -35,18 +30,18 @@ class Medicine(models.Model):
 
     def clean(self):
         self.name = self.name.capitalize()
-        isNameAlreadyUsed = Medicine.objects.filter(name=self.name).exists()
+        is_name_already_used = Medicine.objects.filter(name=self.name).exists()
 
-        if self.producer == "" and isNameAlreadyUsed:
+        if self.producer == "" and is_name_already_used:
             raise ValidationError(
                 _("Medicine with this name already exists."),
                 code="already_exists"
             )
 
         self.producer = self.producer.capitalize()
-        isProducerAlreadyUsed = Medicine.objects.filter(producer=self.producer).exists()
+        is_producer_already_used = Medicine.objects.filter(producer=self.producer).exists()
 
-        if isNameAlreadyUsed and isProducerAlreadyUsed:
+        if is_name_already_used and is_producer_already_used:
             raise ValidationError(
                 _("Medicine with this name and producer already exists."),
                 code="already_exists"

@@ -15,10 +15,10 @@ class DeviceSerializer(serializers.ModelSerializer):
             "owner",
             "capacity",
             "name",
-            "fillStatus"
+            "fill_status"
         ]
         read_only_fields = [
-            "fillStatus"
+            "fill_status"
         ]
         validators = [
             # check name uniqueness

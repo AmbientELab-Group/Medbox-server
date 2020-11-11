@@ -1,14 +1,10 @@
 """
 Constraints:
-    - plannedAdministrationTime has to be set in the future
-    - numberOfPills has to be positive
-    - there can be either administration time or on demand option set, not both at the same time
+    - planned_administration_time has to be set in the future
+    - number_of_pills has to be positive
+    - there can be either administration time or on demand option set, not
+    both at the same time
 """
-
-__author__ = "Krzysztof Adamkiewicz"
-__status__ = "development"
-__date__ = "20.5.2020" 
-
 from django.db import models
 import uuid as UUID
 from django.core.exceptions import ValidationError
@@ -16,7 +12,7 @@ from django.utils.translation import gettext as _
 from django.utils import timezone
 
 
-def plannedAdministrationTimeValidator(time):
+def planned_administration_time_validator(time):
     if time < timezone.now():
         raise ValidationError(
             _("Choose administration time to be in the future."),
@@ -24,8 +20,8 @@ def plannedAdministrationTimeValidator(time):
         )
 
 
-def numberOfPillsValidator(numOfPills):
-    if numOfPills <= 0:
+def number_of_pills_validator(num_of_pills):
+    if num_of_pills <= 0:
         raise ValidationError(
             _("Incorrect number of pills specified."),
             code="invalid_value"
@@ -64,31 +60,31 @@ class Dose(models.Model):
     )
 
     # administration time
-    plannedAdministrationTime = models.DateTimeField(
+    planned_administration_time = models.DateTimeField(
         null=True,
         blank=True,
-        validators=[plannedAdministrationTimeValidator]
+        validators=[planned_administration_time_validator]
     )
 
     # size of the dose
-    numberOfPills = models.FloatField(validators=[numberOfPillsValidator])
+    number_of_pills = models.FloatField(validators=[number_of_pills_validator])
 
     # specifies if the dose is scheduled or available on demand
-    onDemand = models.BooleanField(default=False)
+    on_demand = models.BooleanField(default=False)
 
     def clean(self):
-        # check if the onDemand option do not collide with timestamp
-        if self.plannedAdministrationTime is None and self.onDemand is False:
+        # check if the on_demand option do not collide with timestamp
+        if self.planned_administration_time is None and self.on_demand is False:
             raise ValidationError(
                 _("Choose administration time or specify on demand option."),
                 code="integrity_error"
             )
 
-        if self.plannedAdministrationTime is not None and self.onDemand is True:
+        if self.planned_administration_time is not None and self.on_demand is True:
             raise ValidationError(
                 _("Choose either administration time or on demand option."),
                 code="integrity_error"
             )
 
     def __str__(self):
-        return f"{self.medicine} at: {self.plannedAdministrationTime}"
+        return f"{self.medicine} at: {self.planned_administration_time}"

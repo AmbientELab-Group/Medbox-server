@@ -1,11 +1,7 @@
 """
-Device model.
+Constraints:
+    - device name must be unique for a user
 """
-
-__author__ = "Krzysztof Adamkiewicz"
-__status__ = "development"
-__date__ = "25.5.2020"
-
 from django.db import models
 from django.contrib.auth import get_user_model
 import uuid as UUID
@@ -30,6 +26,12 @@ class Device(models.Model):
         related_name="ownedDevices"
     )
 
+    # reference to supervisors of this device
+    supervisors = models.ManyToManyField(
+        get_user_model(),
+        related_name="supervisedDevices"
+    )
+
     # max number of containers which fit into this device
     capacity = models.PositiveSmallIntegerField()
 
@@ -37,21 +39,25 @@ class Device(models.Model):
     name = models.CharField(max_length=100)
 
     # pairing key used to connect the device with a user's account
-    pairingKey = models.CharField(
+    pairing_key = models.CharField(
         max_length=6,
         default=''
     )
 
     # pairing key expiration date
-    pairingKeyExpiresAt = models.DateTimeField(null=True)
+    pairing_key_expires_at = models.DateTimeField(null=True)
 
     # token used to authenticated API calls from this device
-    apiToken = models.CharField(
+    api_token = models.CharField(
         max_length=42,
         default=''
     )
 
-    def fillStatus(self):
+    def fill_status(self):
+        """
+        Returns number of percents this device is filled in calculated over
+        every container inside.
+        """
         containers = self.containers.filter(device=self)
         totalCapacity = 0
         fullChambers = 0
@@ -59,7 +65,7 @@ class Device(models.Model):
             totalCapacity += cont.capacity
             chambers = cont.chambers.filter(container=cont)
             for chamb in chambers:
-                if chamb.isFull:
+                if chamb.is_full:
                     fullChambers += 1
 
         if totalCapacity == 0:

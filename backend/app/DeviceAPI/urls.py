@@ -11,8 +11,8 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from DeviceAPI.views import (
     DeviceList,
     DeviceDetail,
-    ContainerList,
-    ContainerDetail
+    ContainerListCreateView,
+    ContainerDetailView
 )
 # from . import api
 
@@ -23,8 +23,8 @@ urlpatterns = [
     #     name="request-pairing-key"),
     path("devices", DeviceList.as_view()),
     path("devices/<uuid:pk>", DeviceDetail.as_view()),
-    path("containers", ContainerList.as_view()),
-    path("containers/<uuid:pk>", ContainerDetail.as_view())
+    path("containers", ContainerListCreateView.as_view()),
+    path("containers/<uuid:pk>", ContainerDetailView.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
