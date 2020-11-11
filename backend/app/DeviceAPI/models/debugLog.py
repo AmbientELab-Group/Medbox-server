@@ -44,6 +44,7 @@ class DebugLog(models.Model):
 
     # additional info about the log
     details = models.CharField(
+        max_length=256,
         default="",
         blank=True
     )

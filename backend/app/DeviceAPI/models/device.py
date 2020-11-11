@@ -45,7 +45,7 @@ class Device(models.Model):
     )
 
     # pairing key expiration date
-    pairing_key_expires_at = models.DateTimeField(null=True)
+    pairing_code_expires_at = models.DateTimeField(null=True)
 
     # token used to authenticated API calls from this device
     api_token = models.CharField(
@@ -56,7 +56,7 @@ class Device(models.Model):
 
     # factory serial number assigned to the device
     serial_number = models.UUIDField(
-        default="",
+        null=True,
         blank=True
     )
 

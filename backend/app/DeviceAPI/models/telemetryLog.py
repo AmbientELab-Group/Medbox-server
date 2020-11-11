@@ -20,7 +20,7 @@ class TelemetryLog(models.Model):
     device = models.ForeignKey(
         "Device",
         on_delete=models.CASCADE,
-        related_name="debug_logs"
+        related_name="telemetry_logs"
     )
 
     # Unix time
