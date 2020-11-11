@@ -1,10 +1,6 @@
-__author__ = "Krzysztof Adamkiewicz"
-__status__ = "development"
-__date__ = "12.5.2020" 
-
 from AdminPanel.models.user import User
 
-from AppAPI.models.medicine import Medicine 
+from AppAPI.models.medicine import Medicine
 from AppAPI.models.treatment import Treatment
 from AppAPI.models.dose import Dose
 from AppAPI.models.predefinedTime import PredefinedTime
@@ -12,3 +8,5 @@ from AppAPI.models.predefinedTime import PredefinedTime
 from .device import Device
 from .chamber import Chamber
 from .container import Container
+from .debugLog import DebugLog
+from .telemetryLog import TelemetryLog

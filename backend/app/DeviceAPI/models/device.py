@@ -39,9 +39,9 @@ class Device(models.Model):
     name = models.CharField(max_length=100)
 
     # pairing key used to connect the device with a user's account
-    pairing_key = models.CharField(
+    pairing_code = models.CharField(
         max_length=6,
-        default=''
+        default=""
     )
 
     # pairing key expiration date
@@ -50,7 +50,28 @@ class Device(models.Model):
     # token used to authenticated API calls from this device
     api_token = models.CharField(
         max_length=42,
-        default=''
+        default="",
+        blank=True
+    )
+
+    # factory serial number assigned to the device
+    serial_number = models.UUIDField(
+        default="",
+        blank=True
+    )
+
+    # version of the hardware
+    hardware_version = models.CharField(
+        max_length=11,
+        default="",
+        blank=True
+    )
+
+    # version of the firmware
+    firmware_version = models.CharField(
+        max_length=11,
+        default="",
+        blank=True
     )
 
     def fill_status(self):
