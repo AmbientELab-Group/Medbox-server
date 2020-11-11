@@ -9,8 +9,8 @@ class DeviceAdmin(admin.ModelAdmin):
         "name",
         "capacity",
         "owner",
-        "pairing_key",
-        "pairing_key_expires_at",
+        "pairing_code",
+        "pairing_code_expires_at",
         "api_token",
     )
     list_filter = (

@@ -13,6 +13,7 @@ from django import forms
 from DeviceAPI.models import Device
 from AdminPanel.models import User
 
+
 class CodeForm(forms.Form):
     """
     Form for entering code.
@@ -33,7 +34,7 @@ def add(request):
             code = form.cleaned_data.get('code')
             
             # lookup the code
-            keys = Device.objects.filter(pairing_key__exact=code)
+            keys = Device.objects.filter(pairing_code__exact=code)
             if keys.count() == 0:
                 messages.error(request, 'Invalid code!')
                 return redirect('devices-dispensor-add')

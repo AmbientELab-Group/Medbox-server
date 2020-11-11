@@ -30,7 +30,7 @@ class RequestKeys(APIView):
         # generate new unique code and expiration date
         while True:
             code = '{n:05d}'.format(n=secrets.randbelow(10**6))
-            if Device.objects.filter(pairing_key__exact=code).count() == 0:
+            if Device.objects.filter(pairing_code__exact=code).count() == 0:
                 expirationDate = datetime.now(timezone.utc)+timedelta(minutes=settings.PAIRING_CODE_LIFETIME)
                 break
 
@@ -42,15 +42,17 @@ class RequestKeys(APIView):
 
         if device.count() == 0:
             # create new device entry
-            device = Device(serialNumber=request.data["serial_no"], 
-                        api_token=token,
-                        pairing_key=code,
-                        pairing_key_expires_at=expirationDate)
+            device = Device(
+                serialNumber=request.data["serial_no"],
+                api_token=token,
+                pairing_code=code,
+                pairing_code_expires_at=expirationDate
+            )
         else:
             # update existing device entry with new api_token, pairing code and its expiration date
             device = device[0]
-            device.pairing_key = code
-            device.pairing_key_expires_at = expirationDate
+            device.pairing_code = code
+            device.pairing_code_expires_at = expirationDate
             device.api_token = token
 
         device.save()
