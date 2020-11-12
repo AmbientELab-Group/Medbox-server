@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-    medbox-database_server:
+    medbox-datasbase_server:
         image: postgres
-        container_name: medbox-database_server
+        container_name: medbox-database_server_prod
 
         environment:
             - POSTGRES_DB=mainDB
@@ -14,16 +14,19 @@ services:
             - ./_dbData/mainDB:/var/lib/postgresql/data
 
     medbox-backend_server:
-        build: ./backend
-        image: medbox-backend_server
-        container_name: medbox-backend_server
+        build:
+            context: .
+            dockerfile: Dockerfile.prod
+        
+        image: medbox-backend_server_prod
+        container_name: medbox-backend_server_prod
         command: python manage.py runserver 0.0.0.0:8000
         
         volumes:
             - ./backend/app/:/usr/src/app/
         
         depends_on:
-            - medbox-database_server
+            - medbox-datasbase_server
         
         ports:
             - "8000:8000"
@@ -32,9 +35,12 @@ services:
             - ./backend/app/.env.dev
 
     medbox-frontend_server:
-        build: ./frontend
-        image: medbox-frontend_server
-        container_name: medbox-frontend_server
+        build:
+            context: .
+            dockerfile: Dockerfile.prod
+        
+        image: medbox-frontend_server_prod
+        container_name: medbox-frontend_server_prod
 
         volumes:
             - './frontend/:/app'
@@ -44,10 +50,4 @@ services:
             - medbox-backend_server
     
         ports:
-            - 3000:3000
-        
-        environment:
-            - CHOKIDAR_USEPOLLING=true
-        
-        stdin_open: true
-        tty: true
+            - 80:80
