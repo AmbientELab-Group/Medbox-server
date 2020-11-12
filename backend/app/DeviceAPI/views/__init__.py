@@ -1,2 +1,2 @@
-from .device import DeviceList, DeviceDetail
+from .device import DeviceList, DeviceDetail, DevicePairing
 from .container import ContainerListCreateView, ContainerDetailView

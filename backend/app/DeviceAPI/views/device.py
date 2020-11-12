@@ -24,3 +24,16 @@ class DeviceDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
     permission_classes = [IsAuthenticated]
+
+# still work to do
+class DevicePairing(generics.RetrieveUpdateDestroyAPIView):
+    """Endpoint for pairing device"""
+    queryset = Device.objects.all()
+    serializer_class = DeviceSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_pairing_code(self):
+        """gets current pairing code from server"""
+        code = Device.pairing_code()
+
+        return code  # should be json format; how to test it?
