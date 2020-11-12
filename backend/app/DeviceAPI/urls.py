@@ -14,13 +14,8 @@ from DeviceAPI.views import (
     ContainerListCreateView,
     ContainerDetailView
 )
-# from . import api
-
 
 urlpatterns = [
-    # API for requesting a token and key from the device
-    # path("pairing/requestPairingKey", api.pairing.RequestKeys.as_view(),
-    #     name="request-pairing-key"),
     path("devices", DeviceList.as_view()),
     path("devices/<uuid:pk>", DeviceDetail.as_view()),
     path("containers", ContainerListCreateView.as_view()),
