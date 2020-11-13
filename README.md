@@ -406,14 +406,18 @@ and this MAY work (with Django you never know).
 In case it didn't, go ahead and do the full reset using the scripts kindly provided by your colleagues:
 ```
 cd /backend
-./resetDB.sh                                                <- before running this only DB container should be up
-docker exec -it medbox-backend_server bash < migrate.sh     <- before running this both server and DB should be up
+./resetDB.sh
 ```
-Finish the process with creating new superuser:
-```
-docker exec -it medbox-backend_server bash
-./manage.py createsuperuser
-```
+This script will:
+- recreate DB
+- create migrations
+- apply migrations
+- create superuser
+
+##### Default superuser:
+Email: superemail@gmail.com
+Password: superpassword
+
 
 #### Warning
 *This procedure will wipe out the whole content of your DB. If you want to persist sth copy it rather before than after.*
