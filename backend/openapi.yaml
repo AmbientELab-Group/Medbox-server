@@ -5,26 +5,28 @@ info:
   version: "0.1"
 
 tags:
-  - name: account
+  - name: Account
     description: Managing users, tokens and permissions.
-  - name: device
+  - name: Device
     description: Managing devices, containers and chambers.
   - name: treatments
     description: Managing treatments, doses, and medicines.
-  - name: internal device API
+  - name: Internal device API
     description: Endpoints for communication with devices, not publicly available.
 
 servers:
-  - url: http://localhost:8000/api/v1
+  - url: http://localhost:8000/api
     description: Local development server
 
 paths:
   /account/users/{uuid}:
     get:
+      security:
+        - bearerAuth: []
       tags:
-        - account
+        - Account
       operationId: RetrieveUserInfo
-      description: Gets a user by ID.
+      description: Gets a user by ID. Request has to be authenticated 
       parameters:
       - name: uuid
         in: path
@@ -32,6 +34,7 @@ paths:
         description: UUID of requested user
         schema:
           type: string
+          format: uuid
       responses:
         "200":
           content:
@@ -39,6 +42,128 @@ paths:
               schema:
                 $ref: "#/components/schemas/User"
           description: Successful request.
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "5XX":
+          $ref: "#/components/responses/InternalError"
+
+  /account/signup:
+    post:
+      tags:
+        - Account
+      operationId: Createsign_up_view
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          content:
+            application/json:
+              schema: {}
+          description: ""
+
+  /account/signin:
+    post:
+      tags:
+        - Account
+      operationId: CreateTokenObtainPair
+      description: "Takes a set of user credentials and returns an access and refresh JSON web token pair to prove the authentication of those credentials."
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                  writeOnly: true
+              required:
+              - email
+              - password
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  email:
+                    type: string
+                required:
+                - email
+          description: ""
+  /token/refresh:
+    post:
+      tags:
+        - Account
+      operationId: CreateTokenRefresh
+      description: "Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid."
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                refresh:
+                  type: string
+              required:
+              - refresh
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  refresh:
+                    type: string
+                required:
+                - refresh
+          description: ""
+
+  /token/verify:
+    post:
+      tags:
+       - Account
+      operationId: CreateTokenVerify
+      description: "Takes a token and indicates if it is valid. This view provides no information about a token's fitness for a particular use."
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                token:
+                  type: string
+              required:
+              - token
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  token:
+                    type: string
+                required:
+                - token
+          description: ""
+
   /device/devices:
     get:
       operationId: listDevices
@@ -1071,101 +1196,11 @@ paths:
       responses:
         "204":
           description: ""
-  /account/signup:
-    post:
-      operationId: Createsign_up_view
-      description: ""
-      parameters: []
-      responses:
-        "200":
-          content:
-            application/json:
-              schema: {}
-          description: ""
-  /account/signin:
-    post:
-      operationId: CreateTokenObtainPair
-      description: "Takes a set of user credentials and returns an access and refresh JSON web token pair to prove the authentication of those credentials."
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
-                  writeOnly: true
-              required:
-              - email
-              - password
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  email:
-                    type: string
-                required:
-                - email
-          description: ""
-  /token/refresh:
-    post:
-      operationId: CreateTokenRefresh
-      description: "Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid."
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                refresh:
-                  type: string
-              required:
-              - refresh
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  refresh:
-                    type: string
-                required:
-                - refresh
-          description: ""
-  /token/verify:
-    post:
-      operationId: CreateTokenVerify
-      description: "Takes a token and indicates if it is valid. This view provides no information about a token's fitness for a particular use."
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                token:
-                  type: string
-              required:
-              - token
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  token:
-                    type: string
-                required:
-                - token
-          description: ""
 
   /pairing:
     get:
       tags:
-        - internal device API
+        - Internal device API
       operationId: GetPairingCode
       description: Request new pairing code from the server.
       responses:
@@ -1183,7 +1218,7 @@ paths:
           description: Successful request.
     post:
       tags:
-        - internal device API
+        - Internal device API
       operationId: PoolPairingStatus
       description: Pooling endpoint for pairing authentication.
       requestBody:
@@ -1236,7 +1271,7 @@ paths:
   /pairing/verify:
     post:
       tags:
-        - internal device API
+        - Internal device API
       operationId: PairingVerify
       description: Verify if token is valid.
       requestBody:
@@ -1261,7 +1296,7 @@ paths:
   /debug/logs:
     post:
       tags:
-      - internal device API
+      - Internal device API
       operationId: CreateLog
       description: Create new log from device.
       requestBody:
@@ -1278,7 +1313,7 @@ paths:
   /clock:
     get:
       tags:
-        - internal device API
+        - Internal device API
       operationId: GetNTPServerAddress
       description: Gets ip address of NTP server.
       responses:
@@ -1296,7 +1331,7 @@ paths:
   /telemetry:
     post:
       tags:
-        - internal device API
+        - Internal device API
       operationId: CreateHealthCheckReport
       description: Reports status of the device. The maintanance instructions can be returned as a response.
       requestBody:
@@ -1341,7 +1376,7 @@ paths:
   /program/plannedDoses/count:
     get:
       tags:
-        - internal device API
+        - Internal device API
       operationId: GetPlannedDosesCount
       description: Requests number of planned doses in the scheduled treatments for this devices.
       responses:
@@ -1361,7 +1396,7 @@ paths:
   /program/plannedDoses/{index}:
     get:
       tags:
-        - internal device API
+        - Internal device API
       operationId: GetPlannedDose
       description: Requests a planned dose to be saved in a device memory. Queries a {index} dose from admission time
                   sorted treatments.
@@ -1399,7 +1434,7 @@ paths:
   /program/onDemand/count:
     get:
       tags:
-        - internal device API
+        - Internal device API
       operationId: GetOnDemandDosesCount
       description: Requests number of on demand doses.
       responses:
@@ -1418,7 +1453,7 @@ paths:
   /program/onDemand/{index}:
     get:
       tags:
-        - internal device API
+        - Internal device API
       operationId: GetOnDemandBatch
       description: Requests on demand doses batch to be saved in a device memory. Queries a {index} batch from SOMEHOW
                   sorted batches.
@@ -1460,7 +1495,7 @@ paths:
   /program/hash:
     get:
       tags:
-        - internal device API
+        - Internal device API
       operationId: GetProgramHash
       description: Requests program hash to validate update validity.
       responses:
@@ -1479,7 +1514,7 @@ paths:
   /refill/confirmation:
     post:
       tags:
-        - internal device API
+        - Internal device API
       operationId: RefillConfirmation
       description: Sends refill confirmation to ensure operation is successfully completed.
       responses:
@@ -1489,7 +1524,7 @@ paths:
   /events/container:
     post:
       tags:
-        - internal device API
+        - Internal device API
       operationId: CreateNewContainerEvent
       description: Sends new container event to be stored in event logs.
       requestBody:
@@ -1528,7 +1563,7 @@ paths:
   /events/dose:
     post:
       tags:
-        - internal device API
+        - Internal device API
       operationId: CreateNewDoseEvent
       description: Sends new dose event to be stored in event logs. In request body either dispensed or skipped flag must be set.
       requestBody:
@@ -1562,7 +1597,7 @@ paths:
   /events/user:
     post:
       tags:
-        - internal device API
+        - Internal device API
       operationId: CreateNewUserEvent
       description: Sends new user event to be stored in event logs. Information about user interaction with device.
       requestBody:
@@ -1588,6 +1623,23 @@ paths:
           description: Bad request.
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    Unauthenticated:
+      description: Access token is missing or invalid.
+    Unauthorized:
+      description: You have no access to this resource.
+    NotFound:
+      description: Resource not found.
+    InternalError:
+      description: Unexpected serverside error.
+    
+
   schemas:
     uuid:
       type: string
