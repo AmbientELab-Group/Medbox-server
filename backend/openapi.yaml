@@ -7,26 +7,112 @@ info:
 tags:
   - name: Account
     description: Managing users, tokens and permissions.
-  - name: Device
-    description: Managing devices, containers and chambers.
-  - name: treatments
-    description: Managing treatments, doses, and medicines.
+  - name: Devices
+    description: Managing devices.
+  - name: Containers
+    description: Managing containers.
+  - name: Chambers
+    description: Managing chambers.
+  - name: Treatments
+    description: Managing treatments.
+  - name: Doses
+    description: Managing doses.
+  - name: Medicines
+    description: Managing medicines.
   - name: Internal device API
-    description: Endpoints for communication with devices, not publicly available.
+    description: Endpoints for server-device communication, not publicly available.
 
 servers:
   - url: http://localhost:8000/api
     description: Local development server
 
 paths:
-  /account/users/{uuid}:
-    get:
-      security:
-        - bearerAuth: []
+  /account/signup:
+    post:
       tags:
         - Account
+      operationId: SignUp
+      description: "This endpoint allows to create user account in the system. Returns refresh and access jwt tokens used to authenticate API calls."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  refresh_token:
+                    type: string
+                    format: jwt
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYwNTYzNjU3OSwianRpIjoiYmYyZmQ5ZTY5MzY1NGUxZmFjZGI5Y2QzNzZiZWQyNmQiLCJ1c2VyX2lkIjoiYmNmZTA4NmYtZDgyOC00NWM4LWFlNzItZGY3ZTJkZDdiMTRlIn0.izJVDI6wCRxsBxY4Mx12__XJLVsy2xsywBbtsfiQYIA
+                  access_token:
+                    type: string
+                    format: jwt
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NTUxOTc5LCJqdGkiOiI2NTcyNTY5ZThhMWQ0YzlkYmNjM2ZhZTFiNGE3N2M3OCIsInVzZXJfaWQiOiJiY2ZlMDg2Zi1kODI4LTQ1YzgtYWU3Mi1kZjdlMmRkN2IxNGUifQ.1HWYdfySr5I7COXHlbxnVc9JsJ8L15k0e4UGYFYYEus
+          description: "User created successfully."
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /account/signin:
+    post:
+      tags:
+        - Account
+      operationId: SignIn
+      description: "Takes a set of user credentials and returns an access and refresh JSON web token pair to prove the authentication of those credentials."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+              - email
+              - password
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  refresh_token:
+                    type: string
+                    format: jwt
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYwNTYzNjU3OSwianRpIjoiYmYyZmQ5ZTY5MzY1NGUxZmFjZGI5Y2QzNzZiZWQyNmQiLCJ1c2VyX2lkIjoiYmNmZTA4NmYtZDgyOC00NWM4LWFlNzItZGY3ZTJkZDdiMTRlIn0.izJVDI6wCRxsBxY4Mx12__XJLVsy2xsywBbtsfiQYIA
+                  access_token:
+                    type: string
+                    format: jwt
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NTUxOTc5LCJqdGkiOiI2NTcyNTY5ZThhMWQ0YzlkYmNjM2ZhZTFiNGE3N2M3OCIsInVzZXJfaWQiOiJiY2ZlMDg2Zi1kODI4LTQ1YzgtYWU3Mi1kZjdlMmRkN2IxNGUifQ.1HWYdfySr5I7COXHlbxnVc9JsJ8L15k0e4UGYFYYEus
+          description: "Successfull sign in request."
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+
+  /account/users/{uuid}:
+    get:
+      tags:
+        - Account
+      security:
+        - bearerAuth: []
       operationId: RetrieveUserInfo
-      description: Gets a user by ID. Request has to be authenticated 
+      description: Gets a user by ID. Only authenticated clients may see their details.
       parameters:
       - name: uuid
         in: path
@@ -48,80 +134,23 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
-        "5XX":
-          $ref: "#/components/responses/InternalError"
 
-  /account/signup:
+  /account/token/refresh:
     post:
       tags:
         - Account
-      operationId: Createsign_up_view
-      description: ""
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                email:
-                  type: string
-                  format: email
-                password:
-                  type: string
-              required:
-                - email
-                - password
-      responses:
-        "200":
-          content:
-            application/json:
-              schema: {}
-          description: ""
-
-  /account/signin:
-    post:
-      tags:
-        - Account
-      operationId: CreateTokenObtainPair
-      description: "Takes a set of user credentials and returns an access and refresh JSON web token pair to prove the authentication of those credentials."
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
-                  writeOnly: true
-              required:
-              - email
-              - password
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  email:
-                    type: string
-                required:
-                - email
-          description: ""
-  /token/refresh:
-    post:
-      tags:
-        - Account
-      operationId: CreateTokenRefresh
+      operationId: RefreshAccessToken
       description: "Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid."
-      parameters: []
       requestBody:
         content:
           application/json:
             schema:
+              type: object
               properties:
                 refresh:
                   type: string
+                  format: jwt
+                  example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NTUxOTc5LCJqdGkiOiI2NTcyNTY5ZThhMWQ0YzlkYmNjM2ZhZTFiNGE3N2M3OCIsInVzZXJfaWQiOiJiY2ZlMDg2Zi1kODI4LTQ1YzgtYWU3Mi1kZjdlMmRkN2IxNGUifQ.1HWYdfySr5I7COXHlbxnVc9JsJ8L15k0e4UGYFYYEus
               required:
               - refresh
       responses:
@@ -129,46 +158,51 @@ paths:
           content:
             application/json:
               schema:
+                type: object
                 properties:
-                  refresh:
+                  access:
                     type: string
+                    format: jwt
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NTUxOTc5LCJqdGkiOiI2NTcyNTY5ZThhMWQ0YzlkYmNjM2ZhZTFiNGE3N2M3OCIsInVzZXJfaWQiOiJiY2ZlMDg2Zi1kODI4LTQ1YzgtYWU3Mi1kZjdlMmRkN2IxNGUifQ.1HWYdfySr5I7COXHlbxnVc9JsJ8L15k0e4UGYFYYEus
                 required:
-                - refresh
-          description: ""
+                - access
+          description: "Successfully refreshed."
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
 
-  /token/verify:
+  /account/token/verify:
     post:
       tags:
        - Account
-      operationId: CreateTokenVerify
+      operationId: VerifyToken
       description: "Takes a token and indicates if it is valid. This view provides no information about a token's fitness for a particular use."
-      parameters: []
       requestBody:
         content:
           application/json:
             schema:
+              type: object
               properties:
                 token:
                   type: string
+                  format: jwt
               required:
               - token
       responses:
         "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  token:
-                    type: string
-                required:
-                - token
-          description: ""
+          description: "Token is valid."
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
 
-  /device/devices:
+  /devices:
     get:
-      operationId: listDevices
-      description: Endpoint for managing devices.
-      parameters: []
+      tags:
+        - Devices
+      operationId: ListDevices
+      description: This endpoint returns all available devices managed by the authenticated user.
       responses:
         "200":
           content:
@@ -176,190 +210,63 @@ paths:
               schema:
                 type: array
                 items:
-                  properties:
-                    uuid:
-                      type: string
-                      format: uuid
-                      readOnly: true
-                    capacity:
-                      type: integer
-                      maximum: 32767
-                      minimum: 0
-                    name:
-                      type: string
-                      maxLength: 100
-                    fillStatus:
-                      type: string
-                      readOnly: true
-                  required:
-                  - capacity
-                  - name
-          description: ""
+                  $ref: "#/components/schemas/Device"
+          description: "Successfull reqeust."
     post:
+      tags:
+        - Devices
       operationId: CreateDevice
-      description: Endpoint for managing devices.
-      parameters: []
+      description: This endpoint allows to create a device. Assigns authenticated user as an owner.
       requestBody:
         content:
           application/json:
             schema:
-              properties:
-                capacity:
-                  type: integer
-                  maximum: 32767
-                  minimum: 0
-                name:
-                  type: string
-                  maxLength: 100
-              required:
-              - capacity
-              - name
+              $ref: "#/components/schemas/Device"
       responses:
-        "200":
+        "201":
           content:
             application/json:
               schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  name:
-                    type: string
-                    maxLength: 100
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - capacity
-                - name
-          description: ""
-  /api/device/devices{format}:
+                $ref: "#/components/schemas/Device"
+          description: "Successfully created."
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+
+  /devices/{uuid}:
     get:
+      tags:
+        - Devices
       operationId: RetrieveDevice
-      description: Endpoint for managing devices.
-      parameters:
-      - name: format
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  name:
-                    type: string
-                    maxLength: 100
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - capacity
-                - name
-          description: ""
-    post:
-      operationId: CreateDevice
-      description: Endpoint for managing devices.
-      parameters:
-      - name: format
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                capacity:
-                  type: integer
-                  maximum: 32767
-                  minimum: 0
-                name:
-                  type: string
-                  maxLength: 100
-              required:
-              - capacity
-              - name
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  name:
-                    type: string
-                    maxLength: 100
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - capacity
-                - name
-          description: ""
-  /device/devices/{uuid}:
-    get:
-      operationId: RetrieveDevice
-      description: Endpoint for managing devices.
+      description: Endpoint for retriving information on device identified with uuid passed as a path parameter.
       parameters:
       - name: uuid
         in: path
         required: true
         description: A UUID string identifying this device.
         schema:
-          type: string
+          $ref: "#/components/schemas/uuid"
       responses:
         "200":
           content:
             application/json:
               schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  name:
-                    type: string
-                    maxLength: 100
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - capacity
-                - name
-          description: ""
+                $ref: "#/components/schemas/Device"
+          description: "Successfull request."
+        "400": 
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
     put:
+      tags:
+        - Devices
       operationId: UpdateDevice
-      description: Endpoint for managing devices.
+      description: Endpoint for updating the existing device.
       parameters:
       - name: uuid
         in: path
@@ -387,25 +294,16 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  name:
-                    type: string
-                    maxLength: 100
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - capacity
-                - name
-          description: ""
+                $ref: "#/components/schemas/Device"
+          description: "Successfully updated."
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
     patch:
       operationId: PartialUpdateDevice
       description: Endpoint for managing devices.
@@ -1297,6 +1195,8 @@ paths:
     post:
       tags:
       - Internal device API
+      security:
+        - tokenAuth: []
       operationId: CreateLog
       description: Create new log from device.
       requestBody:
@@ -1314,6 +1214,8 @@ paths:
     get:
       tags:
         - Internal device API
+      security:
+        - tokenAuth: []
       operationId: GetNTPServerAddress
       description: Gets ip address of NTP server.
       responses:
@@ -1332,6 +1234,8 @@ paths:
     post:
       tags:
         - Internal device API
+      security:
+        - tokenAuth: []
       operationId: CreateHealthCheckReport
       description: Reports status of the device. The maintanance instructions can be returned as a response.
       requestBody:
@@ -1377,6 +1281,8 @@ paths:
     get:
       tags:
         - Internal device API
+      security:
+        - tokenAuth: []
       operationId: GetPlannedDosesCount
       description: Requests number of planned doses in the scheduled treatments for this devices.
       responses:
@@ -1397,6 +1303,8 @@ paths:
     get:
       tags:
         - Internal device API
+      security:
+        - tokenAuth: []
       operationId: GetPlannedDose
       description: Requests a planned dose to be saved in a device memory. Queries a {index} dose from admission time
                   sorted treatments.
@@ -1435,6 +1343,8 @@ paths:
     get:
       tags:
         - Internal device API
+      security:
+        - tokenAuth: []
       operationId: GetOnDemandDosesCount
       description: Requests number of on demand doses.
       responses:
@@ -1454,6 +1364,8 @@ paths:
     get:
       tags:
         - Internal device API
+      security:
+        - tokenAuth: []
       operationId: GetOnDemandBatch
       description: Requests on demand doses batch to be saved in a device memory. Queries a {index} batch from SOMEHOW
                   sorted batches.
@@ -1496,6 +1408,8 @@ paths:
     get:
       tags:
         - Internal device API
+      security:
+        - tokenAuth: []
       operationId: GetProgramHash
       description: Requests program hash to validate update validity.
       responses:
@@ -1515,6 +1429,8 @@ paths:
     post:
       tags:
         - Internal device API
+      security:
+        - tokenAuth: []
       operationId: RefillConfirmation
       description: Sends refill confirmation to ensure operation is successfully completed.
       responses:
@@ -1525,6 +1441,8 @@ paths:
     post:
       tags:
         - Internal device API
+      security:
+        - tokenAuth: []
       operationId: CreateNewContainerEvent
       description: Sends new container event to be stored in event logs.
       requestBody:
@@ -1564,6 +1482,8 @@ paths:
     post:
       tags:
         - Internal device API
+      security:
+        - tokenAuth: []
       operationId: CreateNewDoseEvent
       description: Sends new dose event to be stored in event logs. In request body either dispensed or skipped flag must be set.
       requestBody:
@@ -1598,6 +1518,8 @@ paths:
     post:
       tags:
         - Internal device API
+      security:
+        - tokenAuth: []
       operationId: CreateNewUserEvent
       description: Sends new user event to be stored in event logs. Information about user interaction with device.
       requestBody:
@@ -1628,16 +1550,21 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+    tokenAuth:
+      type: http
+      scheme: token
 
   responses:
+    Ok:
+      description: Successfull request.
     Unauthenticated:
       description: Access token is missing or invalid.
     Unauthorized:
       description: You have no access to this resource.
     NotFound:
       description: Resource not found.
-    InternalError:
-      description: Unexpected serverside error.
+    BadRequest:
+      description: There was a problem with request data. (Possible error messages in the response body)
     
 
   schemas:
@@ -1645,6 +1572,15 @@ components:
       type: string
       format: uuid
       example: c24205cc-96fa-4a17-8b2a-890d10b01980
+      readOnly: true
+    refresh_token:
+      type: string
+      format: jwt
+      example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYwNTYzNjU3OSwianRpIjoiYmYyZmQ5ZTY5MzY1NGUxZmFjZGI5Y2QzNzZiZWQyNmQiLCJ1c2VyX2lkIjoiYmNmZTA4NmYtZDgyOC00NWM4LWFlNzItZGY3ZTJkZDdiMTRlIn0.izJVDI6wCRxsBxY4Mx12__XJLVsy2xsywBbtsfiQYIA
+    access_token:
+      type: string
+      format: jwt
+      example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NTUxOTc5LCJqdGkiOiI2NTcyNTY5ZThhMWQ0YzlkYmNjM2ZhZTFiNGE3N2M3OCIsInVzZXJfaWQiOiJiY2ZlMDg2Zi1kODI4LTQ1YzgtYWU3Mi1kZjdlMmRkN2IxNGUifQ.1HWYdfySr5I7COXHlbxnVc9JsJ8L15k0e4UGYFYYEus
 
     User:
       type: object
@@ -1675,10 +1611,12 @@ components:
         capacity:
           type: integer
           minimum: 0
+          maximum: 32767
           example: 3
         name:
           type: string
-          default: TestBox
+          example: TestBox
+          maxLength: 100
         fill_status:
           readOnly: true
           type: integer
@@ -1696,12 +1634,14 @@ components:
           readOnly: true
           type: integer
           minimum: 0
+          maximum: 32767
           example: 3
         device:
           $ref: "#/components/schemas/uuid"
         position:
           type: integer
           minimum: 0
+          maximum: 32767
           example: 2
           description: Unique position of this container in device, starting from the bottom 0 index.
         last_refill:
@@ -1724,6 +1664,7 @@ components:
         position:
           type: integer
           minimum: 0
+          maximum: 32767
           example: 2
           description: Unique position of this chamber in container.
         is_full:
