@@ -23,7 +23,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "rest_framework",
-    "rest_framework.authtoken",
     "AdminPanel.apps.AdminpanelConfig",
     "AppAPI.apps.AppapiConfig",
     "DeviceAPI.apps.DeviceapiConfig",
@@ -48,7 +47,6 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        "DeviceAPI.authentication.DeviceTokenAuthentication"
     ),
     "DEFAULT_SCHEMA_CLASSS": "rest_framework.schemas.coreapi.AutoSchema"
 }
