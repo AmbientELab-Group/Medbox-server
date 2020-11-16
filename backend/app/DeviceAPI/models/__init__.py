@@ -10,3 +10,4 @@ from .chamber import Chamber
 from .container import Container
 from .debugLog import DebugLog
 from .telemetryLog import TelemetryLog
+from .deviceToken import DeviceToken
