@@ -1,1 +1,0 @@
-from .deviceAuthentication import DeviceTokenAuthentication

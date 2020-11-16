@@ -12,7 +12,6 @@ class DeviceAdmin(admin.ModelAdmin):
         "pairing_code",
         "pairing_code_expires_at",
         "api_token",
-        "is_active"
     )
     list_filter = (
         "name",
