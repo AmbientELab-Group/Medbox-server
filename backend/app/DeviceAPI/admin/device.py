@@ -24,7 +24,8 @@ class DeviceAdmin(admin.ModelAdmin):
             "fields": (
                 "name",
                 "capacity",
-                "owner"
+                "owner",
+                "is_active"
             )
         }),
     )

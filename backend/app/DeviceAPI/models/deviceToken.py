@@ -37,7 +37,7 @@ class DeviceToken(models.Model):
 
     @classmethod
     def generate_key(cls):
-        return binascii.hexlify(os.urandom(20)).decode()
+        return binascii.hexlify(os.urandom(16)).decode()
 
     def __str__(self):
         return self.key

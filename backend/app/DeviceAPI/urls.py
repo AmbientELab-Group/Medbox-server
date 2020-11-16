@@ -15,17 +15,11 @@ from DeviceAPI.views import (
     ContainerDetailView
 )
 
-# testing
-from DeviceAPI.views.pairing import (CreateDeviceToken, AuthenticatedView)
-
 urlpatterns = [
     path("devices", DeviceList.as_view()),
     path("devices/<uuid:pk>", DeviceDetail.as_view()),
     path("containers", ContainerListCreateView.as_view()),
     path("containers/<uuid:pk>", ContainerDetailView.as_view()),
-    # testing
-    path("createToken", CreateDeviceToken.as_view()),
-    path("authView", AuthenticatedView.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
