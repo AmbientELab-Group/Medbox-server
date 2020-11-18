@@ -19,6 +19,8 @@ tags:
     description: Managing doses.
   - name: Medicines
     description: Managing medicines.
+  - name: Versions
+    description: Info about available models.
   - name: Internal device API
     description: Endpoints for server-device communication, not publicly available.
 
@@ -37,31 +39,15 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                password:
-                  type: string
-              required:
-                - email
-                - password
+              $ref: "#/components/schemas/User"
       responses:
         "201":
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  refresh_token:
-                    type: string
-                    format: jwt
-                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYwNTYzNjU3OSwianRpIjoiYmYyZmQ5ZTY5MzY1NGUxZmFjZGI5Y2QzNzZiZWQyNmQiLCJ1c2VyX2lkIjoiYmNmZTA4NmYtZDgyOC00NWM4LWFlNzItZGY3ZTJkZDdiMTRlIn0.izJVDI6wCRxsBxY4Mx12__XJLVsy2xsywBbtsfiQYIA
-                  access_token:
-                    type: string
-                    format: jwt
-                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NTUxOTc5LCJqdGkiOiI2NTcyNTY5ZThhMWQ0YzlkYmNjM2ZhZTFiNGE3N2M3OCIsInVzZXJfaWQiOiJiY2ZlMDg2Zi1kODI4LTQ1YzgtYWU3Mi1kZjdlMmRkN2IxNGUifQ.1HWYdfySr5I7COXHlbxnVc9JsJ8L15k0e4UGYFYYEus
+                allOf:
+                - $ref:  "#/components/schemas/RefreshToken"
+                - $ref:   "#/components/schemas/AccessToken"
           description: "User created successfully."
         "400":
           $ref: "#/components/responses/BadRequest"
@@ -91,17 +77,10 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  refresh_token:
-                    type: string
-                    format: jwt
-                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYwNTYzNjU3OSwianRpIjoiYmYyZmQ5ZTY5MzY1NGUxZmFjZGI5Y2QzNzZiZWQyNmQiLCJ1c2VyX2lkIjoiYmNmZTA4NmYtZDgyOC00NWM4LWFlNzItZGY3ZTJkZDdiMTRlIn0.izJVDI6wCRxsBxY4Mx12__XJLVsy2xsywBbtsfiQYIA
-                  access_token:
-                    type: string
-                    format: jwt
-                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NTUxOTc5LCJqdGkiOiI2NTcyNTY5ZThhMWQ0YzlkYmNjM2ZhZTFiNGE3N2M3OCIsInVzZXJfaWQiOiJiY2ZlMDg2Zi1kODI4LTQ1YzgtYWU3Mi1kZjdlMmRkN2IxNGUifQ.1HWYdfySr5I7COXHlbxnVc9JsJ8L15k0e4UGYFYYEus
-          description: "Successfull sign in request."
+                allOf:
+                - $ref:  "#/components/schemas/RefreshToken"
+                - $ref:   "#/components/schemas/AccessToken"
+          description: "Successful sign in request."
         "401":
           $ref: "#/components/responses/Unauthenticated"
 
@@ -200,6 +179,8 @@ paths:
     get:
       tags:
         - Devices
+      security:
+        - bearerAuth: []
       operationId: ListDevices
       description: This endpoint returns all available `Devices` managed by the authenticated user.
       responses:
@@ -210,10 +191,12 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Device"
-          description: "Successfull reqeust."
+          description: "Successful reqeust."
     post:
       tags:
         - Devices
+      security:
+        - bearerAuth: []
       operationId: CreateDevice
       description: This endpoint allows to create a `Device`. Assigns authenticated user as an owner.
       requestBody:
@@ -238,6 +221,8 @@ paths:
       tags:
         - Devices
       operationId: RetrieveDevice
+      security:
+        - bearerAuth: []
       description: This endpoint allows to retrive information on `Device` identified with uuid passed as a path parameter.
       parameters:
       - name: uuid
@@ -252,7 +237,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Device"
-          description: "Successfull request."
+          description: Successful request.
         "400": 
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -264,6 +249,8 @@ paths:
     put:
       tags:
         - Devices
+      security:
+        - bearerAuth: []
       operationId: UpdateDevice
       description: This endpoint allows to perform update on specified `Device`.
       parameters:
@@ -284,7 +271,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Device"
-          description: "Successfull update."
+          description: Successful update.
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -296,6 +283,8 @@ paths:
     patch:
       tags:
         - Devices
+      security:
+        - bearerAuth: []
       operationId: PartialUpdateDevice
       description: This endpoint allows to perform partial update on specified `Device`.
       parameters:
@@ -316,7 +305,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Device"
-          description: "Successfull partial update."
+          description: Successful partial update.
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -328,23 +317,37 @@ paths:
     delete:
       tags:
         - Devices
+      security:
+        - bearerAuth: []
       operationId: DestroyDevice
-      description: Endpoint for managing devices.
+      description: This endpoint removes sepcified `Device`.
       parameters:
       - name: uuid
         in: path
         required: true
         description: A UUID string identifying this device.
         schema:
-          $ref: "#/components/schemas/Device"
+          $ref: "#/components/schemas/uuid"
       responses:
         "204":
-          description: ""
-  /device/containers:
+          description: Successfuly deleted.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /containers:
     get:
-      operationId: listContainerCreateOnlys
-      description: Endpoint for managing containers.
-      parameters: []
+      tags:
+        - Containers
+      security:
+        - bearerAuth: []
+      operationId: ListContainers
+      description: This endpoint retrives all of the `Containers` managed by authenticated user.
       responses:
         "200":
           content:
@@ -352,259 +355,198 @@ paths:
               schema:
                 type: array
                 items:
-                  properties:
-                    uuid:
-                      type: string
-                      format: uuid
-                      readOnly: true
-                    capacity:
-                      type: integer
-                      maximum: 32767
-                      minimum: 0
-                    device:
-                      type: string
-                    position:
-                      type: integer
-                      maximum: 32767
-                      minimum: 0
-                    lastRefill:
-                      type: string
-                      format: date-time
-                      nullable: true
-                    fillStatus:
-                      type: string
-                      readOnly: true
-                  required:
-                  - capacity
-                  - device
-                  - position
-          description: ""
+                  $ref: "#/components/schemas/Container"
+          description: "Successful request."
     post:
-      operationId: CreateContainerCreateOnly
-      description: Endpoint for managing containers.
-      parameters: []
+      tags:
+        - Containers
+      security:
+        - bearerAuth: []
+      operationId: CreateContainer
+      description: This endpoint allows to create `Container`. <br/><br/>
+        Inserting container in between other contaieners will move them up by one position. <br/><br/>
+        When position parameter is not provided, the container is placed on the first available position (top).
       requestBody:
         content:
           application/json:
             schema:
-              properties:
-                capacity:
-                  type: integer
-                  maximum: 32767
-                  minimum: 0
-                device:
-                  type: string
-                position:
-                  type: integer
-                  maximum: 32767
-                  minimum: 0
-                lastRefill:
-                  type: string
-                  format: date-time
-                  nullable: true
-              required:
-              - capacity
-              - device
-              - position
+              $ref: "#/components/schemas/Container"
       responses:
-        "200":
+        "201":
           content:
             application/json:
               schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  device:
-                    type: string
-                  position:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  lastRefill:
-                    type: string
-                    format: date-time
-                    nullable: true
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - capacity
-                - device
-                - position
-          description: ""
-  /device/containers/{id}:
+                $ref: "#/components/schemas/Container"
+          description: "Successfully created."
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+
+  /containers/{uuid}:
     get:
+      tags:
+        - Containers
+      security:
+        - bearerAuth: []
       operationId: RetrieveContainer
-      description: Endpoint for managing containers.
+      description: This allows to get a single `Container` specified by its uuid.
       parameters:
-      - name: id
+      - name: uuid
         in: path
         required: true
-        description: ""
+        description: A UUID string identifying this device.
         schema:
-          type: string
+          $ref: "#/components/schemas/uuid"
       responses:
         "200":
           content:
             application/json:
               schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    readOnly: true
-                  device:
-                    type: string
-                  position:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  lastRefill:
-                    type: string
-                    format: date-time
-                    nullable: true
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - device
-                - position
-          description: ""
+                $ref: "#/components/schemas/Container"
+          description: Successful request.
+        "400": 
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
     put:
+      tags:
+        - Containers
+      security:
+        - bearerAuth: []
       operationId: UpdateContainer
-      description: Endpoint for managing containers.
+      description: This endpoint allows to update specified `Container`. <br/><br/>
+          Updating container's position may force other containers to change positions. Inserting container in between 
+        other contaieners will move them up by one position. <br/><br/>
+         When position parameter is not provided, the container is placed on the first available position (top).
       parameters:
-      - name: id
+      - name: uuid
         in: path
         required: true
-        description: ""
+        description: A UUID string identifying this device.
         schema:
-          type: string
+          $ref: "#/components/schemas/uuid"
       requestBody:
         content:
           application/json:
             schema:
-              properties:
-                device:
-                  type: string
-                position:
-                  type: integer
-                  maximum: 32767
-                  minimum: 0
-                lastRefill:
-                  type: string
-                  format: date-time
-                  nullable: true
-              required:
-              - device
-              - position
+              $ref: "#/components/schemas/Container"
       responses:
         "200":
           content:
             application/json:
               schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    readOnly: true
-                  device:
-                    type: string
-                  position:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  lastRefill:
-                    type: string
-                    format: date-time
-                    nullable: true
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - device
-                - position
-          description: ""
+                $ref: "#/components/schemas/Container"
+          description: Successful update.
+        "400": 
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
     patch:
+      tags:
+        - Containers
+      security:
+        - bearerAuth: []
       operationId: PartialUpdateContainer
-      description: Endpoint for managing containers.
+      description: This endpoint allows to partially update specified `Container`. <br/><br/>
+         Updating container's position may force other containers to change positions. Inserting container in between 
+        other contaieners will move them up by one position. <br/><br/>
+         When position parameter is not provided, the container is placed on the first available position (top).
       parameters:
-      - name: id
+      - name: uuid
         in: path
         required: true
-        description: ""
+        description: A UUID string identifying this device.
         schema:
-          type: string
+          $ref: "#/components/schemas/uuid"
       requestBody:
         content:
           application/json:
             schema:
-              properties:
-                device:
-                  type: string
-                position:
-                  type: integer
-                  maximum: 32767
-                  minimum: 0
-                lastRefill:
-                  type: string
-                  format: date-time
-                  nullable: true
+              $ref: "#/components/schemas/Container"
       responses:
         "200":
           content:
             application/json:
               schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    readOnly: true
-                  device:
-                    type: string
-                  position:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  lastRefill:
-                    type: string
-                    format: date-time
-                    nullable: true
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - device
-                - position
-          description: ""
+                $ref: "#/components/schemas/Container"
+          description: Successful partial update.
+        "400": 
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
     delete:
+      tags:
+        - Containers
+      security:
+        - bearerAuth: []
       operationId: DestroyContainer
-      description: Endpoint for managing containers.
+      description: This endpoint allows to destroy specified `Container`. <br/><br/>
+          Deleting container that was positioned in between other containers will force upper ones to go down one position each
+        and fill up the empty space.
       parameters:
-      - name: id
+      - name: uuid
         in: path
         required: true
-        description: ""
+        description: A UUID string identifying this device.
         schema:
-          type: string
+          $ref: "#/components/schemas/uuid"
       responses:
         "204":
-          description: ""
+          description: Successfully deleted.
+        "400": 
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  
+  /versions/device:
+    get:
+      tags:
+        - Versions
+      operationId: ListDeviceVersions
+      description: Request all available models of `Device`.
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DeviceVersion"
+          description: Successful request.
+  
+  /versions/container:
+    get:
+      tags:
+        - Versions
+      operationId: ListDeviceVersions
+      description: Request all available models of `Container`.
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContainerVersion"
+          description: Successful request.
+
   /pairing:
     get:
       tags:
@@ -1066,7 +1008,7 @@ components:
 
   responses:
     Ok:
-      description: Successfull request.
+      description: Successful request.
     Unauthenticated:
       description: Access token is missing or invalid.
     Unauthorized:
@@ -1083,14 +1025,22 @@ components:
       format: uuid
       example: c24205cc-96fa-4a17-8b2a-890d10b01980
       readOnly: true
-    refresh_token:
-      type: string
-      format: jwt
-      example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYwNTYzNjU3OSwianRpIjoiYmYyZmQ5ZTY5MzY1NGUxZmFjZGI5Y2QzNzZiZWQyNmQiLCJ1c2VyX2lkIjoiYmNmZTA4NmYtZDgyOC00NWM4LWFlNzItZGY3ZTJkZDdiMTRlIn0.izJVDI6wCRxsBxY4Mx12__XJLVsy2xsywBbtsfiQYIA
-    access_token:
-      type: string
-      format: jwt
-      example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NTUxOTc5LCJqdGkiOiI2NTcyNTY5ZThhMWQ0YzlkYmNjM2ZhZTFiNGE3N2M3OCIsInVzZXJfaWQiOiJiY2ZlMDg2Zi1kODI4LTQ1YzgtYWU3Mi1kZjdlMmRkN2IxNGUifQ.1HWYdfySr5I7COXHlbxnVc9JsJ8L15k0e4UGYFYYEus
+    
+    RefreshToken:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+          format: jwt
+          example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYwNTYzNjU3OSwianRpIjoiYmYyZmQ5ZTY5MzY1NGUxZmFjZGI5Y2QzNzZiZWQyNmQiLCJ1c2VyX2lkIjoiYmNmZTA4NmYtZDgyOC00NWM4LWFlNzItZGY3ZTJkZDdiMTRlIn0.izJVDI6wCRxsBxY4Mx12__XJLVsy2xsywBbtsfiQYIA
+    
+    AccessToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          format: jwt
+          example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NTUxOTc5LCJqdGkiOiI2NTcyNTY5ZThhMWQ0YzlkYmNjM2ZhZTFiNGE3N2M3OCIsInVzZXJfaWQiOiJiY2ZlMDg2Zi1kODI4LTQ1YzgtYWU3Mi1kZjdlMmRkN2IxNGUifQ.1HWYdfySr5I7COXHlbxnVc9JsJ8L15k0e4UGYFYYEus
 
     User:
       type: object
@@ -1107,22 +1057,43 @@ components:
         last_name:
           type: string
           example: TestLastName
+        password:
+          writeOnly: true
+          type: string
+          example: secret
         supervised_devices:
+          readOnly: true
           type: array
           items:
             $ref: "#/components/schemas/uuid"
           description: UUIDs of supervised devices.
 
+    DeviceVersion:
+      type: object
+      readOnly: true
+      properties:
+        name:
+          readOnly: true
+          type: string
+          example: v1.0
+        capacity:
+          readOnly: true
+          type: integer
+          minimum: 0
+          maximum: 32767
+          example: 3
+        latest_firmware_version:
+          readOnly: true
+          type: string
+          example: 0.1.3
+          
     Device:
       type: object
       properties:
         uuid:
           $ref: "#/components/schemas/uuid"
-        capacity:
-          type: integer
-          minimum: 0
-          maximum: 32767
-          example: 3
+        version:
+          $ref: "#/components/schemas/DeviceVersion"
         name:
           type: string
           example: TestBox
@@ -1135,17 +1106,28 @@ components:
           maximum: 100
           description: Percentage of whole summed capacity of all filled containers in this device.
           
-    Container:
+    ContainerVersion:
       type: object
+      readOnly: true
       properties:
-        uuid:
-          $ref: "#/components/schemas/uuid"
+        name:
+          readOnly: true
+          type: string
+          example: v1.0
         capacity:
           readOnly: true
           type: integer
           minimum: 0
           maximum: 32767
           example: 3
+
+    Container:
+      type: object
+      properties:
+        uuid:
+          $ref: "#/components/schemas/uuid"
+        version:
+          $ref: "#/components/schemas/ContainerVersion"
         device:
           $ref: "#/components/schemas/uuid"
         position:
@@ -1155,6 +1137,7 @@ components:
           example: 2
           description: Unique position of this container in device, starting from the bottom 0 index.
         last_refill:
+          readOnly: true
           type: string
           format: date-time
           nullable: true
