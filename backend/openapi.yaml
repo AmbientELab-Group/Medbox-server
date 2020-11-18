@@ -112,15 +112,14 @@ paths:
       security:
         - bearerAuth: []
       operationId: RetrieveUserInfo
-      description: Gets a user by ID. Only authenticated clients may see their details.
+      description: Gets a `User` by ID. Only authenticated clients may see their details.
       parameters:
       - name: uuid
         in: path
         required: true
         description: UUID of requested user
         schema:
-          type: string
-          format: uuid
+          $ref: "#/components/schemas/uuid"
       responses:
         "200":
           content:
@@ -140,7 +139,7 @@ paths:
       tags:
         - Account
       operationId: RefreshAccessToken
-      description: "Takes a refresh type JSON web token and returns an access type JSON web token if the refresh token is valid."
+      description: "Takes a `Refresh Token` and returns an access type JSON web token if the provided one was valid."
       requestBody:
         content:
           application/json:
@@ -177,7 +176,7 @@ paths:
       tags:
        - Account
       operationId: VerifyToken
-      description: "Takes a token and indicates if it is valid. This view provides no information about a token's fitness for a particular use."
+      description: "Takes an `Access Token` and indicates if it is valid. This view provides no information about a token's fitness for a particular use."
       requestBody:
         content:
           application/json:
@@ -202,7 +201,7 @@ paths:
       tags:
         - Devices
       operationId: ListDevices
-      description: This endpoint returns all available devices managed by the authenticated user.
+      description: This endpoint returns all available `Devices` managed by the authenticated user.
       responses:
         "200":
           content:
@@ -216,7 +215,7 @@ paths:
       tags:
         - Devices
       operationId: CreateDevice
-      description: This endpoint allows to create a device. Assigns authenticated user as an owner.
+      description: This endpoint allows to create a `Device`. Assigns authenticated user as an owner.
       requestBody:
         content:
           application/json:
@@ -239,7 +238,7 @@ paths:
       tags:
         - Devices
       operationId: RetrieveDevice
-      description: Endpoint for retriving information on device identified with uuid passed as a path parameter.
+      description: This endpoint allows to retrive information on `Device` identified with uuid passed as a path parameter.
       parameters:
       - name: uuid
         in: path
@@ -266,36 +265,26 @@ paths:
       tags:
         - Devices
       operationId: UpdateDevice
-      description: Endpoint for updating the existing device.
+      description: This endpoint allows to perform update on specified `Device`.
       parameters:
       - name: uuid
         in: path
         required: true
         description: A UUID string identifying this device.
         schema:
-          type: string
+          $ref: "#/components/schemas/uuid"
       requestBody:
         content:
           application/json:
             schema:
-              properties:
-                capacity:
-                  type: integer
-                  maximum: 32767
-                  minimum: 0
-                name:
-                  type: string
-                  maxLength: 100
-              required:
-              - capacity
-              - name
+              $ref: "#/components/schemas/Device"
       responses:
         "200":
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Device"
-          description: "Successfully updated."
+          description: "Successfull update."
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -305,52 +294,40 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
     patch:
+      tags:
+        - Devices
       operationId: PartialUpdateDevice
-      description: Endpoint for managing devices.
+      description: This endpoint allows to perform partial update on specified `Device`.
       parameters:
       - name: uuid
         in: path
         required: true
         description: A UUID string identifying this device.
         schema:
-          type: string
+          $ref: "#/components/schemas/uuid"
       requestBody:
         content:
           application/json:
             schema:
-              properties:
-                capacity:
-                  type: integer
-                  maximum: 32767
-                  minimum: 0
-                name:
-                  type: string
-                  maxLength: 100
+              $ref: "#/components/schemas/Device"
       responses:
         "200":
           content:
             application/json:
               schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  name:
-                    type: string
-                    maxLength: 100
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - capacity
-                - name
-          description: ""
+                $ref: "#/components/schemas/Device"
+          description: "Successfull partial update."
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
     delete:
+      tags:
+        - Devices
       operationId: DestroyDevice
       description: Endpoint for managing devices.
       parameters:
@@ -359,174 +336,7 @@ paths:
         required: true
         description: A UUID string identifying this device.
         schema:
-          type: string
-      responses:
-        "204":
-          description: ""
-  /device/devices/{uuid}{format}:
-    get:
-      operationId: RetrieveDevice
-      description: Endpoint for managing devices.
-      parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this device.
-        schema:
-          type: string
-      - name: format
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  name:
-                    type: string
-                    maxLength: 100
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - capacity
-                - name
-          description: ""
-    put:
-      operationId: UpdateDevice
-      description: Endpoint for managing devices.
-      parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this device.
-        schema:
-          type: string
-      - name: format
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                capacity:
-                  type: integer
-                  maximum: 32767
-                  minimum: 0
-                name:
-                  type: string
-                  maxLength: 100
-              required:
-              - capacity
-              - name
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  name:
-                    type: string
-                    maxLength: 100
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - capacity
-                - name
-          description: ""
-    patch:
-      operationId: PartialUpdateDevice
-      description: Endpoint for managing devices.
-      parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this device.
-        schema:
-          type: string
-      - name: format
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                capacity:
-                  type: integer
-                  maximum: 32767
-                  minimum: 0
-                name:
-                  type: string
-                  maxLength: 100
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  name:
-                    type: string
-                    maxLength: 100
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - capacity
-                - name
-          description: ""
-    delete:
-      operationId: DestroyDevice
-      description: Endpoint for managing devices.
-      parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this device.
-        schema:
-          type: string
-      - name: format
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
+          $ref: "#/components/schemas/Device"
       responses:
         "204":
           description: ""
@@ -573,114 +383,6 @@ paths:
       operationId: CreateContainerCreateOnly
       description: Endpoint for managing containers.
       parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                capacity:
-                  type: integer
-                  maximum: 32767
-                  minimum: 0
-                device:
-                  type: string
-                position:
-                  type: integer
-                  maximum: 32767
-                  minimum: 0
-                lastRefill:
-                  type: string
-                  format: date-time
-                  nullable: true
-              required:
-              - capacity
-              - device
-              - position
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  device:
-                    type: string
-                  position:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  lastRefill:
-                    type: string
-                    format: date-time
-                    nullable: true
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - capacity
-                - device
-                - position
-          description: ""
-  /device/containers{format}:
-    get:
-      operationId: RetrieveContainerCreateOnly
-      description: Endpoint for managing containers.
-      parameters:
-      - name: format
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  device:
-                    type: string
-                  position:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  lastRefill:
-                    type: string
-                    format: date-time
-                    nullable: true
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - capacity
-                - device
-                - position
-          description: ""
-    post:
-      operationId: CreateContainerCreateOnly
-      description: Endpoint for managing containers.
-      parameters:
-      - name: format
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
       requestBody:
         content:
           application/json:
@@ -903,198 +605,6 @@ paths:
       responses:
         "204":
           description: ""
-  /device/containers/{id}{format}:
-    get:
-      operationId: RetrieveContainer
-      description: Endpoint for managing containers.
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
-      - name: format
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    readOnly: true
-                  device:
-                    type: string
-                  position:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  lastRefill:
-                    type: string
-                    format: date-time
-                    nullable: true
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - device
-                - position
-          description: ""
-    put:
-      operationId: UpdateContainer
-      description: Endpoint for managing containers.
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
-      - name: format
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                device:
-                  type: string
-                position:
-                  type: integer
-                  maximum: 32767
-                  minimum: 0
-                lastRefill:
-                  type: string
-                  format: date-time
-                  nullable: true
-              required:
-              - device
-              - position
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    readOnly: true
-                  device:
-                    type: string
-                  position:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  lastRefill:
-                    type: string
-                    format: date-time
-                    nullable: true
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - device
-                - position
-          description: ""
-    patch:
-      operationId: PartialUpdateContainer
-      description: Endpoint for managing containers.
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
-      - name: format
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                device:
-                  type: string
-                position:
-                  type: integer
-                  maximum: 32767
-                  minimum: 0
-                lastRefill:
-                  type: string
-                  format: date-time
-                  nullable: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  uuid:
-                    type: string
-                    format: uuid
-                    readOnly: true
-                  capacity:
-                    type: integer
-                    readOnly: true
-                  device:
-                    type: string
-                  position:
-                    type: integer
-                    maximum: 32767
-                    minimum: 0
-                  lastRefill:
-                    type: string
-                    format: date-time
-                    nullable: true
-                  fillStatus:
-                    type: string
-                    readOnly: true
-                required:
-                - device
-                - position
-          description: ""
-    delete:
-      operationId: DestroyContainer
-      description: Endpoint for managing containers.
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
-      - name: format
-        in: path
-        required: true
-        description: ""
-        schema:
-          type: string
-      responses:
-        "204":
-          description: ""
-
   /pairing:
     get:
       tags:
@@ -1623,7 +1133,7 @@ components:
           example: 80
           minimum: 0
           maximum: 100
-          description: Percentage of whole summed capacity of all containers in this device filled.
+          description: Percentage of whole summed capacity of all filled containers in this device.
           
     Container:
       type: object
@@ -1654,7 +1164,7 @@ components:
           example: 80
           minimum: 0
           maximum: 100
-          description: Percentage of whole summed capacity of all chambers in this container filled.
+          description: Percentage of whole summed capacity of all filled chambers in this container.
 
     Chamber:
       type: object
