@@ -57,13 +57,6 @@ class Device(models.Model):
     # pairing key expiration date
     pairing_code_expires_at = models.DateTimeField(null=True)
 
-    # token used to authenticated API calls from this device
-    api_token = models.CharField(
-        max_length=42,
-        default="",
-        blank=True
-    )
-
     # factory serial number assigned to the device
     serial_number = models.UUIDField(
         null=True,
@@ -83,6 +76,15 @@ class Device(models.Model):
         default="",
         blank=True
     )
+
+    # for compatibility sake, copy pasted from django source, don't ask
+    @property
+    def is_authenticated(self):
+        """
+        Always return True. This is a way to tell if the user has been
+        authenticated in templates.
+        """
+        return True
 
     def fill_status(self):
         """
