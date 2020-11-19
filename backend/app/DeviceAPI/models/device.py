@@ -32,6 +32,16 @@ class Device(models.Model):
         related_name="supervisedDevices"
     )
 
+    # based on django user model field
+    is_active = models.BooleanField(
+        _("active"),
+        default=True,
+        help_text=_(
+            "Designates whether this device should be treated as active. "
+            "Unselect this instead of deleting device object."
+        ),
+    )
+
     # max number of containers which fit into this device
     capacity = models.PositiveSmallIntegerField()
 
