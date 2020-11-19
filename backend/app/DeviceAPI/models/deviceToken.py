@@ -10,13 +10,19 @@ class DeviceToken(models.Model):
     """
     Custom authorization token based on rest framework token
     """
-    key = models.CharField(_("Key"), max_length=40, primary_key=True)
+    key = models.CharField(
+        _("Key"),
+        max_length=40,
+        primary_key=True
+    )
 
     # The name of this field has to stay the same for compatibility sake.
     # Now the "user" is a device that this token authenticates.
     user = models.OneToOneField(
-        "Device", related_name='api_token',
-        on_delete=models.CASCADE, verbose_name=_("Device")
+        "Device",
+        related_name='api_token',
+        on_delete=models.CASCADE, 
+        verbose_name=_("Device")
     )
     created = models.DateTimeField(_("Created"), auto_now_add=True)
 
@@ -37,7 +43,7 @@ class DeviceToken(models.Model):
 
     @classmethod
     def generate_key(cls):
-        return binascii.hexlify(os.urandom(16)).decode()
+        return binascii.hexlify(os.urandom(32)).decode()
 
     def __str__(self):
         return self.key
