@@ -77,6 +77,15 @@ class Device(models.Model):
         blank=True
     )
 
+    # for compatibility sake, copy pasted from django source, don't ask
+    @property
+    def is_authenticated(self):
+        """
+        Always return True. This is a way to tell if the user has been
+        authenticated in templates.
+        """
+        return True
+
     def fill_status(self):
         """
         Returns number of percents this device is filled in calculated over
