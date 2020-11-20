@@ -7,19 +7,20 @@ class ContainerAdmin(admin.ModelAdmin):
     list_display = (
         "uuid",
         "device",
+        "version",
         "position",
         "last_refill"
     )
     list_filter = (
         "device",
-        "capacity",
+        "version",
         "position",
         "last_refill"
     )
     fieldsets = (
         (None, {
             "fields": (
-                "capacity",
+                "version",
                 "device",
                 "position",
                 "last_refill",

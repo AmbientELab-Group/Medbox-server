@@ -7,7 +7,7 @@ class DeviceAdmin(admin.ModelAdmin):
     list_display = (
         "uuid",
         "name",
-        "capacity",
+        "version",
         "owner",
         "pairing_code",
         "pairing_code_expires_at",
@@ -15,14 +15,14 @@ class DeviceAdmin(admin.ModelAdmin):
     )
     list_filter = (
         "name",
-        "capacity",
+        "version",
         "owner"
     )
     fieldsets = (
         (None, {
             "fields": (
                 "name",
-                "capacity",
+                "version",
                 "owner",
                 "is_active"
             )

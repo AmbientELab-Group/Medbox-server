@@ -5,6 +5,8 @@ from .device import DeviceAdmin
 from .debugLog import DebugLogAdmin
 from .telemetryLog import TelemetryLogAdmin
 from .deviceToken import DeviceTokenAdmin
+from .deviceVersion import DeviceVersionAdmin
+from .containerVersion import ContainerVersionAdmin
 
 from ..models import (
     Device,
@@ -12,7 +14,9 @@ from ..models import (
     Chamber,
     DebugLog,
     TelemetryLog,
-    DeviceToken
+    DeviceToken,
+    DeviceVersion,
+    ContainerVersion
 )
 
 admin.site.register(Device, DeviceAdmin)
@@ -21,3 +25,5 @@ admin.site.register(Chamber, ChamberAdmin)
 admin.site.register(DebugLog, DebugLogAdmin)
 admin.site.register(TelemetryLog, TelemetryLogAdmin)
 admin.site.register(DeviceToken, DeviceTokenAdmin)
+admin.site.register(DeviceVersion, DeviceVersionAdmin)
+admin.site.register(ContainerVersion, ContainerVersionAdmin)

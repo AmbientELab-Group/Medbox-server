@@ -23,8 +23,12 @@ class Container(models.Model):
         unique=True
     )
 
-    # number of chambers in this container
-    capacity = models.PositiveSmallIntegerField()
+    # version that specifies capacity
+    version = models.ForeignKey(
+        "ContainerVersion",
+        on_delete=models.PROTECT,
+        related_name="existing_containers"
+    )
 
     # reference to device this container belongs to
     device = models.ForeignKey(
@@ -42,6 +46,11 @@ class Container(models.Model):
     # custom manager
     objects = ContainerManager()
 
+    @property
+    def capacity(self):
+        return self.version.capacity
+
+    @property
     def fill_status(self):
         """
         Returns number of percents this container is filled in calculated over
