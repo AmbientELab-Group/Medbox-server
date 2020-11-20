@@ -42,8 +42,12 @@ class Device(models.Model):
         ),
     )
 
-    # max number of containers which fit into this device
-    capacity = models.PositiveSmallIntegerField()
+    # version that specifies capacity and latest firmware version
+    version = models.ForeignKey(
+        "DeviceVersion",
+        on_delete=models.PROTECT,
+        related_name="existing_devices"
+    )
 
     # name given to the device by user
     name = models.CharField(max_length=100)
@@ -77,15 +81,11 @@ class Device(models.Model):
         blank=True
     )
 
-    # for compatibility sake, copy pasted from django source, don't ask
     @property
-    def is_authenticated(self):
-        """
-        Always return True. This is a way to tell if the user has been
-        authenticated in templates.
-        """
-        return True
+    def capacity(self):
+        return self.version.capacity
 
+    @property
     def fill_status(self):
         """
         Returns number of percents this device is filled in calculated over
@@ -116,6 +116,15 @@ class Device(models.Model):
                 _("Device with this name already exists, choose different name."),
                 code="duplicated_value"
             )
+
+    # for compatibility sake, copy pasted from django source, don't ask
+    @property
+    def is_authenticated(self):
+        """
+        Always return True. This is a way to tell if the user has been
+        authenticated in templates.
+        """
+        return True
 
     def __str__(self):
         return f"'{self.name}':{self.uuid}"
