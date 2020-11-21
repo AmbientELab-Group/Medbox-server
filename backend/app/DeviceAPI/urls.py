@@ -12,8 +12,5 @@ urlpatterns = [
     path("devices/<uuid:pk>", DeviceDetail.as_view()),
     path("containers", ContainerListCreateView.as_view()),
     path("containers/<uuid:pk>", ContainerDetailView.as_view()),
-<<<<<<< HEAD
-    path("pairing", DevicePairing.as_view())
-=======
->>>>>>> dev
+    path("pairing/<uuid:pk>", DevicePairing.as_view())
 ]

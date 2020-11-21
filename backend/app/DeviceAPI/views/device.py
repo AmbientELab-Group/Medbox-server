@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from DeviceAPI.serializers import DeviceSerializer
 from DeviceAPI.models import Device
+from DeviceAPI.serializers import PairingGetSerializer
 
 
 class DeviceList(generics.ListCreateAPIView):
@@ -25,15 +26,17 @@ class DeviceDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = DeviceSerializer
     permission_classes = [IsAuthenticated]
 
-# still work to do
-class DevicePairing(generics.RetrieveUpdateDestroyAPIView):
-    """Endpoint for pairing device"""
+
+class DevicePairing(generics.ListCreateAPIView):
+    """Endpoint for pairing device."""
     queryset = Device.objects.all()
-    serializer_class = DeviceSerializer
+    serializer_class = PairingGetSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_pairing_code(self):
-        """gets current pairing code from server"""
-        code = Device.pairing_code()
+    def get(self, request, pk):
+        queryset = self.get_queryset()
+        queryset = queryset.filter(uuid=pk).first()
+        #queryset = Device.objects.values()
+        serializer = PairingGetSerializer(queryset, many=False)
 
-        return code  # should be json format; how to test it?
+        return Response(serializer.data)
