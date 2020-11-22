@@ -3,12 +3,12 @@ from DeviceAPI.models import Device
 from rest_framework.validators import UniqueTogetherValidator
 
 
-class PairingGetSerializer(serializers.ModelSerializer):
+class PairingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Device
         fields = [
-            #"uuid",  # just for testing puproses
+            "uuid",  # just for testing puproses
             "pairing_code"
 
         ]

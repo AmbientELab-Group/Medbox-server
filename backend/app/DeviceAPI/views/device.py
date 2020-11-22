@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from DeviceAPI.serializers import DeviceSerializer
 from DeviceAPI.models import Device
-from DeviceAPI.serializers import PairingGetSerializer
+from DeviceAPI.serializers import PairingSerializer
 
 
 class DeviceList(generics.ListCreateAPIView):
@@ -30,13 +30,18 @@ class DeviceDetail(generics.RetrieveUpdateDestroyAPIView):
 class DevicePairing(generics.ListCreateAPIView):
     """Endpoint for pairing device."""
     queryset = Device.objects.all()
-    serializer_class = PairingGetSerializer
+    #serializer_class = PairingGetSerializer
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
         queryset = self.get_queryset()
         queryset = queryset.filter(uuid=pk).first()
-        #queryset = Device.objects.values()
-        serializer = PairingGetSerializer(queryset, many=False)
 
-        return Response(serializer.data)
+        code = queryset.pairing_code
+        #serializer = PairingGetSerializer(queryset, many=False)
+        #return Response(serializer.data)
+        
+        return Response(data={"pairing_code": code})
+    
+    def post(self, request):
+        pass
