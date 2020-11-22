@@ -7,6 +7,7 @@ from .telemetryLog import TelemetryLogAdmin
 from .deviceToken import DeviceTokenAdmin
 from .deviceVersion import DeviceVersionAdmin
 from .containerVersion import ContainerVersionAdmin
+from .pairingInfo import PairingInfoAdmin
 
 from ..models import (
     Device,
@@ -16,7 +17,8 @@ from ..models import (
     TelemetryLog,
     DeviceToken,
     DeviceVersion,
-    ContainerVersion
+    ContainerVersion,
+    PairingInfo
 )
 
 admin.site.register(Device, DeviceAdmin)
@@ -27,3 +29,4 @@ admin.site.register(TelemetryLog, TelemetryLogAdmin)
 admin.site.register(DeviceToken, DeviceTokenAdmin)
 admin.site.register(DeviceVersion, DeviceVersionAdmin)
 admin.site.register(ContainerVersion, ContainerVersionAdmin)
+admin.site.register(PairingInfo, PairingInfoAdmin)

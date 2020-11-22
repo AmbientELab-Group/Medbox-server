@@ -21,7 +21,7 @@ class DeviceToken(models.Model):
     user = models.OneToOneField(
         "Device",
         related_name='api_token',
-        on_delete=models.CASCADE, 
+        on_delete=models.CASCADE,
         verbose_name=_("Device")
     )
     created = models.DateTimeField(_("Created"), auto_now_add=True)

@@ -13,3 +13,4 @@ from .telemetryLog import TelemetryLog
 from .deviceToken import DeviceToken
 from .deviceVersion import DeviceVersion
 from .containerVersion import ContainerVersion
+from .pairingInfo import PairingInfo
