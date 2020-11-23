@@ -548,29 +548,11 @@ paths:
           description: Successful request.
 
   /pairing:
-    get:
-      tags:
-        - Internal device API
-      operationId: GetPairingCode
-      description: Request new pairing code from the server.
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                properties:
-                  pairing_code:
-                    type: integer
-                    format: int32
-                    description: Random 6-digit pairing code. uint32_t
-                required:
-                  - pairing_code
-          description: Successful request.
     post:
       tags:
         - Internal device API
-      operationId: PoolPairingStatus
-      description: Pooling endpoint for pairing authentication.
+      operationId: CreatePairingCode
+      description: Initiates pairing procedure. Creates PairingInfo object and returns a pairing code.
       requestBody:
         content:
           application/json:
@@ -583,10 +565,6 @@ paths:
                   minLength: 37
                   maxLength: 37
                   description: 37 characters.
-                pairing_code:
-                  type: integer
-                  format: int32
-                  description: Code, uint32_t
                 device_version:
                   type: string
                   description: major.minor.patch
@@ -595,53 +573,75 @@ paths:
                   description: major.minor.patch
               required:
               - serial_number
-              - pairing_code
               - device_version
               - firmware_version
       responses:
-        "200":
+        "201":
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  api_token:
-                    type: string
-                    minLength: 16
-                    maxLength: 16
-                    description: API token, 16 character, base-64 encoded.
-                required:
-                - api_token
-          description: Pairing successfull.
-        "401":
-          description: User has not entered the code yet, please retry later.
-        "403":
-          description: Pairing code expired. Please restart pairing procedure.
-                  
-  /pairing/verify:
+                $ref: "#/components/schemas/PairingCode"
+          description: Pairing initiated.
+  
+  /device/pairing/confirm:
     post:
       tags:
-        - Internal device API
-      operationId: PairingVerify
-      description: Verify if token is valid.
+        - Devices
+      security:
+        - bearerAuth: []
+      operationId: ConfirmPairing
+      description: If successful it binds `serial_number` to `device_uuid` (and implicitly a particular user). 
+        Should be called during paring procedure from the application.
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                api_token:
+                pairing_code:
+                  type: integer
+                  description: Random 6-digit pairing code. uint32_t
+                  example: 123456
+                device_uuid:
                   type: string
-                  minLength: 16
-                  maxLength: 16
-                  description: API token, 16 character, base-64 encoded.
-              required:
-                - api_token
+                  format: uuid
+                  example: c24205cc-96fa-4a17-8b2a-890d10b01980
+      responses:
+        "201":
+          description: Pairing code submitted.
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/BadRequest"
+
+  /pairing/verify/{pairing_code}:
+    get:
+      tags:
+        - Internal device API
+      operationId: VerifyPairing
+      description: This endpoint allows a device to get information about outcome of a pairing procedure. If the procedure
+        is successful, it returns api token for a device to authenticate itself. This call can only be successful when
+        there is pending pairing procedure (pairing code has not expired).
+      parameters:
+        - name: pairing_code
+          in: path
+          required: true
+          description: Paring code for which the verification is performed.
+          schema:
+            $ref: "#/components/schemas/pairing_code"
       responses:
         "200":
-          description: Verification successfull.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeviceApiToken"
+          description: Pairing successfull.
         "401":
-          description: Verification failed.
+          description: User has not entered the code yet, please retry later.
+        "403":
+          description: Pairing code expired. Please restart pairing procedure.
 
   /debug/logs:
     post:
@@ -1026,6 +1026,31 @@ components:
       example: c24205cc-96fa-4a17-8b2a-890d10b01980
       readOnly: true
     
+    pairing_code:
+      type: integer
+      format: int32
+      description: Random 6-digit pairing code. uint32_t
+      example: 123456
+
+    PairingCode:
+      type: object
+      properties:
+        pairing_code:
+          type: integer
+          format: int32
+          description: Random 6-digit pairing code. uint32_t
+          example: 123456
+
+    DeviceApiToken:
+      type: object
+      properties:
+        api_token:
+          type: string
+          minLength: 32
+          maxLength: 32
+          description: API token, 32 character.
+          example: 2425b8b80fe725f575c33ac96afff9aa
+
     RefreshToken:
       type: object
       properties:
