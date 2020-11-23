@@ -9,9 +9,7 @@ class DeviceAdmin(admin.ModelAdmin):
         "name",
         "version",
         "owner",
-        "pairing_code",
-        "pairing_code_expires_at",
-        "api_token",
+        "fill_status"
     )
     list_filter = (
         "name",
@@ -24,7 +22,10 @@ class DeviceAdmin(admin.ModelAdmin):
                 "name",
                 "version",
                 "owner",
-                "is_active"
+                "is_active",
+                "serial_number",
+                "hardware_version",
+                "firmware_version",
             )
         }),
     )

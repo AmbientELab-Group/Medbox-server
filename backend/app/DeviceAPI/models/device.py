@@ -52,15 +52,6 @@ class Device(models.Model):
     # name given to the device by user
     name = models.CharField(max_length=100)
 
-    # pairing key used to connect the device with a user's account
-    pairing_code = models.CharField(
-        max_length=6,
-        default=""
-    )
-
-    # pairing key expiration date
-    pairing_code_expires_at = models.DateTimeField(null=True)
-
     # factory serial number assigned to the device
     serial_number = models.UUIDField(
         null=True,
