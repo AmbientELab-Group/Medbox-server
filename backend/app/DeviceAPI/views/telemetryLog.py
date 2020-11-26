@@ -10,7 +10,6 @@ class TelemetryLogView(generics.CreateAPIView):
 
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save(device_id=request.user.uuid)
-            return Response(status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(device_id=request.user.uuid)
+        return Response(status=status.HTTP_201_CREATED)
