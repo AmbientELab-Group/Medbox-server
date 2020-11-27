@@ -4,7 +4,8 @@ from DeviceAPI.views import (
     DeviceDetail,
     ContainerListCreateView,
     ContainerDetailView,
-    TelemetryLogView
+    TelemetryLogView,
+    DebugLogView,
 )
 
 urlpatterns = [
@@ -13,4 +14,5 @@ urlpatterns = [
     path("containers", ContainerListCreateView.as_view()),
     path("containers/<uuid:pk>", ContainerDetailView.as_view()),
     path("telemetry", TelemetryLogView.as_view()),
+    path("debug/logs", DebugLogView.as_view()),
 ]
