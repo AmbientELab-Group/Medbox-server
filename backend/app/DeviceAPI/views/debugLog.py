@@ -11,5 +11,5 @@ class DebugLogView(generics.CreateAPIView):
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(device_id=request.user.uuid)
+        serializer.save(device=request.user)
         return Response(status=status.HTTP_201_CREATED)
