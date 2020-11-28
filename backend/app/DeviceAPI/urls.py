@@ -4,7 +4,9 @@ from DeviceAPI.views import (
     DeviceDetail,
     ContainerListCreateView,
     ContainerDetailView,
-    DevicePairing
+    PairingInfoCreate,
+    PairingConfirm,
+    PairingConfirmCode
 )
 
 urlpatterns = [
@@ -12,5 +14,7 @@ urlpatterns = [
     path("devices/<uuid:pk>", DeviceDetail.as_view()),
     path("containers", ContainerListCreateView.as_view()),
     path("containers/<uuid:pk>", ContainerDetailView.as_view()),
-    path("pairing/", DevicePairing.as_view())
+    path("pairing/", PairingInfoCreate.as_view()),
+    path("pairing/confirm/", PairingConfirm.as_view()),
+    path("pairing/confirm/<uuid:pk>", PairingConfirmCode.as_view())
 ]
