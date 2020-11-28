@@ -1,9 +1,10 @@
 from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from DeviceAPI.serializers import DeviceSerializer
 from DeviceAPI.models import Device
-from DeviceAPI.serializers import PairingSerializer
+from DeviceAPI.serializers import PairingInfoSerializer
 
 
 class DeviceList(generics.ListCreateAPIView):
@@ -27,21 +28,15 @@ class DeviceDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class DevicePairing(generics.ListCreateAPIView):
+class DevicePairing(APIView):
     """Endpoint for pairing device."""
     queryset = Device.objects.all()
-    #serializer_class = PairingGetSerializer
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, pk):
-        queryset = self.get_queryset()
-        queryset = queryset.filter(uuid=pk).first()
-
-        code = queryset.pairing_code
-        #serializer = PairingGetSerializer(queryset, many=False)
-        #return Response(serializer.data)
-        
-        return Response(data={"pairing_code": code})
-    
     def post(self, request):
-        pass
+        serializer = PairingInfoSerializer(data = request.data, many = False)
+        if serializer.is_valid():
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
+            
