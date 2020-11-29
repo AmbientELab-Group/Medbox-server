@@ -7,5 +7,13 @@ class PairingInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PairingInfo
-        fields = "__all__"
+        fields = [
+            "serial_number",
+            "hardware_version",
+            "firmware_version",
+        ]
+        
+        read_only_fields = ["pairing_code"]
+
+
         

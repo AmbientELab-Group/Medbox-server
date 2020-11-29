@@ -22,6 +22,10 @@ class PairingInfo(models.Model):
     # version of the firmware
     firmware_version = models.CharField(max_length=11)
 
+    def __init__(self):
+        if self.pairing_code == null:
+            self.pairing_code = PairingInfo.generate_code
+
     @classmethod
     def generate_code(cls):
         code = secrets.randbelow(1000000)

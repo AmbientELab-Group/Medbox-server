@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from DeviceAPI.serializers import DeviceSerializer
-from DeviceAPI.models import Device, deviceToken
+from DeviceAPI.models import Device, deviceToken, PairingInfo
 from DeviceAPI.serializers import PairingInfoSerializer
 from rest_framework.authtoken.models import Token
 
@@ -38,7 +38,8 @@ class PairingInfoCreate(APIView):
         serializer = PairingInfoSerializer(data = request.data, many = False)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            pairing_info = serializer.save()
+            return Response(data = {"Pairing_code" : pairing_info.pairing_code})
         else:
             return Response(serializer.errors)
 
