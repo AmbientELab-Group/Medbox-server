@@ -17,8 +17,7 @@ class DeviceTokenAdmin(admin.ModelAdmin):
         (None, {
             "fields": (
                 "key",
-                "user",
-                "created"
+                "user"
             )
         }),
     )

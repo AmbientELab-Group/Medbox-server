@@ -6,7 +6,8 @@ from DeviceAPI.views import (
     ContainerDetailView,
     PairingInfoCreate,
     PairingConfirm,
-    PairingConfirmCode
+    PairingConfirmCode,
+    TelemetryLogView
 )
 
 urlpatterns = [
@@ -16,5 +17,6 @@ urlpatterns = [
     path("containers/<uuid:pk>", ContainerDetailView.as_view()),
     path("pairing/", PairingInfoCreate.as_view()),
     path("pairing/confirm/", PairingConfirm.as_view()),
-    path("pairing/confirm/<uuid:pk>", PairingConfirmCode.as_view())
+    path("pairing/confirm/<uuid:pk>", PairingConfirmCode.as_view()),
+    path("telemetry", TelemetryLogView.as_view()),
 ]
