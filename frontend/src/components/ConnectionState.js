@@ -3,6 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import StateIcon from "@material-ui/icons/FiberManualRecord";
 import Typography from "@material-ui/core/Typography";
 import { Tooltip } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
+
 
 const useStyles = makeStyles((theme) => ({
     statusIndicator: {
@@ -53,6 +55,7 @@ const ConnectionState = ({ state }) => {
     const classes = useStyles();
     const [lastSeen, setLastSeen] = useState(getElapsedTime(state.lastSeen));
     const [open, setOpen] = useState(false);
+    const {t} = useTranslation("device");
 
     const handleClose = () => {
         setOpen(false);
@@ -72,7 +75,7 @@ const ConnectionState = ({ state }) => {
             onOpen={handleOpen}
         >
             <div className={classes.statusIndicator}>
-                <Typography color="textSecondary">{state.isOn ? "Connected" : "Disconnected"}</Typography>
+                <Typography color="textSecondary">{state.isOn ? t("Connected") : t("Disconnected")}</Typography>
                 <StateIcon className={state.isOn ? classes.onIcon : classes.offIcon} />
             </div>
         </Tooltip>

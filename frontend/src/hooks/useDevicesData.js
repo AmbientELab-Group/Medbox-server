@@ -111,7 +111,7 @@ const boxes = [
 
 
 const fetchDevices = async (setDevices) => {
-    const req = await (await authFetch()).get("/device/devices");
+    const req = await (await authFetch()).get("/devices");
     setDevices(req.data);
 };
 

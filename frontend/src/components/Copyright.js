@@ -8,7 +8,7 @@ const Copyright = () => {
       <Typography variant="body2" color="textSecondary" align="center">
         {'Copyright © '}
         <Link color="inherit" component={RouterLink} to="/">
-          MedBox
+          UbiComp
         </Link>{' '}
         {new Date().getFullYear()}
         {'.'}

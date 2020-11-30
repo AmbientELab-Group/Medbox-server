@@ -5,10 +5,12 @@ import Popover from "@material-ui/core/Popover";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import IconButton from "@material-ui/core/IconButton";
+import { useTranslation } from "react-i18next";
 
 const ContextMenu = ({editUrl}) => {
     const history = useHistory();
     const [anchorEl, setAnchorEl] = useState(null);
+    const { t } = useTranslation("buttons");
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -45,10 +47,10 @@ const ContextMenu = ({editUrl}) => {
                     handleClose();
                     history.push(editUrl);
                 }}>
-                    Edit
+                    {t("Edit")}
                 </ListItem>
                 <ListItem button>
-                    Delete
+                    {t("Delete")}
                 </ListItem>
             </List>
         </Popover>

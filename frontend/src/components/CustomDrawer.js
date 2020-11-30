@@ -7,16 +7,21 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import MainDrawerList from "./MainDrawerList";
-import logo from "../assets/img/Logo_medBox@2x.png";
+import logo from "../assets/img/Logo_Icon@2x.png";
 
 
 const useStyles = makeStyles((theme) => ({
     toolbarIcon: {
         display: "flex",
         alignItems: "center",
-        justifyContent: "flex-end",
+        justifyContent: "space-between",
         padding: "0 8px",
         ...theme.mixins.toolbar,
+    },
+    logoWrapper: {
+        flexGrow: 1,
+        display: "flex",
+        justifyContent: "center"
     },
     drawerPaper: {
         position: "relative",
@@ -60,7 +65,9 @@ const CustomDrawer = ({drawerHook, ...rest}) => {
             onClose={handleDrawerClose}
         >
             <div className={classes.toolbarIcon}>
-                <img src={logo} width={170} alt="Logo"/>
+                <div className={classes.logoWrapper}>
+                    <img src={logo} height={54} alt="Logo"/>
+                </div>
                 <IconButton onClick={handleDrawerClose}>
                     <ChevronLeftIcon />
                 </IconButton>

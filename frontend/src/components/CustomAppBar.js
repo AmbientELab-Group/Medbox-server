@@ -12,7 +12,7 @@ import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import { logout } from "../contexts/authProvider";
 import { useLocation } from "react-router-dom";
-
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
     toolbar: {
@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
     appBar: {
         color: "white",
+        background: `linear-gradient(90deg, #0cbdb8 0%, #99f8ff 50%, #e0fbfd 100%)`,
         zIndex: theme.zIndex.drawer + 1,
         transition: theme.transitions.create(["width", "margin"], {
             easing: theme.transitions.easing.sharp,
@@ -48,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
     },
     logoutIcon: {
         paddingRight: 0
+    },
+    icon: {
+        color: theme.palette.grey[800]
     }
 }));
 
@@ -57,6 +61,7 @@ const CustomAppBar = ({ drawerHook, ...rest }) => {
     const location = useLocation();
     const theme = useTheme();
     const upSm = useMediaQuery(theme.breakpoints.up("sm"));
+    const { t } = useTranslation("translation");
 
     const handleDrawerOpen = () => {
         setDrawerOpen(true);
@@ -68,7 +73,8 @@ const CustomAppBar = ({ drawerHook, ...rest }) => {
 
     const getTitle = () => {
         const tokens = location.pathname.split("/");
-        const title = tokens[2] || tokens[1];
+        const path = tokens[2] || tokens[1];
+        const title = t(path[0].toUpperCase() + path.slice(1));
         return title;
     };
 
@@ -87,12 +93,12 @@ const CustomAppBar = ({ drawerHook, ...rest }) => {
                 <Typography component="h1" variant="h2" color="inherit" noWrap className={classes.title}>
                     {getTitle()}
                 </Typography>
-                <IconButton color="inherit">
+                <IconButton>
                     <Badge badgeContent={4} color="secondary">
-                        <NotificationsIcon />
+                        <NotificationsIcon className={classes.icon}/>
                     </Badge>
                 </IconButton>
-                <IconButton color="inherit" onClick={handleLogout} aria-label="log out" >
+                <IconButton className={classes.icon} onClick={handleLogout} aria-label="log out" >
                     <MeetingRoomIcon className={classes.logoutIcon} />
                 </IconButton>
             </Toolbar>

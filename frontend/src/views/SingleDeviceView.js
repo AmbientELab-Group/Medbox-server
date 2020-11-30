@@ -12,19 +12,19 @@ const boxes = [
             isOn: true,
             lastSeen: Date.now()
         },
-        owner: "Bob",
+        owner: "Jan",
         fill: 20,
         medicines: [
             { 
-                name: "Medicine X",
+                name: "Allosol",
                 doseAmount: 12
             },
             { 
-                name: "Medicine Y",
+                name: "Sensistar",
                 doseAmount: 4
             },
             { 
-                name: "Medicine Z",
+                name: "Invalin",
                 doseAmount: 25
             }
         ],
@@ -55,19 +55,19 @@ const boxes = [
             isOn: false,
             lastSeen: Date.now()
         },
-        owner: "Jack",
+        owner: "Tadeusz",
         fill: 50,
         medicines: [
             { 
-                name: "Medicine X",
+                name: "Allosol",
                 doseAmount: 12
             },
             { 
-                name: "Medicine Y",
+                name: "Sensistar",
                 doseAmount: 4
             },
             { 
-                name: "Medicine Z",
+                name: "Invalin",
                 doseAmount: 25
             }
         ],
@@ -85,19 +85,19 @@ const boxes = [
             isOn: false,
             lastSeen: Date.now()
         },
-        owner: "Karen",
+        owner: "Ilona",
         fill: 80,
         medicines: [
             { 
-                name: "Medicine X",
+                name: "Allosol",
                 doseAmount: 12
             },
             { 
-                name: "Medicine Y",
+                name: "Sensistar",
                 doseAmount: 4
             },
             { 
-                name: "Medicine Z",
+                name: "Invalin",
                 doseAmount: 25
             }
         ],

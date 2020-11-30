@@ -21,7 +21,7 @@ const Diagram = ({container, pathProps, textProps, ...rest}) => {
     const ANGLE_DELTA = 2 * Math.PI / capacity;
     const ANGLE_ORIGIN = -0.5 * Math.PI; 
     const BIG_R = MAX_WIDTH / 2 - 20;
-    const SMALL_R = BIG_R - RING_WIDTH;
+    const SMALL_R = BIG_R - RING_WIDTH; 
     const PADDING = ANGLE_DELTA / 20;
 
     const points = [];

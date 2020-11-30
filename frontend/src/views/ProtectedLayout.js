@@ -82,7 +82,7 @@ const ProtectedLayout = () => {
                             <Redirect to={`${routeMatch.url}`}/>
                         </Route>
                     </Switch>
-                    <CustomFab/>
+                    {/* <CustomFab/> */}
                 </Container>
                 <Box className={classes.copyright}>
                     <Copyright />

@@ -17,21 +17,24 @@ import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ContextMenu from "./ContextMenu";
+import { useTranslation } from "react-i18next";
+
+import CropDinIcon from '@material-ui/icons/CropDin';
 
 const boxes = [
     {
         id: "1",
-        name: "Box123456789qwertyuiop",
+        name: "Dozownik Janiny",
         state: "on"
     },
     {   
         id: "2",
-        name: "Box2",
+        name: "Dozownik Henryka",
         state: "off"
     },
     {
         id: "3",
-        name: "Box3",
+        name: "Dozownik Stefanii",
         state: "connecting"
     }
 ];
@@ -39,15 +42,15 @@ const boxes = [
 const treatments = [
     {
         id: "1",
-        name: "Bob"
+        name: "Janina"
     },
     {
         id: "2",
-        name: "John"
+        name: "Henryk"
     },
     {
         id: "3",
-        name: "Marry"
+        name: "Stefania"
     }
 ];
 
@@ -87,6 +90,7 @@ const MainDrawerList = ({drawerState}) => {
     const matchDevices = useRouteMatch("/dashboard/devices");
     const matchTreatments = useRouteMatch("/dashboard/treatments");
     const matchSettings = useRouteMatch("/dashboard/settings");
+    const { t } = useTranslation("translation");
 
     const getStateIcon = ({state}) => {
         switch (state) {
@@ -142,13 +146,13 @@ const MainDrawerList = ({drawerState}) => {
                 <ListItemIcon >
                     <DashboardIcon color={!!matchDashboard ? "primary" : "inherit"}/>
                 </ListItemIcon>
-                <ListItemText primary="Dashboard" />
+                <ListItemText primary={t("Dashboard")} />
             </ListItem>
             <ListItem button component={RouterLink} to="/dashboard/devices">
                 <ListItemIcon>
-                    <AllInboxIcon color={!!matchDevices ? "primary" : "inherit"}/>
+                    <CropDinIcon color={!!matchDevices ? "primary" : "inherit"}/>
                 </ListItemIcon>
-                <ListItemText primary="Devices" />
+                <ListItemText primary={t("Devices")} />
                 { devicesExpanded ? 
                     <IconButton onClick={closeDevices}>
                         <ExpandLess/>
@@ -188,7 +192,7 @@ const MainDrawerList = ({drawerState}) => {
                 <ListItemIcon>
                     <LocalHospitalIcon color={!!matchTreatments ? "primary" : "inherit"}/>
                 </ListItemIcon>
-                <ListItemText primary="Treatments" />
+                <ListItemText primary={t("Treatments")} />
                 { treatmentsExpanded ? 
                     <IconButton onClick={closeTreatments}>
                         <ExpandLess/>
@@ -225,7 +229,7 @@ const MainDrawerList = ({drawerState}) => {
                 <ListItemIcon>
                     <SettingsIcon color={!!matchSettings ? "primary" : "inherit"}/>
                 </ListItemIcon>
-                <ListItemText primary="Settings" />
+                <ListItemText primary={t("Settings")} />
             </ListItem>
         </List>
     );

@@ -5,6 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import ConnectionState from "./ConnectionState";
 import { Divider, Grid } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
 
 const DeviceInfoCard = ({device}) => {
     const classes = useStyles();
+    const { t } = useTranslation("device");
 
     return (
         <Card>
@@ -41,19 +43,19 @@ const DeviceInfoCard = ({device}) => {
                     {device.name}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                    Owner: {device.owner}
+                    {t("Owner")}: {device.owner}
                 </Typography>
                 <Divider  className={classes.divider}/>
                 <Grid container className={classes.medicine}>
                     <Grid container item xs={12} className={classes.medicineLabels}>
                         <Grid item xs={6}>
                             <Typography variant="h3" color="textSecondary">
-                                Medicine name
+                                {t("Medicine name")}
                             </Typography>
                         </Grid>
                         <Grid item xs={6}>
                             <Typography variant="h3" color="textSecondary">
-                                Number of doses
+                                {t("Number of doses")}
                             </Typography>
                         </Grid>
                     </Grid>

@@ -1,6 +1,7 @@
 import { Card, CardContent, makeStyles, Select } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import ContainerDiagram from "./ContainerDiagram";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
     cardContent: {
@@ -16,6 +17,7 @@ const DeviceContainersInfo = ({device}) => {
     const classes = useStyles();
     const { containers } = device;
     const [selectedContainer, setSelectedContainer] = useState();
+    const { t } = useTranslation("device");
 
     useEffect(() => {
         setSelectedContainer(containers.length > 0 ? containers[0] : null);
@@ -37,7 +39,7 @@ const DeviceContainersInfo = ({device}) => {
                 >
                     {!selectedContainer && <option aria-label="None" value="">Device is empty</option>}
                     { containers.map((cnt) => (
-                        <option key={`device-${device.id}/container-${cnt.id}`} value={cnt.id}>Container {String.fromCharCode(65 + cnt.position)}</option>
+                        <option key={`device-${device.id}/container-${cnt.id}`} value={cnt.id}>{t("Container")} {String.fromCharCode(65 + cnt.position)}</option>
                     ))}
                 </Select>
                 <ContainerDiagram container={selectedContainer}/>

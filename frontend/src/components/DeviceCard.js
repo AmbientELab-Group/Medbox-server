@@ -1,7 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -9,6 +8,9 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import ConnectionState from "./ConnectionState";
+import { useTranslation } from "react-i18next";
+
+import FatTextButton from "./FatTextButton";
 
 const FillBar = withStyles((theme) => ({
     root: {
@@ -33,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "flex-end"
     },
     barFull: {
-        backgroundColor: theme.palette.primary.light
+        backgroundColor: theme.palette.primary.light,
     },
     barMedium: {
         backgroundColor: theme.palette.primary.main
@@ -52,6 +54,7 @@ const DeviceCard = ({ device }) => {
     const history = useHistory();
     const theme = useTheme();
     const sm = useMediaQuery(theme.breakpoints.up("sm"));
+    const { t } = useTranslation(["device", "buttons"]);
 
     return (
         <Card>
@@ -61,10 +64,10 @@ const DeviceCard = ({ device }) => {
                     {device.name}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                    Owner: {device.owner}
+                    {t("device:Owner")}: {device.owner}
                 </Typography>
                 <Typography className={classes.fill}>
-                    Device fill: {device.fill}%
+                    {t("device:Device fill")}: {device.fill}%
                 </Typography>
                 <FillBar
                     variant="determinate" 
@@ -78,15 +81,23 @@ const DeviceCard = ({ device }) => {
                     }}/>
             </CardContent>
             <CardActions className={classes.actions}>
-                <Button size={sm ? "large" : "small"} color="primary" onClick={()=>history.push(`/dashboard/devices/${device.id}`)}>
-                    Show more
-                </Button>
-                <Button size={sm ? "large" : "small"} color="primary" onClick={()=>history.push(`/dashboard/devices/${device.id}`)}>
-                    Edit
-                </Button>
-                <Button size={sm ? "large" : "small"} color="primary">
-                    Delete
-                </Button>
+                <FatTextButton 
+                    size={sm ? "large" : "small"}
+                    onClick={()=>history.push(`/dashboard/devices/${device.id}`)
+                }>
+                    {t("buttons:Show more")}
+                </FatTextButton>
+                <FatTextButton 
+                    size={sm ? "large" : "small"}
+                    onClick={()=>history.push(`/dashboard/devices/${device.id}`)
+                }>
+                    {t("buttons:Edit")}
+                </FatTextButton>
+                <FatTextButton 
+                    size={sm ? "large" : "small"} 
+                >
+                    {t("buttons:Delete")}
+                </FatTextButton>
             </CardActions>
         </Card>
     );
