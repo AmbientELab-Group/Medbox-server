@@ -3,9 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from DeviceAPI.serializers import DeviceSerializer
-from DeviceAPI.models import Device, deviceToken, PairingInfo
-from DeviceAPI.serializers import PairingInfoSerializer
-from rest_framework.authtoken.models import Token
+from DeviceAPI.models import Device, PairingInfo
 
 
 class DeviceList(generics.ListCreateAPIView):
@@ -29,82 +27,27 @@ class DeviceDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class PairingInfoCreate(APIView):
-    """Endpoint for creating PairingInfo object"""
-    queryset = Device.objects.all()
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        serializer = PairingInfoSerializer(data = request.data, many = False)
-        if serializer.is_valid():
-            serializer.save()
-            pairing_info = serializer.save()
-            return Response(data = {"Pairing_code" : pairing_info.pairing_code})
-        else:
-            return Response(serializer.errors)
-
-
 class PairingConfirm(APIView):
     """Endpoint for binding physical device to its db model"""
-    queryset = Device.objects.all()
     permission_classes = [IsAuthenticated]
-    
+
     def post(self, request):
-        queryset = self.queryset
-        user = self.request.user
-        queryset = queryset.filter(user)
+        user = request.user
 
-        #print(queryset.values())
+        # get_or_404 todo
+        device = Device.objects.get(pk=request.data.get("device_uuid"))
 
-        content = {
-            "SerialNumber": SerialNumber
-        }
-        Device = queryset.filter(serial_number = SerialNumber)
+        # this works, I've checked
+        if not device.is_managed(user):
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
-        #print(queryset)
+        # get or 404 todo
+        info = PairingInfo.objects.get(pairing_code=request.data.get("pairing_code"))
 
-        #print(user)
+        device.serial_number = info.serial_number
+        device.hardware_version = info.hardware_version
+        device.firmware_version = info.firmware_version
 
+        device.save()
 
-        #device.serialnum = postedserialnum
-        api_token = Token.objects.create(user = user)
-        data = { "Token": api_token.key}
-            
-        return Response(data)
-
-
-class PairingConfirmCode(APIView):
-    """Endpoint for pairing by code"""
-    queryset = Device.objects.all()
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, pk):
-        queryset = self.queryset
-        user = self.request.user
-        queryset = queryset.filter(pa)
-             
-"""        try:
-            code = user.PairingInfo.pairing_code
-            if(code == pk)
-                api_token = Token.objects.get(user = user)
-                data = { "Token": api_token.key}
-                return Response(data)
-            else:
-                return Response(status = status.HTTP_401_UNAUTHORIZED)
-        except: 
-            return Response(status = status.HTTP_403_FORBIDDEN) 
-        try:
-            code = user.PairingInfo.pairing_code
-        except:
-            return Response(status = status.HTTP_401_UNAUTHORIZED)
-        else:
-            if(code == pk):
-                api_token = Token.objects.get(user = user)
-                data = { "Token": api_token.key} """
-        
-#try:
-#coś do zjebania
-#except:
-#coś co ma się wykonać gdy się zjebie
-#else:
-#coś co ma się wykonać gdy się nie zjebie
+        return Response(status=status.HTTP_201_CREATED)
