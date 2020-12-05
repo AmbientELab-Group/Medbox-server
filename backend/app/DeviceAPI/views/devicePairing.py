@@ -37,6 +37,16 @@ class PairingConfirmCode(APIView):
         data = {"token":token.key}
         return Response(data)
 
+
+class PairingVerification(APIView):
+    """Endpoint for verifying whether token key in device memory is valid"""
+    
+    def post(self, request):
+        user = request.user
+        api_token = request.data.get("api_token")
+        if api_token == Token.objects.get(user=user).key:
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
              
 """        try:
             code = user.PairingInfo.pairing_code
