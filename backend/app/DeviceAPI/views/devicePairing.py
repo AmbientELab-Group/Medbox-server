@@ -2,7 +2,8 @@ from DeviceAPI.serializers import PairingInfoSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from DeviceAPI.models import Device, PairingInfo
-
+from rest_framework import status
+from rest_framework.authtoken.models import Token
 
 class PairingInfoCreate(APIView):
     """Endpoint for creating PairingInfo object"""
@@ -20,10 +21,22 @@ class PairingInfoCreate(APIView):
 
 class PairingConfirmCode(APIView):
     """Endpoint for pairing by code"""
-    queryset = Device.objects.all()
 
     def get(self, request, pk):
-        pass
+        try:
+            pairing_info = PairingInfo.objects.get(pairing_code=pk)
+        except PairingInfo.DoesNotExist:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
+        if pairing_info.is_expired():
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        device = Device.objects.get(serial_number=pairing_info.serial_number)
+        user = request.user
+        token, created = Token.objects.get_or_create(user=user)
+        data = {"token":token.key}
+        return Response(data)
+
              
 """        try:
             code = user.PairingInfo.pairing_code
