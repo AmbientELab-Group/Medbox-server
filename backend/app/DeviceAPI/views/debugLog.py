@@ -1,12 +1,12 @@
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from DeviceAPI.serializers import TelemetrySerializer
+from DeviceAPI.serializers import DebugLogSerializer
 
 
-class TelemetryLogView(generics.CreateAPIView):
+class DebugLogView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = TelemetrySerializer
+    serializer_class = DebugLogSerializer
 
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
