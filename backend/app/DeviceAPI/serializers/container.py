@@ -9,14 +9,14 @@ class ContainerSerializer(serializers.ModelSerializer):
         model = Container
         fields = [
             "uuid",
-            "capacity",
+            "version",
             "device",
             "position",
             "last_refill",
             "fill_status"
         ]
         read_only_fields = [
-            "capacity",
+            "version",
             "fill_status"
         ]
 
@@ -62,7 +62,7 @@ class ContainerCreateOnlySerializer(ContainerSerializer):
         model = Container
         fields = [
             "uuid",
-            "capacity",
+            "version",
             "device",
             "position",
             "last_refill",
