@@ -35,17 +35,14 @@ class PairingConfirm(APIView):
     def post(self, request):
         user = request.user
 
-        # get_or_404 todo
         try:
             device = Device.objects.get(pk=request.data.get("device_uuid"))
         except Device.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        # this works, I've checked
         if not device.is_managed(user):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-        # get or 404 todo
         try:
             info = PairingInfo.objects.get(pairing_code=request.data.get("pairing_code"))
         except PairingInfo.DoesNotExist:

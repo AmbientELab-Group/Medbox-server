@@ -19,7 +19,7 @@ class PairingInfoCreate(APIView):
             return Response(serializer.errors)
 
 
-class PairingConfirmCode(APIView):
+class PairingVerify(APIView):
     """Endpoint for pairing by code"""
 
     def get(self, request, pk):
@@ -38,7 +38,7 @@ class PairingConfirmCode(APIView):
         return Response(data)
 
 
-class PairingVerification(APIView):
+class PairingCodeCheck(APIView):
     """Endpoint for verifying whether token key in device memory is valid"""
     
     def post(self, request):
@@ -47,23 +47,3 @@ class PairingVerification(APIView):
         if api_token == Token.objects.get(user=user).key:
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
-             
-"""        try:
-            code = user.PairingInfo.pairing_code
-            if(code == pk)
-                api_token = Token.objects.get(user = user)
-                data = { "Token": api_token.key}
-                return Response(data)
-            else:
-                return Response(status = status.HTTP_401_UNAUTHORIZED)
-        except: 
-            return Response(status = status.HTTP_403_FORBIDDEN) 
-        try:
-            code = user.PairingInfo.pairing_code
-        except:
-            return Response(status = status.HTTP_401_UNAUTHORIZED)
-        else:
-            if(code == pk):
-                api_token = Token.objects.get(user = user)
-                data = { "Token": api_token.key} """
-        
