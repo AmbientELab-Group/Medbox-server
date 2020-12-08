@@ -10,6 +10,7 @@ class PairingInfoAdmin(admin.ModelAdmin):
         "serial_number",
         "hardware_version",
         "firmware_version",
+        "is_expired"
     )
     list_filter = (
         "pairing_code",

@@ -29,7 +29,8 @@ class Device(models.Model):
     # reference to supervisors of this device
     supervisors = models.ManyToManyField(
         get_user_model(),
-        related_name="supervisedDevices"
+        related_name="supervisedDevices",
+        blank=True
     )
 
     # based on django user model field
@@ -100,6 +101,7 @@ class Device(models.Model):
     def clean(self):
         # check name uniqueness
         if Device.objects.filter(
+            ~Q(uuid=self.uuid) &
             Q(owner=self.owner) &
             Q(name=self.name)
         ).exists():
@@ -107,6 +109,12 @@ class Device(models.Model):
                 _("Device with this name already exists, choose different name."),
                 code="duplicated_value"
             )
+
+    def is_managed(self, user):
+        """
+        Checks if user is the owner or supervisor of this device.
+        """
+        return self.owner == user or user in self.supervisors.all()
 
     # for compatibility sake, copy pasted from django source, don't ask
     @property

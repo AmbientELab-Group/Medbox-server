@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
-from datetime import timedelta, datetime
+from datetime import timedelta
+from django.utils import timezone
 import secrets
 
 
@@ -30,10 +31,10 @@ class PairingInfo(models.Model):
         return code
 
     def expires_at(self):
-        return self.created + timedelta(minutes=settings.PAIRING_CODE_LIFETIME)
+        return self.created_at + timedelta(minutes=settings.PAIRING_CODE_LIFETIME)
 
     def is_expired(self):
-        return self.expires_at() < datetime.now()
+        return self.expires_at() < timezone.now()
 
     def __str__(self):
-        return f"{self.pairing_code}, created at: {self.created}"
+        return f"{self.pairing_code}, created at: {self.created_at}"
