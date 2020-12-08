@@ -22,6 +22,7 @@ class DeviceAdmin(admin.ModelAdmin):
                 "name",
                 "version",
                 "owner",
+                "supervisors",
                 "is_active",
                 "serial_number",
                 "hardware_version",
