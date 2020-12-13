@@ -12,7 +12,7 @@ class ContainerSerializer(serializers.ModelSerializer):
             "capacity",
             "device",
             "position",
-            "last_refil",
+            "last_refill",
             "fill_status"
         ]
         read_only_fields = [
@@ -65,7 +65,7 @@ class ContainerCreateOnlySerializer(ContainerSerializer):
             "capacity",
             "device",
             "position",
-            "last_refil",
+            "last_refill",
             "fill_status"
         ]
         read_only_fields = [

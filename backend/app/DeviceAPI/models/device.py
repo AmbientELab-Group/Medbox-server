@@ -29,30 +29,29 @@ class Device(models.Model):
     # reference to supervisors of this device
     supervisors = models.ManyToManyField(
         get_user_model(),
-        related_name="supervisedDevices"
+        related_name="supervisedDevices",
+        blank=True
     )
 
-    # max number of containers which fit into this device
-    capacity = models.PositiveSmallIntegerField()
+    # based on django user model field
+    is_active = models.BooleanField(
+        _("active"),
+        default=True,
+        help_text=_(
+            "Designates whether this device should be treated as active. "
+            "Unselect this instead of deleting device object."
+        ),
+    )
+
+    # version that specifies capacity and latest firmware version
+    version = models.ForeignKey(
+        "DeviceVersion",
+        on_delete=models.PROTECT,
+        related_name="existing_devices"
+    )
 
     # name given to the device by user
     name = models.CharField(max_length=100)
-
-    # pairing key used to connect the device with a user's account
-    pairing_code = models.CharField(
-        max_length=6,
-        default=""
-    )
-
-    # pairing key expiration date
-    pairing_code_expires_at = models.DateTimeField(null=True)
-
-    # token used to authenticated API calls from this device
-    api_token = models.CharField(
-        max_length=42,
-        default="",
-        blank=True
-    )
 
     # factory serial number assigned to the device
     serial_number = models.UUIDField(
@@ -74,6 +73,11 @@ class Device(models.Model):
         blank=True
     )
 
+    @property
+    def capacity(self):
+        return self.version.capacity
+
+    @property
     def fill_status(self):
         """
         Returns number of percents this device is filled in calculated over
@@ -97,6 +101,7 @@ class Device(models.Model):
     def clean(self):
         # check name uniqueness
         if Device.objects.filter(
+            ~Q(uuid=self.uuid) &
             Q(owner=self.owner) &
             Q(name=self.name)
         ).exists():
@@ -104,6 +109,21 @@ class Device(models.Model):
                 _("Device with this name already exists, choose different name."),
                 code="duplicated_value"
             )
+
+    def is_managed(self, user):
+        """
+        Checks if user is the owner or supervisor of this device.
+        """
+        return self.owner == user or user in self.supervisors.all()
+
+    # for compatibility sake, copy pasted from django source, don't ask
+    @property
+    def is_authenticated(self):
+        """
+        Always return True. This is a way to tell if the user has been
+        authenticated in templates.
+        """
+        return True
 
     def __str__(self):
         return f"'{self.name}':{self.uuid}"
