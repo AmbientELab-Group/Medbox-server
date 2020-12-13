@@ -4,3 +4,5 @@ from .chamber import ChamberSerializer
 from .pairing import PairingInfoSerializer
 from .telemetryLog import TelemetrySerializer
 from .debugLog import DebugLogSerializer
+from .deviceVersion import DeviceVersionSerializer
+from .containerVersion import ContainerVersionSerializer
