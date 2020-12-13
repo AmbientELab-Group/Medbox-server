@@ -11,7 +11,6 @@ from DeviceAPI.models import (
 
 class TelemetryLogViewTestCase(APITestCase):
     telemetrylog_url = "/api/telemetry"
-    token = "123456"
 
     def setUp(self):
         self.owner = get_user_model().objects.create(
@@ -32,11 +31,11 @@ class TelemetryLogViewTestCase(APITestCase):
         )
 
         self.device_token = DeviceToken.objects.create(
-            key=self.token,
+            key=DeviceToken.generate_key(),
             user=self.device
         )
 
-        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.device_token.key)
 
     def test_telemetry_create(self):
         data = {
