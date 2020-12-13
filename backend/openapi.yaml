@@ -730,7 +730,7 @@ paths:
             schema:
               type: object
               properties:
-                unix_time:
+                timestamp:
                   type: integer
                   minimum: 0
                   description: Unix time (Time_t or uint32_t)
