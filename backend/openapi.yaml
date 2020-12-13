@@ -1240,15 +1240,15 @@ components:
           type: integer
           minimum: 0
           description: Message code, uint16_t.
-        unix_timestamp:
+        timestamp:
           type: integer
           format: int32
           minimum: 0
           description: Time_t or uint32_t
-        additional_info:
+        details:
           type: string
           maxLength: 64
       required:
         - severity
         - message_code
-        - unix_timestamp
+        - timestamp
