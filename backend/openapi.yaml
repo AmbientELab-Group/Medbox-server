@@ -340,6 +340,40 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
+  /device/pairing/confirm:
+    post:
+      tags:
+        - Devices
+      security:
+        - bearerAuth: []
+      operationId: ConfirmPairing
+      description: If successful it binds `serial_number` to `device_uuid` (and implicitly a particular user). 
+        Should be called during paring procedure from the application.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pairing_code:
+                  type: integer
+                  description: Random 6-digit pairing code. uint32_t
+                  example: 123456
+                device_uuid:
+                  type: string
+                  format: uuid
+                  example: c24205cc-96fa-4a17-8b2a-890d10b01980
+      responses:
+        "201":
+          description: Pairing code submitted.
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/BadRequest"
+
+
   /containers:
     get:
       tags:
@@ -696,7 +730,7 @@ paths:
             schema:
               type: object
               properties:
-                unix_time:
+                timestamp:
                   type: integer
                   minimum: 0
                   description: Unix time (Time_t or uint32_t)
@@ -1206,15 +1240,15 @@ components:
           type: integer
           minimum: 0
           description: Message code, uint16_t.
-        unix_timestamp:
+        timestamp:
           type: integer
           format: int32
           minimum: 0
           description: Time_t or uint32_t
-        additional_info:
+        details:
           type: string
           maxLength: 64
       required:
         - severity
         - message_code
-        - unix_timestamp
+        - timestamp
