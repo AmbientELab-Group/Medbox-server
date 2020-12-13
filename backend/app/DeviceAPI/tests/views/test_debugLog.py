@@ -9,9 +9,8 @@ from DeviceAPI.models import (
 )
 
 
-class DebugViewTestCase(APITestCase):
+class DebugLogViewTestCase(APITestCase):
     debug_url = "/api/debug/logs"
-    token = "123456"
 
     def setUp(self):
         self.owner = get_user_model().objects.create(
@@ -32,18 +31,18 @@ class DebugViewTestCase(APITestCase):
         )
 
         self.device_token = DeviceToken.objects.create(
-            key=self.token,
+            key=DeviceToken.generate_key(),
             user=self.device
         )
 
-        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.device_token.key)
 
     def test_telemetry_create(self):
         data = {
             "severity": 1,
             "message_code": 0,
             "timestamp": 0,
-            "details": "dupa"
+            "details": "test"
         }
 
         response = self.client.post(
@@ -59,7 +58,7 @@ class DebugViewTestCase(APITestCase):
             "severity": 1,
             "message_code": 0,
             "timestamp": 0,
-            "details": "dupa"
+            "details": "test"
         }
 
         data_from_model = {
