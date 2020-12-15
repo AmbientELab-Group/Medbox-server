@@ -36,14 +36,6 @@ class DevicePairingTestCase(APITestCase):
             version=self.device_version,
             name="TestBox"
         )
-
-        self.pairing_info = PairingInfo.objects.create(
-            pairing_code = PairingInfo.generate_code(),
-            serial_number = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-            hardware_version = "0.0",
-            firmware_version = "0.0.0"
-        )
-
     
     def test_pairingInfo_create(self):
        
@@ -60,7 +52,7 @@ class DevicePairingTestCase(APITestCase):
         )
 
         expected_data = {
-            "pairing_code": self.pairing_info.pairing_code
+            "pairing_code": PairingInfo.objects.first().pairing_code
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -68,14 +60,15 @@ class DevicePairingTestCase(APITestCase):
 
     def test_pairingVerify(self):
         
+        #return error need to create pairinginfo object. Maybe create it in SetUp for both tests?
+        #to be continued
         response = self.client.get(
-            "pairing/verify/" + str(self.pairing_info.pairing_code),
-            format="json"
+            "pairing/verify/" + str(PairingInfo.objects.first().pairing_code) + "/",
         )
 
-        token = Token.objects.get(user = self.owner)
+        token = Token.objects.first()
         expected_data = {
-            "token": token.key
+            "token": token
         }
 
-        self.assertEqual(response.data, expected_data)
+        self.assertEqual(response, expected_data)
