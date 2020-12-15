@@ -4,8 +4,8 @@ from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from DeviceAPI.models import (
     Device,
-    deviceVersion,
-    pairingInfo
+    DeviceVersion,
+    PairingInfo
 )
 from uuid import UUID
 from collections import OrderedDict

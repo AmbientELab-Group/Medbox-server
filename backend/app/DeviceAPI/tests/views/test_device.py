@@ -5,13 +5,13 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from DeviceAPI.models import (
     Device,
     deviceVersion,
-    pairingInfo
+    PairingInfo
 )
 from uuid import UUID
 from collections import OrderedDict
 
 class DeviceTestCase(APITestCase):
-    device_pairing_url = "devices/pairing/confirm/"
+    device_pairing_url = "/api/devices/pairing/confirm/"
 
     def setUp(self):
         self.owner = get_user_model().objects.create(
@@ -34,9 +34,21 @@ class DeviceTestCase(APITestCase):
             name="TestBox"
         )
 
+        self.pairing_info = pairingInfo.objects.create(
+            pairing_code = pairingInfo.generate_code()
+            #serial_number = 
+            #hardware_version = 
+            #firmware_version
+        )
+
     def test_pairing_confirm(self):
         data = {
             "device_uuid": self.device.uuid
-            "pairing_code": 
+            "pairing_code": self.pairing_info.pairing_code
         }
-        pass
+        response = self.client.post(
+            self.device_pairing_url,
+            data,
+            format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
