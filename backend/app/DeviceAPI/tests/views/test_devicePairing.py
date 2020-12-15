@@ -12,8 +12,8 @@ from collections import OrderedDict
 
 
 class DevicePairingTestCase(APITestCase):
-    #url declaration
     pairingInfo_post_url = "/api/pairing/"
+    pairingInfoVerify_get_url = "pairing/verify/"
 
     def setUp(self):
         self.owner = get_user_model().objects.create(
@@ -37,12 +37,11 @@ class DevicePairingTestCase(APITestCase):
         )
     
     def test_pairingInfo_create(self):
-        test_serialnum = "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-
+       
         data = {
-            "serial_number": test_serialnum,
-            "hardware_version": self.device_version.name,
-            "firmware_version": self.device_version.latest_firmware_version
+            "serial_number": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "hardware_version": "0.0",
+            "firmware_version": "0.0.0"
         }
 
         response = self.client.post(
@@ -51,12 +50,24 @@ class DevicePairingTestCase(APITestCase):
             format="json"
         )
 
-        expected_data = (
+        expected_data = {
             "pairing_code": pairingInfo.objects.get(position=1).pairing_code
-        )
+        }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_data)
 
     def test_pairingVerify(self):
-        pass
+        
+        response = self.client.get(
+            "pairing/verify/" + pairingInfo.objects.get(position=1).pairing_code,
+            data,
+            format="json"
+        )
+
+        token = self.Token.objects.get(user=user)
+        expected_data = {
+            "token": token.key
+        }
+
+        self.assertEqual(response.data, expected_data)

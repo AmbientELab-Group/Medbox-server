@@ -34,16 +34,19 @@ class DeviceTestCase(APITestCase):
             name="TestBox"
         )
 
-        self.pairing_info = pairingInfo.objects.create(
-            pairing_code = pairingInfo.generate_code()
-            #serial_number = 
-            #hardware_version = 
-            #firmware_version
+        self.client.post(
+            "/api/devices/pairing/",
+            {
+            "serial_number": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "hardware_version": "0.0",
+            "firmware_version": "0.0.0"
+            },
+            format="json"
         )
-
+        
     def test_pairing_confirm(self):
         data = {
-            "device_uuid": self.device.uuid
+            "device_uuid": self.device.uuid,
             "pairing_code": self.pairing_info.pairing_code
         }
         response = self.client.post(
