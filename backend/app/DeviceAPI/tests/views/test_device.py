@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from DeviceAPI.models import (
     Device,
-    deviceVersion,
+    DeviceVersion,
     PairingInfo
 )
 from uuid import UUID
@@ -33,16 +33,15 @@ class DeviceTestCase(APITestCase):
             version=self.device_version,
             name="TestBox"
         )
+        self.pairing_info = PairingInfo.objects.create(
+            pairing_code = PairingInfo.generate_code(),
+            serial_number = "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            hardware_version = "0.0",
+            firmware_version = "0.0.0"
 
-        self.client.post(
-            "/api/devices/pairing/",
-            {
-            "serial_number": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-            "hardware_version": "0.0",
-            "firmware_version": "0.0.0"
-            },
-            format="json"
         )
+
+
         
     def test_pairing_confirm(self):
         data = {
