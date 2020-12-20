@@ -6,6 +6,7 @@ from DeviceAPI.models import (
 )
 from collections import OrderedDict
 
+
 class DeviceVersionViewTestCase(APITestCase):
     device_versions_url = "/api/versions/device"
 
@@ -52,6 +53,7 @@ class DeviceVersionViewTestCase(APITestCase):
         self.assertEqual(response.data[0], expected_data[0])
         self.assertEqual(response.data[1], expected_data[1])
         self.assertEqual(response.data[2], expected_data[2])
+
 
 class ContainerVersionViewTestCase(APITestCase):
     container_versions_url = "/api/versions/container"
