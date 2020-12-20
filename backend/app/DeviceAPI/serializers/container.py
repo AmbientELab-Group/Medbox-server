@@ -31,9 +31,9 @@ class ContainerSerializer(serializers.ModelSerializer):
         Check if position is in capacity range.
         """
         data = self.context.get("request").data
-        deviceUUID = data.get("device")
-        if deviceUUID:
-            device = Device.objects.get(uuid=deviceUUID)
+        device_UUID = data.get("device")
+        if device_UUID:
+            device = Device.objects.get(uuid=device_UUID)
             if position < 0 or position >= device.capacity:
                 raise serializers.ValidationError(
                     _("Position value outside of container's capacity."),
@@ -47,8 +47,8 @@ class ContainerSerializer(serializers.ModelSerializer):
         provided device.
         """
         user = self.context.get("request").user
-        supervisedDevices = user.supervisedDevices.all()
-        if device in supervisedDevices or user == device.owner:
+        supervised_devices = user.supervised_devices.all()
+        if device in supervised_devices or user == device.owner:
             return device
 
         raise serializers.ValidationError(

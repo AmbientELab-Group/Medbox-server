@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "first_name",
             "last_name",
-            "supervisedDevices"
+            "supervised_devices"
         ]
 
 

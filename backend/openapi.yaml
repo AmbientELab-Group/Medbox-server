@@ -416,7 +416,7 @@ paths:
       - name: uuid
         in: path
         required: true
-        description: A UUID string identifying this device.
+        description: A UUID string identifying this container.
         schema:
           $ref: "#/components/schemas/uuid"
       responses:
@@ -448,14 +448,23 @@ paths:
       - name: uuid
         in: path
         required: true
-        description: A UUID string identifying this device.
+        description: A UUID string identifying this container.
         schema:
           $ref: "#/components/schemas/uuid"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Container"
+              allOf:
+              - $ref: "#/components/schemas/Container"
+              - type: object
+                properties:
+                  device:
+                    readOnly: false
+                    description: Device to add the new container to.
+              required:
+                - device
+                - position
       responses:
         "200":
           content:
@@ -485,14 +494,23 @@ paths:
       - name: uuid
         in: path
         required: true
-        description: A UUID string identifying this device.
+        description: A UUID string identifying this container.
         schema:
           $ref: "#/components/schemas/uuid"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Container"
+              allOf:
+              - $ref: "#/components/schemas/Container"
+              - type: object
+                properties:
+                  device:
+                    readOnly: false
+                    description: Device to add the new container to.
+              required:
+                - device
+                - position
       responses:
         "200":
           content:
@@ -521,7 +539,7 @@ paths:
       - name: uuid
         in: path
         required: true
-        description: A UUID string identifying this device.
+        description: A UUID string identifying this container.
         schema:
           $ref: "#/components/schemas/uuid"
       responses:
