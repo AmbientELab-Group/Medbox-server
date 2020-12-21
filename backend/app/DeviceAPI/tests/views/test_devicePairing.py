@@ -61,14 +61,21 @@ class DevicePairingTestCase(APITestCase):
     def test_pairingVerify(self):
         
         #return error need to create pairinginfo object. Maybe create it in SetUp for both tests?
-        #to be continued
+        #to be continued.
+        self.pairing_info = PairingInfo.objects.create(
+            pairing_code=PairingInfo.generate_code(),
+            serial_number="3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            hardware_version="0.0",
+            firmware_version="0.0.0"
+        )
         response = self.client.get(
-            "pairing/verify/" + str(PairingInfo.objects.first().pairing_code) + "/",
+            "pairing/verify/" + str(self.pairing_info.pairing_code) + "/",
+            format="json"
         )
 
-        token = Token.objects.first()
+        token = Token.objects.create(user=self.owner)
         expected_data = {
-            "token": token
+            "token": token.key,
         }
 
         self.assertEqual(response, expected_data)
