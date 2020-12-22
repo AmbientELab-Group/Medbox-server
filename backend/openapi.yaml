@@ -46,8 +46,8 @@ paths:
             application/json:
               schema:
                 allOf:
-                - $ref:  "#/components/schemas/RefreshToken"
-                - $ref:   "#/components/schemas/AccessToken"
+                  - $ref: "#/components/schemas/RefreshToken"
+                  - $ref: "#/components/schemas/AccessToken"
           description: "User created successfully."
         "400":
           $ref: "#/components/responses/BadRequest"
@@ -70,16 +70,16 @@ paths:
                 password:
                   type: string
               required:
-              - email
-              - password
+                - email
+                - password
       responses:
         "201":
           content:
             application/json:
               schema:
                 allOf:
-                - $ref:  "#/components/schemas/RefreshToken"
-                - $ref:   "#/components/schemas/AccessToken"
+                  - $ref: "#/components/schemas/RefreshToken"
+                  - $ref: "#/components/schemas/AccessToken"
           description: "Successful sign in request."
         "401":
           $ref: "#/components/responses/Unauthenticated"
@@ -93,12 +93,12 @@ paths:
       operationId: RetrieveUserInfo
       description: Gets a `User` by ID. Only authenticated clients may see their details.
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: UUID of requested user
-        schema:
-          $ref: "#/components/schemas/uuid"
+        - name: uuid
+          in: path
+          required: true
+          description: UUID of requested user
+          schema:
+            $ref: "#/components/schemas/uuid"
       responses:
         "200":
           content:
@@ -130,7 +130,7 @@ paths:
                   format: jwt
                   example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NTUxOTc5LCJqdGkiOiI2NTcyNTY5ZThhMWQ0YzlkYmNjM2ZhZTFiNGE3N2M3OCIsInVzZXJfaWQiOiJiY2ZlMDg2Zi1kODI4LTQ1YzgtYWU3Mi1kZjdlMmRkN2IxNGUifQ.1HWYdfySr5I7COXHlbxnVc9JsJ8L15k0e4UGYFYYEus
               required:
-              - refresh
+                - refresh
       responses:
         "200":
           content:
@@ -143,7 +143,7 @@ paths:
                     format: jwt
                     example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NTUxOTc5LCJqdGkiOiI2NTcyNTY5ZThhMWQ0YzlkYmNjM2ZhZTFiNGE3N2M3OCIsInVzZXJfaWQiOiJiY2ZlMDg2Zi1kODI4LTQ1YzgtYWU3Mi1kZjdlMmRkN2IxNGUifQ.1HWYdfySr5I7COXHlbxnVc9JsJ8L15k0e4UGYFYYEus
                 required:
-                - access
+                  - access
           description: "Successfully refreshed."
         "400":
           $ref: "#/components/responses/BadRequest"
@@ -153,7 +153,7 @@ paths:
   /account/token/verify:
     post:
       tags:
-       - Account
+        - Account
       operationId: VerifyToken
       description: "Takes an `Access Token` and indicates if it is valid. This view provides no information about a token's fitness for a particular use."
       requestBody:
@@ -166,7 +166,7 @@ paths:
                   type: string
                   format: jwt
               required:
-              - token
+                - token
       responses:
         "200":
           description: "Token is valid."
@@ -225,12 +225,12 @@ paths:
         - bearerAuth: []
       description: This endpoint allows to retrive information on `Device` identified with uuid passed as a path parameter.
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this device.
-        schema:
-          $ref: "#/components/schemas/uuid"
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this device.
+          schema:
+            $ref: "#/components/schemas/uuid"
       responses:
         "200":
           content:
@@ -238,7 +238,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Device"
           description: Successful request.
-        "400": 
+        "400":
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthenticated"
@@ -254,12 +254,12 @@ paths:
       operationId: UpdateDevice
       description: This endpoint allows to perform update on specified `Device`.
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this device.
-        schema:
-          $ref: "#/components/schemas/uuid"
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this device.
+          schema:
+            $ref: "#/components/schemas/uuid"
       requestBody:
         content:
           application/json:
@@ -288,12 +288,12 @@ paths:
       operationId: PartialUpdateDevice
       description: This endpoint allows to perform partial update on specified `Device`.
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this device.
-        schema:
-          $ref: "#/components/schemas/uuid"
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this device.
+          schema:
+            $ref: "#/components/schemas/uuid"
       requestBody:
         content:
           application/json:
@@ -322,12 +322,12 @@ paths:
       operationId: DestroyDevice
       description: This endpoint removes sepcified `Device`.
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this device.
-        schema:
-          $ref: "#/components/schemas/uuid"
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this device.
+          schema:
+            $ref: "#/components/schemas/uuid"
       responses:
         "204":
           description: Successfuly deleted.
@@ -340,40 +340,6 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
-  /device/pairing/confirm:
-    post:
-      tags:
-        - Devices
-      security:
-        - bearerAuth: []
-      operationId: ConfirmPairing
-      description: If successful it binds `serial_number` to `device_uuid` (and implicitly a particular user). 
-        Should be called during paring procedure from the application.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                pairing_code:
-                  type: integer
-                  description: Random 6-digit pairing code. uint32_t
-                  example: 123456
-                device_uuid:
-                  type: string
-                  format: uuid
-                  example: c24205cc-96fa-4a17-8b2a-890d10b01980
-      responses:
-        "201":
-          description: Pairing code submitted.
-        "401":
-          $ref: "#/components/responses/Unauthenticated"
-        "403":
-          $ref: "#/components/responses/Unauthorized"
-        "404":
-          $ref: "#/components/responses/BadRequest"
-
-
   /containers:
     get:
       tags:
@@ -381,7 +347,8 @@ paths:
       security:
         - bearerAuth: []
       operationId: ListContainers
-      description: This endpoint retrives all of the `Containers` managed by authenticated user or those from the device
+      description:
+        This endpoint retrives all of the `Containers` managed by authenticated user or those from the device
         specified in query parameter.
       parameters:
         - in: query
@@ -412,17 +379,17 @@ paths:
           application/json:
             schema:
               allOf:
-              - $ref: "#/components/schemas/Container"
-              - type: object
-                properties:
-                  device:
-                    readOnly: false
-                    description: Device to add the new container to.
-                  version:
-                    type: string
-                    readOnly: false
-                    example: "0.1"
-                    description: The name of the container version.
+                - $ref: "#/components/schemas/Container"
+                - type: object
+                  properties:
+                    device:
+                      readOnly: false
+                      description: Device to add the new container to.
+                    version:
+                      type: string
+                      readOnly: false
+                      example: "0.1"
+                      description: The name of the container version.
               required:
                 - device
                 - version
@@ -447,12 +414,12 @@ paths:
       operationId: RetrieveContainer
       description: This allows to get a single `Container` specified by its uuid.
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this container.
-        schema:
-          $ref: "#/components/schemas/uuid"
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this container.
+          schema:
+            $ref: "#/components/schemas/uuid"
       responses:
         "200":
           content:
@@ -460,7 +427,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Container"
           description: Successful request.
-        "400": 
+        "400":
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthenticated"
@@ -474,28 +441,29 @@ paths:
       security:
         - bearerAuth: []
       operationId: UpdateContainer
-      description: This endpoint allows to update specified `Container`. <br/><br/>
-          Updating container's position may force other containers to change positions. Inserting container in between 
+      description:
+        This endpoint allows to update specified `Container`. <br/><br/>
+        Updating container's position may force other containers to change positions. Inserting container in between
         other contaieners will move them up by one position. <br/><br/>
-         When position parameter is not provided, the container is placed on the first available position (top).
+        When position parameter is not provided, the container is placed on the first available position (top).
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this container.
-        schema:
-          $ref: "#/components/schemas/uuid"
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this container.
+          schema:
+            $ref: "#/components/schemas/uuid"
       requestBody:
         content:
           application/json:
             schema:
               allOf:
-              - $ref: "#/components/schemas/Container"
-              - type: object
-                properties:
-                  device:
-                    readOnly: false
-                    description: Device to add the new container to.
+                - $ref: "#/components/schemas/Container"
+                - type: object
+                  properties:
+                    device:
+                      readOnly: false
+                      description: Device to add the new container to.
               required:
                 - device
                 - position
@@ -506,7 +474,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Container"
           description: Successful update.
-        "400": 
+        "400":
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthenticated"
@@ -520,28 +488,29 @@ paths:
       security:
         - bearerAuth: []
       operationId: PartialUpdateContainer
-      description: This endpoint allows to partially update specified `Container`. <br/><br/>
-         Updating container's position may force other containers to change positions. Inserting container in between 
+      description:
+        This endpoint allows to partially update specified `Container`. <br/><br/>
+        Updating container's position may force other containers to change positions. Inserting container in between
         other contaieners will move them up by one position. <br/><br/>
-         When position parameter is not provided, the container is placed on the first available position (top).
+        When position parameter is not provided, the container is placed on the first available position (top).
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this container.
-        schema:
-          $ref: "#/components/schemas/uuid"
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this container.
+          schema:
+            $ref: "#/components/schemas/uuid"
       requestBody:
         content:
           application/json:
             schema:
               allOf:
-              - $ref: "#/components/schemas/Container"
-              - type: object
-                properties:
-                  device:
-                    readOnly: false
-                    description: Device to add the new container to.
+                - $ref: "#/components/schemas/Container"
+                - type: object
+                  properties:
+                    device:
+                      readOnly: false
+                      description: Device to add the new container to.
               required:
                 - device
                 - position
@@ -552,7 +521,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Container"
           description: Successful partial update.
-        "400": 
+        "400":
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthenticated"
@@ -566,20 +535,21 @@ paths:
       security:
         - bearerAuth: []
       operationId: DestroyContainer
-      description: This endpoint allows to destroy specified `Container`. <br/><br/>
-          Deleting container that was positioned in between other containers will force upper ones to go down one position each
+      description:
+        This endpoint allows to destroy specified `Container`. <br/><br/>
+        Deleting container that was positioned in between other containers will force upper ones to go down one position each
         and fill up the empty space.
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this container.
-        schema:
-          $ref: "#/components/schemas/uuid"
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this container.
+          schema:
+            $ref: "#/components/schemas/uuid"
       responses:
         "204":
           description: Successfully deleted.
-        "400": 
+        "400":
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthenticated"
@@ -587,7 +557,278 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
-  
+
+  /devices/pairing/confirm:
+    post:
+      tags:
+        - Devices
+      security:
+        - bearerAuth: []
+      operationId: ConfirmPairing
+      description:
+        If successful it binds `serial_number` to `device_uuid` (and implicitly a particular user).
+        Should be called during paring procedure from the application.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pairing_code:
+                  type: integer
+                  description: Random 6-digit pairing code. uint32_t
+                  example: 123456
+                device_uuid:
+                  type: string
+                  format: uuid
+                  example: c24205cc-96fa-4a17-8b2a-890d10b01980
+      responses:
+        "201":
+          description: Pairing code submitted.
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/BadRequest"
+
+  /chambers:
+    get:
+      tags:
+        - Chambers
+      security:
+        - bearerAuth: []
+      operationId: ListChambers
+      description:
+        This endpoint retrives all of the `Chambers` managed by authenticated user or those from the container
+        specified in query parameter.
+      parameters:
+        - in: query
+          name: container
+          schema:
+            $ref: "#/components/schemas/uuid"
+          description: Container to get chambers from.
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Chamber"
+          description: "Successful request."
+
+  /chambers/{uuid}:
+    get:
+      tags:
+        - Chambers
+      security:
+        - bearerAuth: []
+      operationId: RetrieveChamber
+      description: This allows to get a single `Chamber` specified by its uuid.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this chamber.
+          schema:
+            $ref: "#/components/schemas/uuid"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Chamber"
+          description: Successful request.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /treatments:
+    get:
+      tags:
+        - Treatments
+      security:
+        - bearerAuth: []
+      operationId: ListTreatments
+      description: This endpoint retrives all of the `Treatments` managed by authenticated user.
+      parameters:
+        - in: query
+          name: beneficiary
+          schema:
+           $ref: "#/components/schemas/beneficiary"
+          description: Beneficiary associated with the treatments to get.
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Treatment"
+          description: "Successful request."
+    post:
+      tags:
+        - Treatments
+      security:
+        - bearerAuth: []
+      operationId: CreateTreatment
+      description: This endpoint allows to create `Treatment`.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Treatment"
+              required:
+                - name
+                - beneficiary
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Treatment"
+          description: "Successfully created."
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+
+  /treatments/{uuid}:
+    get:
+      tags:
+        - Treatments
+      security:
+        - bearerAuth: []
+      operationId: RetrieveTreatment
+      description: This allows to get a single `Treatment` specified by its uuid.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this treatment.
+          schema:
+            $ref: "#/components/schemas/uuid"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Treatment"
+          description: Successful request.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags:
+        - Treatments
+      security:
+        - bearerAuth: []
+      operationId: UpdateTreatment
+      description:
+        This endpoint allows to update specified `Treatment`.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this treatment.
+          schema:
+            $ref: "#/components/schemas/uuid"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Treatment"
+              required:
+                - name
+                - beneficiary
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Treatment"
+          description: Successful update.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags:
+        - Treatments
+      security:
+        - bearerAuth: []
+      operationId: PartialUpdateTreatment
+      description:
+        This endpoint allows to partially update specified `Treatment`.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this treatment.
+          schema:
+            $ref: "#/components/schemas/uuid"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Treatment"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Treatment"
+          description: Successful partial update.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags:
+        - Treatments
+      security:
+        - bearerAuth: []
+      operationId: DestroyTreatment
+      description:
+        This endpoint allows to destroy specified `Treatment`.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this treatment.
+          schema:
+            $ref: "#/components/schemas/uuid"
+      responses:
+        "204":
+          description: Successfully deleted.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
   /versions/device:
     get:
       tags:
@@ -603,7 +844,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/DeviceVersion"
           description: Successful request.
-  
+
   /versions/container:
     get:
       tags:
@@ -645,9 +886,9 @@ paths:
                   type: string
                   description: major.minor.patch
               required:
-              - serial_number
-              - device_version
-              - firmware_version
+                - serial_number
+                - device_version
+                - firmware_version
       responses:
         "201":
           content:
@@ -655,46 +896,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/PairingCode"
           description: Pairing initiated.
-  
-  /devices/pairing/confirm:
-    post:
-      tags:
-        - Devices
-      security:
-        - bearerAuth: []
-      operationId: ConfirmPairing
-      description: If successful it binds `serial_number` to `device_uuid` (and implicitly a particular user). 
-        Should be called during paring procedure from the application.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                pairing_code:
-                  type: integer
-                  description: Random 6-digit pairing code. uint32_t
-                  example: 123456
-                device_uuid:
-                  type: string
-                  format: uuid
-                  example: c24205cc-96fa-4a17-8b2a-890d10b01980
-      responses:
-        "201":
-          description: Pairing code submitted.
-        "401":
-          $ref: "#/components/responses/Unauthenticated"
-        "403":
-          $ref: "#/components/responses/Unauthorized"
-        "404":
-          $ref: "#/components/responses/BadRequest"
 
   /pairing/verify/{pairing_code}:
     get:
       tags:
         - Internal device API
       operationId: VerifyPairing
-      description: This endpoint allows a device to get information about outcome of a pairing procedure. If the procedure
+      description:
+        This endpoint allows a device to get information about outcome of a pairing procedure. If the procedure
         is successful, it returns api token for a device to authenticate itself. This call can only be successful when
         there is pending pairing procedure (pairing code has not expired).
       parameters:
@@ -719,7 +928,7 @@ paths:
   /debug/logs:
     post:
       tags:
-      - Internal device API
+        - Internal device API
       security:
         - tokenAuth: []
       operationId: CreateLog
@@ -733,7 +942,7 @@ paths:
         "201":
           description: Resource created.
         "400":
-          description: Bad request.   
+          description: Bad request.
 
   /clock:
     get:
@@ -831,8 +1040,9 @@ paths:
       security:
         - tokenAuth: []
       operationId: GetPlannedDose
-      description: Requests a planned dose to be saved in a device memory. Queries a {index} dose from admission time
-                  sorted treatments.
+      description:
+        Requests a planned dose to be saved in a device memory. Queries a {index} dose from admission time
+        sorted treatments.
       parameters:
         - name: index
           in: path
@@ -892,8 +1102,9 @@ paths:
       security:
         - tokenAuth: []
       operationId: GetOnDemandBatch
-      description: Requests on demand doses batch to be saved in a device memory. Queries a {index} batch from SOMEHOW
-                  sorted batches.
+      description:
+        Requests on demand doses batch to be saved in a device memory. Queries a {index} batch from SOMEHOW
+        sorted batches.
       parameters:
         - name: index
           in: path
@@ -949,7 +1160,7 @@ paths:
                 required:
                   - hash
           description: Successful request.
-    
+
   /refill/confirmation:
     post:
       tags:
@@ -961,7 +1172,7 @@ paths:
       responses:
         "200":
           description: Successful request.
-        
+
   /events/container:
     post:
       tags:
@@ -1002,7 +1213,7 @@ paths:
           description: Event created.
         "400":
           description: Bad request.
-  
+
   /events/dose:
     post:
       tags:
@@ -1090,7 +1301,6 @@ components:
       description: Resource not found.
     BadRequest:
       description: There was a problem with request data. (Possible error messages in the response body)
-    
 
   schemas:
     uuid:
@@ -1098,7 +1308,11 @@ components:
       format: uuid
       example: c24205cc-96fa-4a17-8b2a-890d10b01980
       readOnly: true
-    
+
+    beneficiary:
+      type: string
+      example: Johnny
+
     pairing_code:
       type: integer
       format: int32
@@ -1131,7 +1345,7 @@ components:
           type: string
           format: jwt
           example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYwNTYzNjU3OSwianRpIjoiYmYyZmQ5ZTY5MzY1NGUxZmFjZGI5Y2QzNzZiZWQyNmQiLCJ1c2VyX2lkIjoiYmNmZTA4NmYtZDgyOC00NWM4LWFlNzItZGY3ZTJkZDdiMTRlIn0.izJVDI6wCRxsBxY4Mx12__XJLVsy2xsywBbtsfiQYIA
-    
+
     AccessToken:
       type: object
       properties:
@@ -1184,7 +1398,7 @@ components:
           readOnly: true
           type: string
           example: 0.1.3
-          
+
     Device:
       type: object
       properties:
@@ -1203,7 +1417,7 @@ components:
           minimum: 0
           maximum: 100
           description: Percentage of whole summed capacity of all filled containers in this device.
-          
+
     ContainerVersion:
       type: object
       readOnly: true
@@ -1252,6 +1466,8 @@ components:
       properties:
         uuid:
           $ref: "#/components/schemas/uuid"
+        container:
+          $ref: "#/components/schemas/uuid"
         position:
           type: integer
           minimum: 0
@@ -1265,7 +1481,21 @@ components:
           type: string
           format: date-time
           nullable: true
-          
+
+    Treatment:
+      type: object
+      properties:
+        uuid:
+          $ref: "#/components/schemas/uuid"
+        associated_user:
+          $ref:  "#/components/schemas/uuid"
+        name:
+          type: string
+          example: Johnny's treatment
+        beneficiary:
+          type: string
+          example: Johnny
+
     DebugLog:
       type: object
       properties:

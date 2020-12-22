@@ -25,13 +25,18 @@ class Treatment(models.Model):
     # custom name of the treatment
     name = models.CharField(max_length=100)
 
+    # beneficiary name
+    beneficiary = models.CharField(max_length=100)
+
     def clean(self):
         if Treatment.objects.filter(
-            Q(patient=self.patient) &
-            Q(name=self.name)
+            Q(associated_user=self.associated_user) &
+            Q(name=self.name) &
+            Q(beneficiary=self.beneficiary)
         ).exists():
             raise ValidationError(
-                _("Treatment with this name already exists, choose different name."),
+                _("Treatment with this name for a given beneficiary already \
+                exists, choose different name or beneficiary."),
                 code="duplicated_value"
             )
 

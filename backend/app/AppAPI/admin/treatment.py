@@ -7,17 +7,20 @@ class TreatmentAdmin(admin.ModelAdmin):
     list_display = (
         "uuid",
         "name",
-        "associated_user"
+        "associated_user",
+        "beneficiary"
     )
     list_filter = (
         "name",
-        "associated_user"
+        "associated_user",
+        "beneficiary"
     )
     fieldsets = (
         (None, {
             "fields": (
                 "name",
                 "associated_user",
+                "beneficiary"
             )
         }),
     )
