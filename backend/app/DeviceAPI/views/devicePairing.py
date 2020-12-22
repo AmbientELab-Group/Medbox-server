@@ -1,9 +1,10 @@
 from DeviceAPI.serializers import PairingInfoSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from DeviceAPI.models import Device, PairingInfo
+from DeviceAPI.models import PairingInfo
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+
 
 class PairingInfoCreate(APIView):
     """Endpoint for creating PairingInfo object"""
@@ -33,7 +34,7 @@ class PairingVerify(APIView):
 
         user = request.user
         token, created = Token.objects.get_or_create(user=user)
-        data = {"token":token.key}
+        data = {"token": token.key}
         return Response(data)
 
 

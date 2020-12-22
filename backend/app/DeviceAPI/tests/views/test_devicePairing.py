@@ -8,8 +8,7 @@ from DeviceAPI.models import (
     DeviceVersion,
     PairingInfo
 )
-from uuid import UUID
-from collections import OrderedDict
+
 
 
 class DevicePairingTestCase(APITestCase):
@@ -36,9 +35,8 @@ class DevicePairingTestCase(APITestCase):
             version=self.device_version,
             name="TestBox"
         )
-    
+
     def test_pairingInfo_create(self):
-       
         data = {
             "serial_number": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
             "hardware_version": "0.0",
@@ -59,9 +57,6 @@ class DevicePairingTestCase(APITestCase):
         self.assertEqual(response.data, expected_data)
 
     def test_pairingVerify(self):
-        
-        #return error need to create pairinginfo object. Maybe create it in SetUp for both tests?
-        #to be continued.
         self.pairing_info = PairingInfo.objects.create(
             pairing_code=PairingInfo.generate_code(),
             serial_number="3fa85f64-5717-4562-b3fc-2c963f66afa6",
