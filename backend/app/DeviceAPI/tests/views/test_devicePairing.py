@@ -69,13 +69,13 @@ class DevicePairingTestCase(APITestCase):
             firmware_version="0.0.0"
         )
         response = self.client.get(
-            "pairing/verify/" + str(self.pairing_info.pairing_code) + "/",
+            "/api/pairing/verify/" + str(self.pairing_info.pairing_code),
             format="json"
         )
 
-        token = Token.objects.create(user=self.owner)
+        token = Token.objects.first()
         expected_data = {
             "token": token.key,
         }
 
-        self.assertEqual(response, expected_data)
+        self.assertEqual(response.data, expected_data)

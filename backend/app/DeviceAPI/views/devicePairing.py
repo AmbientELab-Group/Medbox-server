@@ -31,7 +31,6 @@ class PairingVerify(APIView):
         if pairing_info.is_expired():
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-        device = Device.objects.get(serial_number=pairing_info.serial_number)
         user = request.user
         token, created = Token.objects.get_or_create(user=user)
         data = {"token":token.key}
