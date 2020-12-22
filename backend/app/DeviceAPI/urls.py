@@ -11,6 +11,8 @@ from DeviceAPI.views import (
     PairingCodeCheck,
     TelemetryLogView,
     DebugLogView,
+    ListDeviceVersions,
+    ListContainerVersions,
 )
 
 urlpatterns = [
@@ -24,4 +26,6 @@ urlpatterns = [
     path("telemetry", TelemetryLogView.as_view()),
     path("pairing/checkPairingCode",PairingCodeCheck.as_view()),
     path("debug/logs", DebugLogView.as_view()),
+    path("versions/device", ListDeviceVersions.as_view()),
+    path("versions/container", ListContainerVersions.as_view()),
 ]

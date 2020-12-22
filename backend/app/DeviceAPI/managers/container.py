@@ -8,7 +8,7 @@ class ContainerManager(models.Manager):
         Creates container and associated chambers.
         """
         container = self.create(**container_data)
-        for pos in range(container_data.get("capacity")):
+        for pos in range(container_data.get("version").capacity):
             Chamber.objects.create(container=container, position=pos)
 
         return container

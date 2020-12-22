@@ -381,7 +381,14 @@ paths:
       security:
         - bearerAuth: []
       operationId: ListContainers
-      description: This endpoint retrives all of the `Containers` managed by authenticated user.
+      description: This endpoint retrives all of the `Containers` managed by authenticated user or those from the device
+        specified in query parameter.
+      parameters:
+        - in: query
+          name: device
+          schema:
+            $ref: "#/components/schemas/uuid"
+          description: Device to get containers from.
       responses:
         "200":
           content:
@@ -404,7 +411,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Container"
+              allOf:
+              - $ref: "#/components/schemas/Container"
+              - type: object
+                properties:
+                  device:
+                    readOnly: false
+                    description: Device to add the new container to.
+                  version:
+                    type: string
+                    readOnly: false
+                    example: "0.1"
+                    description: The name of the container version.
+              required:
+                - device
+                - version
       responses:
         "201":
           content:
@@ -429,7 +450,7 @@ paths:
       - name: uuid
         in: path
         required: true
-        description: A UUID string identifying this device.
+        description: A UUID string identifying this container.
         schema:
           $ref: "#/components/schemas/uuid"
       responses:
@@ -461,14 +482,23 @@ paths:
       - name: uuid
         in: path
         required: true
-        description: A UUID string identifying this device.
+        description: A UUID string identifying this container.
         schema:
           $ref: "#/components/schemas/uuid"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Container"
+              allOf:
+              - $ref: "#/components/schemas/Container"
+              - type: object
+                properties:
+                  device:
+                    readOnly: false
+                    description: Device to add the new container to.
+              required:
+                - device
+                - position
       responses:
         "200":
           content:
@@ -498,14 +528,23 @@ paths:
       - name: uuid
         in: path
         required: true
-        description: A UUID string identifying this device.
+        description: A UUID string identifying this container.
         schema:
           $ref: "#/components/schemas/uuid"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Container"
+              allOf:
+              - $ref: "#/components/schemas/Container"
+              - type: object
+                properties:
+                  device:
+                    readOnly: false
+                    description: Device to add the new container to.
+              required:
+                - device
+                - position
       responses:
         "200":
           content:
@@ -534,7 +573,7 @@ paths:
       - name: uuid
         in: path
         required: true
-        description: A UUID string identifying this device.
+        description: A UUID string identifying this container.
         schema:
           $ref: "#/components/schemas/uuid"
       responses:

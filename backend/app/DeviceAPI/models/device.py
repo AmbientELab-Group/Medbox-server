@@ -23,13 +23,13 @@ class Device(models.Model):
     owner = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE,
-        related_name="ownedDevices"
+        related_name="owned_devices"
     )
 
     # reference to supervisors of this device
     supervisors = models.ManyToManyField(
         get_user_model(),
-        related_name="supervisedDevices",
+        related_name="supervised_devices",
         blank=True
     )
 
