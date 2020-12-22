@@ -23,6 +23,7 @@ class ContainerViewTestCase(APITestCase):
         )
 
         tokens = RefreshToken.for_user(self.owner)
+
         self.client.credentials(
             HTTP_AUTHORIZATION="Bearer " + str(tokens.access_token)
         )
@@ -43,6 +44,7 @@ class ContainerViewTestCase(APITestCase):
             name="0.1",
             capacity=20
         )
+
 
         self.containers = []
 
@@ -130,6 +132,7 @@ class ContainerViewTestCase(APITestCase):
     def test_container_create(self):
         data = {
             "device": self.additional_device.uuid,
+
             "version": self.container_version.name
         }
 
