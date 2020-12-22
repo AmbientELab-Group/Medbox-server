@@ -10,7 +10,6 @@ from DeviceAPI.models import (
 )
 
 
-
 class DevicePairingTestCase(APITestCase):
     pairingInfo_post_url = "/api/pairing/"
     pairingInfoVerify_get_url = "/api/pairing/verify/"
@@ -53,7 +52,7 @@ class DevicePairingTestCase(APITestCase):
             "pairing_code": PairingInfo.objects.first().pairing_code
         }
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data, expected_data)
 
     def test_pairingVerify(self):
@@ -64,13 +63,14 @@ class DevicePairingTestCase(APITestCase):
             firmware_version="0.0.0"
         )
         response = self.client.get(
-            "/api/pairing/verify/" + str(self.pairing_info.pairing_code),
+            self.pairingInfoVerify_get_url + str(self.pairing_info.pairing_code),
             format="json"
         )
 
         token = Token.objects.first()
         expected_data = {
-            "token": token.key,
+            "api_token": token.key,
         }
 
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_data)
