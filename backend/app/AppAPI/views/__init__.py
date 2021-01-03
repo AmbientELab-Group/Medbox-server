@@ -1,1 +1,1 @@
-from .treatments import TreatmentsListCreateView
+from .treatments import TreatmentsListCreateView, TreatmentsDetailView
