@@ -39,7 +39,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              allOf:
+                - $ref: "#/components/schemas/User"
+              required:
+                - email
+                - first_name
+                - last_name
+                - password
       responses:
         "201":
           content:
@@ -203,7 +209,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Device"
+              allOf:
+                - $ref: "#/components/schemas/Device"
+              required:
+                - name
       responses:
         "201":
           content:
@@ -264,7 +273,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Device"
+              allOf:
+                - $ref: "#/components/schemas/Device"
+              required:
+                - name
       responses:
         "200":
           content:
@@ -582,6 +594,9 @@ paths:
                   type: string
                   format: uuid
                   example: c24205cc-96fa-4a17-8b2a-890d10b01980
+              required:
+                - pairing_code
+                - device_uuid
       responses:
         "201":
           description: Pairing code submitted.
@@ -683,7 +698,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Treatment"
+              allOf:
+                - $ref: "#/components/schemas/Treatment"
               required:
                 - name
                 - beneficiary
@@ -748,7 +764,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Treatment"
+              allOf:
+                - $ref: "#/components/schemas/Treatment"
               required:
                 - name
                 - beneficiary
@@ -815,6 +832,252 @@ paths:
           in: path
           required: true
           description: A UUID string identifying this treatment.
+          schema:
+            $ref: "#/components/schemas/uuid"
+      responses:
+        "204":
+          description: Successfully deleted.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /doses:
+    get:
+      tags:
+        - Doses
+      security:
+        - bearerAuth: []
+      operationId: ListDoses
+      description: This endpoint retrives all of the `Doses` managed by authenticated user.
+      parameters:
+        - in: query
+          name: beneficiary
+          schema:
+            $ref: "#/components/schemas/beneficiary"
+          description: Beneficiary associated with the doses.
+        - in: query
+          name: treatment
+          schema:
+            $ref: "#/components/schemas/uuid"
+          description: Treatment returned doses belong to.
+        - in: query
+          name: medicine
+          schema:
+            $ref: "#/components/schemas/uuid"
+          description: Medicine the doses contain.
+        - in: query
+          name: on_demand
+          schema:
+           type: boolean
+          description: Type associated with the doses.
+        - in: query
+          name: administration_time_start
+          schema:
+           type: string
+           format: date-time
+           example: "2021-01-01T12:00:00.0Z"
+          description: Doses to be administered starting from this time on (inclusive).
+        - in: query
+          name: administration_time_end
+          schema:
+           type: string
+           format: date-time
+           example: "2021-01-01T12:00:00.0Z"
+          description: Doses to be administered before this time (exclusive).
+
+        
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Dose"
+          description: "Successful request."
+    post:
+      tags:
+        - Doses
+      security:
+        - bearerAuth: []
+      operationId: CreateDose
+      description: This endpoint allows to create `Dose`.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/Dose"
+                - type: object
+                  properties:
+                    treatment:
+                      readOnly: false
+                    chamber:
+                      readOnly: false
+                    medicine:
+                      readOnly: false
+              required:
+                - treatment
+                - chamber
+                - medicine
+                - planned_administration_time
+                - number_of_pills
+                - on_demand
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Dose"
+          description: "Successfully created."
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+
+  /doses/{uuid}:
+    get:
+      tags:
+        - Doses
+      security:
+        - bearerAuth: []
+      operationId: RetrieveDose
+      description: This allows to get a single `Dose` specified by its uuid.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this dose.
+          schema:
+            $ref: "#/components/schemas/uuid"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Dose"
+          description: Successful request.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags:
+        - Doses
+      security:
+        - bearerAuth: []
+      operationId: UpdateDose
+      description:
+        This endpoint allows to update specified `Dose`.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this dose.
+          schema:
+            $ref: "#/components/schemas/uuid"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/Dose"
+                - type: object
+                  properties:
+                    treatment:
+                      readOnly: false
+                    chamber:
+                      readOnly: false
+                    medicine:
+                      readOnly: false
+              required:
+                - treatment
+                - chamber
+                - medicine
+                - planned_administration_time
+                - number_of_pills
+                - on_demand
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Dose"
+          description: Successful update.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags:
+        - Doses
+      security:
+        - bearerAuth: []
+      operationId: PartialUpdateDose
+      description:
+        This endpoint allows to partially update specified `Dose`.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this dose.
+          schema:
+            $ref: "#/components/schemas/uuid"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/Dose"
+                - type: object
+                  properties:
+                    treatment:
+                      readOnly: false
+                    chamber:
+                      readOnly: false
+                    medicine:
+                      readOnly: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Dose"
+          description: Successful partial update.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags:
+        - Doses
+      security:
+        - bearerAuth: []
+      operationId: DestroyDose
+      description:
+        This endpoint allows to destroy specified `Dose`.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this dose.
           schema:
             $ref: "#/components/schemas/uuid"
       responses:
@@ -1495,6 +1758,28 @@ components:
         beneficiary:
           type: string
           example: Johnny
+    
+    Dose:
+      type: object
+      properties:
+        uuid:
+          $ref: "#/components/schemas/uuid"
+        treatment:
+          $ref: "#/components/schemas/uuid"
+        chamber:
+          $ref: "#/components/schemas/uuid"
+        medicine:
+          $ref: "#/components/schemas/uuid"
+        planned_administration_time:
+          type: string
+          format: date-time
+        number_of_pills:
+          type: number
+          format: float
+        on_demand:
+          type: boolean
+
+        
 
     DebugLog:
       type: object
