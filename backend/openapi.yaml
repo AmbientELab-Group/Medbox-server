@@ -889,8 +889,6 @@ paths:
            format: date-time
            example: "2021-01-01T12:00:00.0Z"
           description: Doses to be administered before this time (exclusive).
-
-        
       responses:
         "200":
           content:
@@ -1078,6 +1076,191 @@ paths:
           in: path
           required: true
           description: A UUID string identifying this dose.
+          schema:
+            $ref: "#/components/schemas/uuid"
+      responses:
+        "204":
+          description: Successfully deleted.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /medicines:
+    get:
+      tags:
+        - Medicines
+      security:
+        - bearerAuth: []
+      operationId: ListMedicines
+      description: This endpoint retrives all of the `Medicines` managed by authenticated user.
+      parameters:
+        - in: query
+          name: producer
+          schema:
+            type: string
+            example: Medex
+          description: Medicine producer.
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Medicine"
+          description: "Successful request."
+    post:
+      tags:
+        - Medicines
+      security:
+        - bearerAuth: []
+      operationId: CreateMedicine
+      description: This endpoint allows to create `Medicine`.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/Medicine"
+              required:
+                - name
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Medicine"
+          description: "Successfully created."
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+
+  /medicines/{uuid}:
+    get:
+      tags:
+        - Medicines
+      security:
+        - bearerAuth: []
+      operationId: RetrieveMedicine
+      description: This allows to get a single `Medicine` specified by its uuid.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this medicine.
+          schema:
+            $ref: "#/components/schemas/uuid"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Medicine"
+          description: Successful request.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags:
+        - Medicines
+      security:
+        - bearerAuth: []
+      operationId: UpdateMedicine
+      description:
+        This endpoint allows to update specified `Medicine`.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this medicine.
+          schema:
+            $ref: "#/components/schemas/uuid"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/Medicine"
+              required:
+                - name
+                - producer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Medicine"
+          description: Successful update.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags:
+        - Medicines
+      security:
+        - bearerAuth: []
+      operationId: PartialUpdateMedicine
+      description:
+        This endpoint allows to partially update specified `Medicine`.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this medicine.
+          schema:
+            $ref: "#/components/schemas/uuid"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/Medicine"
+              required:
+                - name
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Medicine"
+          description: Successful partial update.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthenticated"
+        "403":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags:
+        - Medicines
+      security:
+        - bearerAuth: []
+      operationId: DestroyMedicine
+      description:
+        This endpoint allows to destroy specified `Medicine`.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: A UUID string identifying this medicine.
           schema:
             $ref: "#/components/schemas/uuid"
       responses:
@@ -1779,7 +1962,17 @@ components:
         on_demand:
           type: boolean
 
-        
+    Medicine:
+      type: object
+      properties:
+        uuid:
+          $ref: "#/components/schemas/uuid"
+        name:
+          type: string
+          example: Iraflex
+        producer:
+          type: string
+          example: Medex
 
     DebugLog:
       type: object
