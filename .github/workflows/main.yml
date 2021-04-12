@@ -1,35 +1,12 @@
-name: Django CI
-
-on:
-  push:
-    branches: [ master, devops ]
-  pull_request:
-    branches: [ master ]
-
+name: docker-compose-actions-workflow
+on: push
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    env:
-      working-directory: ./backend
-      DEBUG: on
-      SECRET_KEY: hoktr^5edgngixl%2o6_n)e8smv$7g73+geiwk01!v5veg^z&l
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.8]
-
+  test:
+    runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-      working-directory: ${{env.working-directory}}
-    - name: Run Tests
-      run: |
-        python app/manage.py test
-      working-directory: ${{env.working-directory}}
+      - uses: actions/checkout@v2
+      - name: Build the stack
+        run: docker-compose up -d
+      - name: Test
+        run: docker exec medbox-backend_server python manage.py test
+
