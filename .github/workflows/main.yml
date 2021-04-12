@@ -29,5 +29,5 @@ jobs:
       working-directory: ${{env.working-directory}}
     - name: Run Tests
       run: |
-        python manage.py test
+        python app/manage.py test
       working-directory: ${{env.working-directory}}
