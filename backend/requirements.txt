@@ -5,3 +5,4 @@ djangorestframework_simplejwt==4.5.0
 django-cors-headers==3.5.0
 PyYAML==5.3.1
 uritemplate==3.0.1
+PyJWT==v1.7.1
