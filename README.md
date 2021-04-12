@@ -1,6 +1,6 @@
 # Medbox Server Side Software
 
-This a main repository for Medbox project server side infrastructure codebase.
+This is a main repository for Medbox project server side infrastructure codebase.
 
 ## How do I start working with this?!!
 
