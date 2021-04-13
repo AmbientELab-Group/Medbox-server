@@ -10,16 +10,6 @@ jobs:
       WORKDIR: ./backend
       DEBUG: on
 
-    services:
-      medbox-database_server:
-        image: postgres
-        env:
-          POSTGRES_DB: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: mainDB
-        ports:
-          - 5432:5432
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python
@@ -31,5 +21,5 @@ jobs:
       working-directory: ${{env.WORKDIR}}
     - name: Run Tests
       run: |
-        python app/manage.py test
-      working-directory: ${{env.WORKDIR}}
+        python manage.py test
+      working-directory: ${{env.WORKDIR}}/app
