@@ -1,3 +1,7 @@
+[![Django Tests](https://github.com/UbiCOMP-Group/Medbox-serveractions/workflows/tests.yml/badge.svg)](https://githubcom/UbiCOMP-Group/Medbox-server/actions/workflows/tests.yml)
+[![Build application](https://github.com/UbiCOMP-Group/Medbox-server/actions/workflows/dev-build.yml/badge.svg)](https://github.com/UbiCOMP-Group/Medbox-server/actions/workflows/dev-build.yml)
+
+
 # Medbox Server Side Software
 
 This is a main repository for Medbox project server side infrastructure codebase.
