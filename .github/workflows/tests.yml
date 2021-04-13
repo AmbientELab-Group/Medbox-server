@@ -11,7 +11,7 @@ jobs:
       DEBUG: on
 
     services:
-      localhost:
+      medbox-database_server:
         image: postgres
         env:
           POSTGRES_DB: postgres
