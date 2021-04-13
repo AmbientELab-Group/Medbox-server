@@ -1,0 +1,16 @@
+name: Build application
+on:
+  push:
+    branches:
+      - '!*'
+      - dev
+jobs:
+  Build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the stack
+        run: docker-compose up -d
+      - name: Test
+        run: docker exec medbox-backend_server python manage.py test
+

@@ -1,6 +1,6 @@
 # Medbox Server Side Software
 
-This a main repository for Medbox project server side infrastructure codebase.
+This is a main repository for Medbox project server side infrastructure codebase.
 
 ## How do I start working with this?!!
 
@@ -169,6 +169,9 @@ and then run the build:
 ```
 docker-compose build
 ```
+If you erased your database or your are setting this up for the first time  you need to initialise database,
+otherwise django will spit out some confusing messages about database faliure. Look's like it's trying to talk
+to database before it's initialized.
 
 This might take a while depending on your internet connection.
 
