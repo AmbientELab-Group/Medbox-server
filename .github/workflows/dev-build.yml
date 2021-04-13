@@ -1,5 +1,10 @@
 name: Build application
-on: push
+on:
+  push:
+    branches:
+      - '!*'
+      - dev
+      - devops
 jobs:
   Build:
     runs-on: ubuntu-20.04
