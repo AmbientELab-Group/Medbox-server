@@ -1,4 +1,4 @@
-[![Django Tests](https://github.com/UbiCOMP-Group/Medbox-serveractions/workflows/tests.yml/badge.svg)](https://github.com/UbiCOMP-Group/Medbox-server/actions/workflows/tests.yml)
+[![Django Tests](https://github.com/UbiCOMP-Group/Medbox-server/actions/workflows/tests.yml/badge.svg)](https://github.com/UbiCOMP-Group/Medbox-server/actions/workflows/tests.yml)
 [![Build application](https://github.com/UbiCOMP-Group/Medbox-server/actions/workflows/dev-build.yml/badge.svg)](https://github.com/UbiCOMP-Group/Medbox-server/actions/workflows/dev-build.yml)
 
 
