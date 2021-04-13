@@ -11,6 +11,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the stack
         run: docker-compose up -d
-      - name: Test
-        run: docker exec medbox-backend_server python manage.py test
 
