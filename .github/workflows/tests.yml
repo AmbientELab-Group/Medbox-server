@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       WORKDIR: ./backend
+      DEBUG: on
+      SECRET_KEY: hoktr^5edgngixl%2o6_n)e8smv$7g73+geiwk01!v5veg^z&l
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python
