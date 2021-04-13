@@ -1,7 +1,7 @@
-name: docker-compose-actions-workflow
+name: Build application
 on: push
 jobs:
-  test:
+  Build:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
