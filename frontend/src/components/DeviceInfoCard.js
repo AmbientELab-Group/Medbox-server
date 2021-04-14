@@ -7,47 +7,51 @@ import ConnectionState from "./ConnectionState";
 import { Divider, Grid } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 
-
 const useStyles = makeStyles((theme) => ({
     content: {
         display: "flex",
         flexDirection: "column",
-        padding: theme.spacing(3)
+        padding: theme.spacing(3),
     },
     divider: {
         color: theme.palette.primary.main,
         borderTop: "1px solid",
-        marginTop: theme.spacing(2)
+        marginTop: theme.spacing(2),
     },
     medicine: {
-        textAlign: "center"
+        textAlign: "center",
     },
     medicineLabels: {
-        padding: `${theme.spacing(2)}px 0px`
+        padding: `${theme.spacing(2)}px 0px`,
     },
     oddMedicineEntry: {
-        backgroundColor: theme.palette.grey[100]
+        backgroundColor: theme.palette.grey[100],
     },
-    evenMedicineEntry: {}
+    evenMedicineEntry: {},
 }));
 
-const DeviceInfoCard = ({device}) => {
+const DeviceInfoCard = ({ device }) => {
     const classes = useStyles();
     const { t } = useTranslation("device");
 
     return (
         <Card>
             <CardContent className={classes.content}>
-                <ConnectionState state={device.state}/>
+                <ConnectionState state={device.state} />
                 <Typography variant="h2" noWrap>
                     {device.name}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                     {t("Owner")}: {device.owner}
                 </Typography>
-                <Divider  className={classes.divider}/>
+                <Divider className={classes.divider} />
                 <Grid container className={classes.medicine}>
-                    <Grid container item xs={12} className={classes.medicineLabels}>
+                    <Grid
+                        container
+                        item
+                        xs={12}
+                        className={classes.medicineLabels}
+                    >
                         <Grid item xs={6}>
                             <Typography variant="h3" color="textSecondary">
                                 {t("Medicine name")}
@@ -59,17 +63,23 @@ const DeviceInfoCard = ({device}) => {
                             </Typography>
                         </Grid>
                     </Grid>
-                    { device.medicines.map((medicine, idx) => ( 
-                        <Grid container item xs={12} className={idx % 2 ? classes.oddMedicineEntry : classes.evenMedicineEntry} key={medicine.name}>    
+                    {device.medicines.map((medicine, idx) => (
+                        <Grid
+                            container
+                            item
+                            xs={12}
+                            className={
+                                idx % 2
+                                    ? classes.oddMedicineEntry
+                                    : classes.evenMedicineEntry
+                            }
+                            key={medicine.name}
+                        >
                             <Grid item xs={6}>
-                                <Typography>
-                                    {medicine.name}
-                                </Typography>
+                                <Typography>{medicine.name}</Typography>
                             </Grid>
                             <Grid item xs={6}>
-                                <Typography>
-                                {medicine.doseAmount}
-                                </Typography>
+                                <Typography>{medicine.doseAmount}</Typography>
                             </Grid>
                         </Grid>
                     ))}

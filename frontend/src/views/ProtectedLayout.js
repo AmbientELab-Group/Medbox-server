@@ -8,14 +8,13 @@ import DashboardView from "./DashboardView";
 import DevicesView from "./DevicesView";
 import SingleDeviceView from "./SingleDeviceView";
 import TreatmentsView from "./TreatmentsView";
-import Copyright from "../components/Copyright"
+import Copyright from "../components/Copyright";
 import CustomAppBar from "../components/CustomAppBar";
 import CustomDrawer from "../components/CustomDrawer";
 import CustomFab from "../components/CustomFab";
 import SettingsView from "./SettingsView";
 import { SettingsProvider } from "../contexts/settingsProvider";
 import useDevicesData from "../hooks/useDevicesData";
-
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,11 +30,11 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
         minHeight: "calc(100vh - 140px)",
-        position:"relative"
+        position: "relative",
     },
     copyright: {
-        padding: theme.spacing(2)
-    }
+        padding: theme.spacing(2),
+    },
 }));
 
 const ProtectedLayout = () => {
@@ -43,43 +42,41 @@ const ProtectedLayout = () => {
     const routeMatch = useRouteMatch();
     const [openDrawer, setDrawerOpen] = React.useState(false);
     const devicesHook = useDevicesData();
-    
 
     useEffect(() => {
         checkAuth();
     }, []);
 
-
     return (
         <div className={classes.root}>
-            <CustomAppBar drawerHook={{openDrawer, setDrawerOpen}}/>
-            <CustomDrawer drawerHook={{openDrawer, setDrawerOpen}}/>
+            <CustomAppBar drawerHook={{ openDrawer, setDrawerOpen }} />
+            <CustomDrawer drawerHook={{ openDrawer, setDrawerOpen }} />
             <main className={classes.content}>
-                <div className={classes.appBarSpacer}/>
+                <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
                     <Switch>
                         <Route exact path={`${routeMatch.path}`}>
-                            <DashboardView/>
+                            <DashboardView />
                         </Route>
                         <Route exact path={`${routeMatch.path}/devices`}>
-                            <DevicesView devices={devicesHook}/>
+                            <DevicesView devices={devicesHook} />
                         </Route>
                         <Route path={`${routeMatch.path}/devices/:id`}>
-                            <SingleDeviceView/>
+                            <SingleDeviceView />
                         </Route>
                         <Route exact path={`${routeMatch.path}/treatments`}>
-                            <TreatmentsView/>
+                            <TreatmentsView />
                         </Route>
                         <Route path={`${routeMatch.path}/treatments/:id`}>
-                            <SingleDeviceView/>
+                            <SingleDeviceView />
                         </Route>
                         <Route path={`${routeMatch.path}/settings`}>
                             <SettingsProvider>
-                                <SettingsView/>
+                                <SettingsView />
                             </SettingsProvider>
                         </Route>
                         <Route path={`${routeMatch.path}/*`}>
-                            <Redirect to={`${routeMatch.url}`}/>
+                            <Redirect to={`${routeMatch.url}`} />
                         </Route>
                     </Switch>
                     {/* <CustomFab/> */}
@@ -90,6 +87,6 @@ const ProtectedLayout = () => {
             </main>
         </div>
     );
-}
+};
 
 export default ProtectedLayout;

@@ -17,37 +17,37 @@ const theme = createMuiTheme({
         primary: {
             light: "#b7f6fa",
             main: "#2be2f0",
-            dark: "#10c8d5"
+            dark: "#10c8d5",
         },
         background: {
             paper: "#fdfdfd",
-            default: "#f0f0f0"
-        }
+            default: "#f0f0f0",
+        },
     },
     typography: {
         h1: {
-           fontSize: "3rem" 
+            fontSize: "3rem",
         },
         h2: {
-            fontSize: "1.625rem"
+            fontSize: "1.625rem",
         },
         h3: {
-            fontSize: "1.2rem"
+            fontSize: "1.2rem",
         },
         h4: {
-            fontSize: "1.0625rem"
+            fontSize: "1.0625rem",
         },
         h5: {
-            fontSize: "0.75rem"
+            fontSize: "0.75rem",
         },
         h6: {
-            fontSize: "0.625rem"
-        }
+            fontSize: "0.625rem",
+        },
     },
     shape: {
-        borderRadius: 20
+        borderRadius: 20,
     },
-    drawerWidth: 240
+    drawerWidth: 240,
 });
 
 ReactDOM.render(

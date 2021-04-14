@@ -13,45 +13,45 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
-import Collapse from "@material-ui/core/Collapse"; 
+import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ContextMenu from "./ContextMenu";
 import { useTranslation } from "react-i18next";
 
-import CropDinIcon from '@material-ui/icons/CropDin';
+import CropDinIcon from "@material-ui/icons/CropDin";
 
 const boxes = [
     {
         id: "1",
         name: "Dozownik Janiny",
-        state: "on"
+        state: "on",
     },
-    {   
+    {
         id: "2",
         name: "Dozownik Henryka",
-        state: "off"
+        state: "off",
     },
     {
         id: "3",
         name: "Dozownik Stefanii",
-        state: "connecting"
-    }
+        state: "connecting",
+    },
 ];
 
 const treatments = [
     {
         id: "1",
-        name: "Janina"
+        name: "Janina",
     },
     {
         id: "2",
-        name: "Henryk"
+        name: "Henryk",
     },
     {
         id: "3",
-        name: "Stefania"
-    }
+        name: "Stefania",
+    },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -62,46 +62,46 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         alignItems: "inherit",
         justifyContent: "inherit",
-        paddingTop: 12
+        paddingTop: 12,
     },
     secondaryAction: {
-        display: "flex"
+        display: "flex",
     },
     collapsedText: {
         maxWidth: 120,
-        paddingRight: 12
+        paddingRight: 12,
     },
     onIcon: {
-        color: theme.palette.success.main
+        color: theme.palette.success.main,
     },
     offIcon: {
-        color: theme.palette.error.main
-    }
+        color: theme.palette.error.main,
+    },
 }));
 
-const MainDrawerList = ({drawerState}) => {
+const MainDrawerList = ({ drawerState }) => {
     const classes = useStyles();
     const [devicesExpanded, setDevicesExpanded] = useState(false);
     const [treatmentsExpanded, setTreatmentsExpanded] = useState(false);
     const matchDashboard = useRouteMatch({
         path: "/dashboard",
-        exact: true
+        exact: true,
     });
     const matchDevices = useRouteMatch("/dashboard/devices");
     const matchTreatments = useRouteMatch("/dashboard/treatments");
     const matchSettings = useRouteMatch("/dashboard/settings");
     const { t } = useTranslation("translation");
 
-    const getStateIcon = ({state}) => {
+    const getStateIcon = ({ state }) => {
         switch (state) {
             case "on":
-                return <StateIcon className={classes.onIcon}/>;
+                return <StateIcon className={classes.onIcon} />;
             case "off":
-                return <StateIcon className={classes.offIcon}/>;
+                return <StateIcon className={classes.offIcon} />;
             case "connecting":
-                return <LoopIcon/>;
+                return <LoopIcon />;
             default:
-                return <StateIcon className={classes.offIcon}/>;
+                return <StateIcon className={classes.offIcon} />;
         }
     };
 
@@ -139,50 +139,61 @@ const MainDrawerList = ({drawerState}) => {
         setTreatmentsExpanded(false);
     };
 
-
     return (
         <List component="nav">
             <ListItem button component={RouterLink} to="/dashboard">
-                <ListItemIcon >
-                    <DashboardIcon color={!!matchDashboard ? "primary" : "inherit"}/>
+                <ListItemIcon>
+                    <DashboardIcon
+                        color={!!matchDashboard ? "primary" : "inherit"}
+                    />
                 </ListItemIcon>
                 <ListItemText primary={t("Dashboard")} />
             </ListItem>
             <ListItem button component={RouterLink} to="/dashboard/devices">
                 <ListItemIcon>
-                    <CropDinIcon color={!!matchDevices ? "primary" : "inherit"}/>
+                    <CropDinIcon
+                        color={!!matchDevices ? "primary" : "inherit"}
+                    />
                 </ListItemIcon>
                 <ListItemText primary={t("Devices")} />
-                { devicesExpanded ? 
+                {devicesExpanded ? (
                     <IconButton onClick={closeDevices}>
-                        <ExpandLess/>
+                        <ExpandLess />
                     </IconButton>
-                    : 
+                ) : (
                     <IconButton onClick={openDevices}>
-                        <ExpandMore/>
+                        <ExpandMore />
                     </IconButton>
-                }
+                )}
             </ListItem>
-            <Collapse in={drawerState && devicesExpanded} timeout="auto" unmountOnExit>
+            <Collapse
+                in={drawerState && devicesExpanded}
+                timeout="auto"
+                unmountOnExit
+            >
                 <List component="div" disablePadding>
-                    { boxes.slice(0, 6).map((box) => (
-                        <ListItem 
-                            key={box.id} 
-                            button 
+                    {boxes.slice(0, 6).map((box) => (
+                        <ListItem
+                            key={box.id}
+                            button
                             className={classes.nested}
-                            component={RouterLink} 
+                            component={RouterLink}
                             to={`/dashboard/devices/${box.id}`}
                         >
-                            <ListItemText 
-                                primary={box.name} 
-                                primaryTypographyProps={{noWrap: true}} 
+                            <ListItemText
+                                primary={box.name}
+                                primaryTypographyProps={{ noWrap: true }}
                                 className={classes.collapsedText}
                             />
-                            <ListItemSecondaryAction className={classes.secondaryAction}>
+                            <ListItemSecondaryAction
+                                className={classes.secondaryAction}
+                            >
                                 <span className={classes.drawerIcon}>
-                                    { getStateIcon(box) }
+                                    {getStateIcon(box)}
                                 </span>
-                                <ContextMenu editUrl={`/dashboard/devices/${box.id}/edit`}/>
+                                <ContextMenu
+                                    editUrl={`/dashboard/devices/${box.id}/edit`}
+                                />
                             </ListItemSecondaryAction>
                         </ListItem>
                     ))}
@@ -190,36 +201,46 @@ const MainDrawerList = ({drawerState}) => {
             </Collapse>
             <ListItem button component={RouterLink} to="/dashboard/treatments">
                 <ListItemIcon>
-                    <LocalHospitalIcon color={!!matchTreatments ? "primary" : "inherit"}/>
+                    <LocalHospitalIcon
+                        color={!!matchTreatments ? "primary" : "inherit"}
+                    />
                 </ListItemIcon>
                 <ListItemText primary={t("Treatments")} />
-                { treatmentsExpanded ? 
+                {treatmentsExpanded ? (
                     <IconButton onClick={closeTreatments}>
-                        <ExpandLess/>
+                        <ExpandLess />
                     </IconButton>
-                    : 
+                ) : (
                     <IconButton onClick={openTreatments}>
-                        <ExpandMore/>
+                        <ExpandMore />
                     </IconButton>
-                }
+                )}
             </ListItem>
-            <Collapse in={drawerState && treatmentsExpanded} timeout="auto" unmountOnExit>
+            <Collapse
+                in={drawerState && treatmentsExpanded}
+                timeout="auto"
+                unmountOnExit
+            >
                 <List component="div" disablePadding>
-                    { treatments.slice(0, 6).map((treatment) => (
-                        <ListItem 
-                            key={treatment.id} 
-                            button 
+                    {treatments.slice(0, 6).map((treatment) => (
+                        <ListItem
+                            key={treatment.id}
+                            button
                             className={classes.nested}
-                            component={RouterLink} 
+                            component={RouterLink}
                             to={`/dashboard/treatments/${treatment.id}`}
                         >
-                            <ListItemText 
-                                primary={treatment.name} 
-                                primaryTypographyProps={{noWrap: true}} 
+                            <ListItemText
+                                primary={treatment.name}
+                                primaryTypographyProps={{ noWrap: true }}
                                 className={classes.collapsedText}
                             />
-                            <ListItemSecondaryAction className={classes.secondaryAction}>
-                                <ContextMenu editUrl={`/dashboard/treatments/${treatment.id}/edit`}/>
+                            <ListItemSecondaryAction
+                                className={classes.secondaryAction}
+                            >
+                                <ContextMenu
+                                    editUrl={`/dashboard/treatments/${treatment.id}/edit`}
+                                />
                             </ListItemSecondaryAction>
                         </ListItem>
                     ))}
@@ -227,12 +248,14 @@ const MainDrawerList = ({drawerState}) => {
             </Collapse>
             <ListItem button component={RouterLink} to="/dashboard/settings">
                 <ListItemIcon>
-                    <SettingsIcon color={!!matchSettings ? "primary" : "inherit"}/>
+                    <SettingsIcon
+                        color={!!matchSettings ? "primary" : "inherit"}
+                    />
                 </ListItemIcon>
                 <ListItemText primary={t("Settings")} />
             </ListItem>
         </List>
     );
-}
+};
 
 export default MainDrawerList;

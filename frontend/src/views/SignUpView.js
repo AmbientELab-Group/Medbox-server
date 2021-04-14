@@ -28,56 +28,58 @@ const useStyles = makeStyles((theme) => ({
 
 const SignUpView = () => {
     const classes = useStyles();
-    const { register, handleSubmit, errors, getValues, setError } = useForm({mode: "onBlur"});
-    const [ submitSuccess, setSubmitSuccess ] = useState("");
-    const [ submitError, setSubmitError ] = useState("");
-    const [ isLoading, setLoading ] = useState(false);
-    const [ connectionError, setConnectionError ] = useState(false);
+    const { register, handleSubmit, errors, getValues, setError } = useForm({
+        mode: "onBlur",
+    });
+    const [submitSuccess, setSubmitSuccess] = useState("");
+    const [submitError, setSubmitError] = useState("");
+    const [isLoading, setLoading] = useState(false);
+    const [connectionError, setConnectionError] = useState(false);
     const history = useHistory();
 
-    const onSubmit = async credentials => {
+    const onSubmit = async (credentials) => {
         try {
             setLoading(true);
             const { data } = await publicAccountFetch.post(
                 "/signup",
                 credentials
             );
-            
-            login({access: data.access_token, refresh: data.refresh_token});
+
+            login({ access: data.access_token, refresh: data.refresh_token });
             setSubmitSuccess(data.response);
             setSubmitError("");
             setTimeout(() => {
-                history.push('/dashboard');
+                history.push("/dashboard");
             }, 1000);
         } catch (error) {
             setLoading(false);
             if (error.response) {
-            const { data } = error.response;
-            console.error(data);
-            setSubmitError("Cannot create account.");
-            setSubmitSuccess("");
-            if (data) {
-                Object.entries(data).forEach((error) => {
-                    const [ fieldName, errorArray ] = error;
-                    console.log(fieldName);
-                    console.log(errorArray);
-                    setError(fieldName, { 
-                        type: "manual", 
-                        message: errorArray[0].charAt(0).toUpperCase() + errorArray[0].slice(1)
+                const { data } = error.response;
+                console.error(data);
+                setSubmitError("Cannot create account.");
+                setSubmitSuccess("");
+                if (data) {
+                    Object.entries(data).forEach((error) => {
+                        const [fieldName, errorArray] = error;
+                        console.log(fieldName);
+                        console.log(errorArray);
+                        setError(fieldName, {
+                            type: "manual",
+                            message:
+                                errorArray[0].charAt(0).toUpperCase() +
+                                errorArray[0].slice(1),
+                        });
                     });
-                }); 
-            }
-            }
-            else if (error.request) {
+                }
+            } else if (error.request) {
                 console.error(JSON.stringify(error));
                 setConnectionError(true);
-            }
-            else {
+            } else {
                 console.error("Uhh ohh! Something went a bit sideways...");
                 console.error(error);
             }
-        } 
-    }
+        }
+    };
 
     return (
         <Container component="main" maxWidth="xs">
@@ -92,9 +94,14 @@ const SignUpView = () => {
                     Sign up
                 </Typography>
                 <SignUpForm
-                    onSubmit={onSubmit} 
-                    authStateHooks={{submitSuccess, submitError, isLoading}}
-                    formStateHooks={{register, handleSubmit, errors, getValues}}
+                    onSubmit={onSubmit}
+                    authStateHooks={{ submitSuccess, submitError, isLoading }}
+                    formStateHooks={{
+                        register,
+                        handleSubmit,
+                        errors,
+                        getValues,
+                    }}
                 />
             </div>
             <Box mt={5}>
@@ -102,6 +109,6 @@ const SignUpView = () => {
             </Box>
         </Container>
     );
-}
+};
 
 export default SignUpView;

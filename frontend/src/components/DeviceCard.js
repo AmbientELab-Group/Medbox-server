@@ -4,7 +4,7 @@ import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent"; 
+import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import ConnectionState from "./ConnectionState";
@@ -16,38 +16,38 @@ const FillBar = withStyles((theme) => ({
     root: {
         height: 10,
         borderRadius: 5,
-      },
-      colorPrimary: {
-        backgroundColor: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
-      },
-      bar: {
+    },
+    colorPrimary: {
+        backgroundColor:
+            theme.palette.grey[theme.palette.type === "light" ? 200 : 700],
+    },
+    bar: {
         borderRadius: 5,
-      },
+    },
 }))(LinearProgress);
 
 const useStyles = makeStyles((theme) => ({
     content: {
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
     },
     actions: {
         display: "flex",
-        justifyContent: "flex-end"
+        justifyContent: "flex-end",
     },
     barFull: {
         backgroundColor: theme.palette.primary.light,
     },
     barMedium: {
-        backgroundColor: theme.palette.primary.main
+        backgroundColor: theme.palette.primary.main,
     },
     barLow: {
-        backgroundColor: theme.palette.primary.dark
+        backgroundColor: theme.palette.primary.dark,
     },
     fill: {
-        marginTop: theme.spacing(3)
-    }
+        marginTop: theme.spacing(3),
+    },
 }));
-
 
 const DeviceCard = ({ device }) => {
     const classes = useStyles();
@@ -59,7 +59,7 @@ const DeviceCard = ({ device }) => {
     return (
         <Card>
             <CardContent className={classes.content}>
-                <ConnectionState state={device.state}/>
+                <ConnectionState state={device.state} />
                 <Typography variant="h3" noWrap>
                     {device.name}
                 </Typography>
@@ -70,32 +70,36 @@ const DeviceCard = ({ device }) => {
                     {t("device:Device fill")}: {device.fill}%
                 </Typography>
                 <FillBar
-                    variant="determinate" 
+                    variant="determinate"
                     value={device.fill}
                     classes={{
-                        bar: device.fill > 70 ? 
-                            classes.barFull :
-                            device.fill > 30 ?
-                            classes.barMedium :
-                            classes.barLow
-                    }}/>
+                        bar:
+                            device.fill > 70
+                                ? classes.barFull
+                                : device.fill > 30
+                                ? classes.barMedium
+                                : classes.barLow,
+                    }}
+                />
             </CardContent>
             <CardActions className={classes.actions}>
-                <FatTextButton 
+                <FatTextButton
                     size={sm ? "large" : "small"}
-                    onClick={()=>history.push(`/dashboard/devices/${device.id}`)
-                }>
+                    onClick={() =>
+                        history.push(`/dashboard/devices/${device.id}`)
+                    }
+                >
                     {t("buttons:Show more")}
                 </FatTextButton>
-                <FatTextButton 
+                <FatTextButton
                     size={sm ? "large" : "small"}
-                    onClick={()=>history.push(`/dashboard/devices/${device.id}`)
-                }>
+                    onClick={() =>
+                        history.push(`/dashboard/devices/${device.id}`)
+                    }
+                >
                     {t("buttons:Edit")}
                 </FatTextButton>
-                <FatTextButton 
-                    size={sm ? "large" : "small"} 
-                >
+                <FatTextButton size={sm ? "large" : "small"}>
                     {t("buttons:Delete")}
                 </FatTextButton>
             </CardActions>

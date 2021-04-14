@@ -8,34 +8,28 @@ const data = {
         name: "Tom",
         surname: "Ross",
     },
-    Devices: {
-        
-    },
+    Devices: {},
     Notifications: {
         isOn: true,
         notificationTypes: {
             replenish: true,
-            administration: false
-        }
+            administration: false,
+        },
     },
     Time: {
         isZoneAuto: true,
         timeZone: getTimeZones()[173],
-        timeZones: getTimeZones()
+        timeZones: getTimeZones(),
     },
     Language: {
-        options: [
-            "Polish",
-            "English"
-        ],
-        chosen: "English"
-    }
-}
-
+        options: ["Polish", "English"],
+        chosen: "English",
+    },
+};
 
 const SettingsContext = createContext();
 
-const SettingsProvider = ({children}) => {
+const SettingsProvider = ({ children }) => {
     const [options, setOptions] = useState(data);
 
     const save = () => {
@@ -52,7 +46,7 @@ const SettingsProvider = ({children}) => {
             {children}
         </SettingsContext.Provider>
     );
-}
+};
 
 const useSettings = () => {
     const context = useContext(SettingsContext);
@@ -61,6 +55,6 @@ const useSettings = () => {
     }
 
     return context;
-}
+};
 
-export {SettingsProvider, useSettings};
+export { SettingsProvider, useSettings };

@@ -9,7 +9,6 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import MainDrawerList from "./MainDrawerList";
 import logo from "../assets/img/Logo_Icon@2x.png";
 
-
 const useStyles = makeStyles((theme) => ({
     toolbarIcon: {
         display: "flex",
@@ -21,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     logoWrapper: {
         flexGrow: 1,
         display: "flex",
-        justifyContent: "center"
+        justifyContent: "center",
     },
     drawerPaper: {
         position: "relative",
@@ -45,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const CustomDrawer = ({drawerHook, ...rest}) => {
+const CustomDrawer = ({ drawerHook, ...rest }) => {
     const classes = useStyles();
     const theme = useTheme();
     const upMd = useMediaQuery(theme.breakpoints.up("md"));
@@ -54,28 +53,31 @@ const CustomDrawer = ({drawerHook, ...rest}) => {
     const handleDrawerClose = () => {
         setDrawerOpen(false);
     };
-    
+
     return (
         <Drawer
             variant={upMd ? "permanent" : "temporary"}
             classes={{
-                paper: clsx(classes.drawerPaper, !openDrawer && classes.drawerPaperClose),
+                paper: clsx(
+                    classes.drawerPaper,
+                    !openDrawer && classes.drawerPaperClose
+                ),
             }}
             open={openDrawer}
             onClose={handleDrawerClose}
         >
             <div className={classes.toolbarIcon}>
                 <div className={classes.logoWrapper}>
-                    <img src={logo} height={54} alt="Logo"/>
+                    <img src={logo} height={54} alt="Logo" />
                 </div>
                 <IconButton onClick={handleDrawerClose}>
                     <ChevronLeftIcon />
                 </IconButton>
             </div>
             <Divider />
-            <MainDrawerList drawerState={openDrawer}/>
+            <MainDrawerList drawerState={openDrawer} />
         </Drawer>
-    )
-}
+    );
+};
 
 export default CustomDrawer;

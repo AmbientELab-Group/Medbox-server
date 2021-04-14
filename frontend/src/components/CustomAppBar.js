@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import Badge from "@material-ui/core/Badge";
@@ -38,21 +38,21 @@ const useStyles = makeStyles((theme) => ({
     menuButton: {
         [theme.breakpoints.up("sm")]: {
             marginRight: 36,
-        }
+        },
     },
     menuButtonHidden: {
         display: "none",
     },
     title: {
         flexGrow: 1,
-        textTransform: "capitalize"
+        textTransform: "capitalize",
     },
     logoutIcon: {
-        paddingRight: 0
+        paddingRight: 0,
     },
     icon: {
-        color: theme.palette.grey[800]
-    }
+        color: theme.palette.grey[800],
+    },
 }));
 
 const CustomAppBar = ({ drawerHook, ...rest }) => {
@@ -79,31 +79,50 @@ const CustomAppBar = ({ drawerHook, ...rest }) => {
     };
 
     return (
-        <AppBar position="absolute" className={clsx(classes.appBar, openDrawer && upSm && classes.appBarShift)}>
+        <AppBar
+            position="absolute"
+            className={clsx(
+                classes.appBar,
+                openDrawer && upSm && classes.appBarShift
+            )}
+        >
             <Toolbar className={classes.toolbar}>
                 <IconButton
                     edge="start"
                     color="inherit"
                     aria-label="open drawer"
                     onClick={handleDrawerOpen}
-                    className={clsx(classes.menuButton, openDrawer && classes.menuButtonHidden)}
+                    className={clsx(
+                        classes.menuButton,
+                        openDrawer && classes.menuButtonHidden
+                    )}
                 >
                     <MenuIcon />
                 </IconButton>
-                <Typography component="h1" variant="h2" color="inherit" noWrap className={classes.title}>
+                <Typography
+                    component="h1"
+                    variant="h2"
+                    color="inherit"
+                    noWrap
+                    className={classes.title}
+                >
                     {getTitle()}
                 </Typography>
                 <IconButton>
                     <Badge badgeContent={4} color="secondary">
-                        <NotificationsIcon className={classes.icon}/>
+                        <NotificationsIcon className={classes.icon} />
                     </Badge>
                 </IconButton>
-                <IconButton className={classes.icon} onClick={handleLogout} aria-label="log out" >
+                <IconButton
+                    className={classes.icon}
+                    onClick={handleLogout}
+                    aria-label="log out"
+                >
                     <MeetingRoomIcon className={classes.logoutIcon} />
                 </IconButton>
             </Toolbar>
         </AppBar>
-    )
-}
+    );
+};
 
-export default CustomAppBar
+export default CustomAppBar;

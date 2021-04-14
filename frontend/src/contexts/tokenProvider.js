@@ -1,11 +1,15 @@
 import { publicTokenFetch } from "../api/publicFetch";
 
 const createTokenProvider = () => {
-    let accessToken = JSON.parse(localStorage.getItem("access-token") || "null");
-    let refreshToken = JSON.parse(localStorage.getItem("refresh-token") || "null");
+    let accessToken = JSON.parse(
+        localStorage.getItem("access-token") || "null"
+    );
+    let refreshToken = JSON.parse(
+        localStorage.getItem("refresh-token") || "null"
+    );
     let userInfo = JSON.parse(localStorage.getItem("user-info") || "null");
     let observers = [];
-    
+
     // returns expiration date in ms from provided token
     const getExpirationDate = (jwtToken) => {
         if (!jwtToken) {
@@ -29,12 +33,9 @@ const createTokenProvider = () => {
     // returns refresh payload or null if refresh token is invalid
     const fetchRefresh = async () => {
         try {
-            const { data } = await publicTokenFetch.post(
-                "/refresh",
-                {
-                    "refresh": refreshToken
-                }
-            );
+            const { data } = await publicTokenFetch.post("/refresh", {
+                refresh: refreshToken,
+            });
 
             return data;
         } catch (error) {
@@ -48,7 +49,6 @@ const createTokenProvider = () => {
         if (isExpired(getExpirationDate(accessToken))) {
             const data = await fetchRefresh();
 
-            
             if (data) {
                 setTokens(data.access, refreshToken);
             } else {
@@ -67,7 +67,6 @@ const createTokenProvider = () => {
     const getUserInfo = () => {
         return userInfo;
     };
-
 
     // sets tokens in provider state and local storage
     // requires both tokens to set them, clears if at least one lacks
@@ -106,14 +105,14 @@ const createTokenProvider = () => {
     const subscribe = (observer) => {
         observers.push(observer);
     };
-    
+
     const unsubscribe = (observer) => {
-        observers = observers.filter(_observer => _observer !== observer);
+        observers = observers.filter((_observer) => _observer !== observer);
     };
 
     const notify = () => {
         const isLogged = isLoggedIn();
-        observers.forEach(observer => observer(isLogged));
+        observers.forEach((observer) => observer(isLogged));
     };
 
     // checks if access token is valid, tries to refresh and returns true on success
@@ -122,9 +121,9 @@ const createTokenProvider = () => {
             const newAccess = getAccessToken();
             return !!newAccess;
         }
-    
+
         return true;
-    }
+    };
 
     return {
         getAccessToken,
@@ -135,8 +134,8 @@ const createTokenProvider = () => {
         checkAuth,
         setTokens,
         subscribe,
-        unsubscribe
-    }
-}
+        unsubscribe,
+    };
+};
 
 export default createTokenProvider;
