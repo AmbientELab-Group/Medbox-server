@@ -22,11 +22,11 @@ const useStyles = makeStyles((theme) => ({
     },
     submitErrorMessage: {
         color: theme.palette.error.main,
-        textAlign: "center"
+        textAlign: "center",
     },
-        successMessage: {
+    successMessage: {
         color: theme.palette.success.main,
-        textAlign: "center"
+        textAlign: "center",
     },
     wrapper: {
         position: "relative",
@@ -40,53 +40,54 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SignUpForm = ({onSubmit, authStateHooks, formStateHooks}) => {
+const SignUpForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
     const { submitSuccess, submitError, isLoading } = authStateHooks;
     const { register, handleSubmit, errors, getValues } = formStateHooks;
     const classes = useStyles();
-    const [ isPasswordHidden, setPasswordHidden ] = useState(true);
+    const [isPasswordHidden, setPasswordHidden] = useState(true);
 
     const validationSchemas = {
         first_name: {
             required: "First name is required.",
             maxLength: {
-            value: 30,
-            message: "First name can not be over 30 letters long."
+                value: 30,
+                message: "First name can not be over 30 letters long.",
             },
         },
         last_name: {
             required: "Last name is required.",
             maxLength: {
-            value: 150,
-            message: "Last name can not be over 150 letters long."
+                value: 150,
+                message: "Last name can not be over 150 letters long.",
             },
         },
         email: {
             required: "Email is required.",
             maxLength: {
-            value: 128,
-            message: "Email can not be over 128 letters long."
+                value: 128,
+                message: "Email can not be over 128 letters long.",
             },
             pattern: {
-            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: "Please enter a valid email address"
-            }
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Please enter a valid email address",
+            },
         },
         password: {
             required: "Password is required.",
             minLength: {
-            value: 8,
-            message: "Password can not be shorter than 8 letters."
+                value: 8,
+                message: "Password can not be shorter than 8 letters.",
             },
             maxLength: {
-            value: 128,
-            message: "Password can not be over 128 letters long."
-            }
+                value: 128,
+                message: "Password can not be over 128 letters long.",
+            },
         },
         password2: {
             required: "Confirmation is required.",
-            validate: value => (value === getValues("password") || "Passwords must match.")
-        }
+            validate: (value) =>
+                value === getValues("password") || "Passwords must match.",
+        },
     };
 
     return (
@@ -94,45 +95,45 @@ const SignUpForm = ({onSubmit, authStateHooks, formStateHooks}) => {
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                    autoComplete="fname"
-                    name="first_name"
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="first_name"
-                    label="First Name"
-                    autoFocus
-                    inputRef={register(validationSchemas.first_name)}
-                    error={errors.first_name !== undefined}
-                    helperText={errors?.first_name?.message}
+                        autoComplete="fname"
+                        name="first_name"
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="first_name"
+                        label="First Name"
+                        autoFocus
+                        inputRef={register(validationSchemas.first_name)}
+                        error={errors.first_name !== undefined}
+                        helperText={errors?.first_name?.message}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="last_name"
-                    label="Last Name"
-                    name="last_name"
-                    autoComplete="lname"
-                    inputRef={register(validationSchemas.last_name)}
-                    error={errors.last_name !== undefined}
-                    helperText={errors?.last_name?.message}
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="last_name"
+                        label="Last Name"
+                        name="last_name"
+                        autoComplete="lname"
+                        inputRef={register(validationSchemas.last_name)}
+                        error={errors.last_name !== undefined}
+                        helperText={errors?.last_name?.message}
                     />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    inputRef={register(validationSchemas.email)}
-                    error={errors.email !== undefined}
-                    helperText={errors?.email?.message}
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
+                        inputRef={register(validationSchemas.email)}
+                        error={errors.email !== undefined}
+                        helperText={errors?.email?.message}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -148,17 +149,24 @@ const SignUpForm = ({onSubmit, authStateHooks, formStateHooks}) => {
                         inputRef={register(validationSchemas.password)}
                         error={errors.password !== undefined}
                         helperText={errors?.password?.message}
-                        InputProps={{endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={() => setPasswordHidden(!isPasswordHidden)}
-                                    onMouseDown={e => e.preventDefault()}
-                                >
-                                    {isPasswordHidden ? <VisibilityOff/> : <Visibility/>}
-                                </IconButton>
-                            </InputAdornment>
-                            )
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={() =>
+                                            setPasswordHidden(!isPasswordHidden)
+                                        }
+                                        onMouseDown={(e) => e.preventDefault()}
+                                    >
+                                        {isPasswordHidden ? (
+                                            <VisibilityOff />
+                                        ) : (
+                                            <Visibility />
+                                        )}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
                         }}
                     />
                 </Grid>
@@ -175,31 +183,38 @@ const SignUpForm = ({onSubmit, authStateHooks, formStateHooks}) => {
                         inputRef={register(validationSchemas.password2)}
                         error={errors.password2 !== undefined}
                         helperText={errors?.password2?.message}
-                        InputProps={{endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={() => setPasswordHidden(!isPasswordHidden)}
-                                    onMouseDown={e => e.preventDefault()}
-                                >
-                                    {isPasswordHidden ? <VisibilityOff/> : <Visibility/>}
-                                </IconButton>
-                            </InputAdornment>
-                            )
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={() =>
+                                            setPasswordHidden(!isPasswordHidden)
+                                        }
+                                        onMouseDown={(e) => e.preventDefault()}
+                                    >
+                                        {isPasswordHidden ? (
+                                            <VisibilityOff />
+                                        ) : (
+                                            <Visibility />
+                                        )}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
                         }}
                     />
                 </Grid>
             </Grid>
-            { submitError && 
+            {submitError && (
                 <Typography className={classes.submitErrorMessage}>
                     {submitError}
                 </Typography>
-            }
-            { submitSuccess && 
+            )}
+            {submitSuccess && (
                 <Typography className={classes.successMessage}>
                     {submitSuccess}
                 </Typography>
-            }
+            )}
             <div className={classes.wrapper}>
                 <Button
                     type="submit"
@@ -210,9 +225,12 @@ const SignUpForm = ({onSubmit, authStateHooks, formStateHooks}) => {
                 >
                     Sign Up
                 </Button>
-                { isLoading && 
-                    <CircularProgress size={24} className={classes.buttonProgress}/>
-                }
+                {isLoading && (
+                    <CircularProgress
+                        size={24}
+                        className={classes.buttonProgress}
+                    />
+                )}
             </div>
             <Grid container justify="flex-end">
                 <Grid item>

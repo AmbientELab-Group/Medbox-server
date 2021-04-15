@@ -5,16 +5,15 @@ import Zoom from "@material-ui/core/Zoom";
 import Fab from "@material-ui/core/Fab";
 import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
-import EditIcon from '@material-ui/icons/Edit';
-
+import EditIcon from "@material-ui/icons/Edit";
 
 const StyledTooltip = withStyles((theme) => ({
     tooltip: {
         [theme.breakpoints.down("sm")]: {
             fontSize: "0.7rem",
         },
-        padding: theme.spacing(1)
-    }
+        padding: theme.spacing(1),
+    },
 }))(Tooltip);
 
 const useStyles = makeStyles((theme) => ({
@@ -24,15 +23,21 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.up("md")]: {
             right: "5vw",
         },
-        top: "80vh"
-    }
+        top: "80vh",
+    },
 }));
 
 const CustomFab = () => {
     const classes = useStyles();
     const theme = useTheme();
-    const matchDevices = useRouteMatch({exact: true, path: "/dashboard/devices"});
-    const matchTreatments = useRouteMatch({exact: true, path: "/dashboard/treatments"});
+    const matchDevices = useRouteMatch({
+        exact: true,
+        path: "/dashboard/devices",
+    });
+    const matchTreatments = useRouteMatch({
+        exact: true,
+        path: "/dashboard/treatments",
+    });
     const matchSingleDevice = useRouteMatch("/dashboard/devices/:id");
     const matchSingleTreatment = useRouteMatch("/dashboard/treatments/:id");
 
@@ -45,46 +50,53 @@ const CustomFab = () => {
         {
             match: matchDevices,
             title: "Add device",
-            icon: <AddIcon/>
+            icon: <AddIcon />,
         },
         {
             match: matchTreatments,
             title: "Add treatment",
-            icon: <AddIcon/>
+            icon: <AddIcon />,
         },
         {
             match: matchSingleDevice,
             title: "Modify device",
-            icon: <EditIcon/>
+            icon: <EditIcon />,
         },
         {
             match: matchSingleTreatment,
             title: "Modify treatment",
-            icon: <EditIcon/>
-        }
+            icon: <EditIcon />,
+        },
     ];
 
     return (
         <>
-        { descriptions.map((desc) => (
-            <Zoom 
-                in={!!desc.match} 
-                key={desc.title} 
-                timeout={transitionDuration} 
-                style={{
-                    transitionDelay: `${!!desc.match ? transitionDuration.exit : 0}ms`,
-                }}
-                unmountOnExit
-            >
-                <StyledTooltip title={desc.title} aria-label={desc.title} placement="left" onClick={()=>console.log("tooltip")}>
-                    <Fab className={classes.fab} color="primary">
-                        {desc.icon}
-                    </Fab>
-                </StyledTooltip>
-            </Zoom>
-        ))}
+            {descriptions.map((desc) => (
+                <Zoom
+                    in={!!desc.match}
+                    key={desc.title}
+                    timeout={transitionDuration}
+                    style={{
+                        transitionDelay: `${
+                            !!desc.match ? transitionDuration.exit : 0
+                        }ms`,
+                    }}
+                    unmountOnExit
+                >
+                    <StyledTooltip
+                        title={desc.title}
+                        aria-label={desc.title}
+                        placement="left"
+                        onClick={() => console.log("tooltip")}
+                    >
+                        <Fab className={classes.fab} color="primary">
+                            {desc.icon}
+                        </Fab>
+                    </StyledTooltip>
+                </Zoom>
+            ))}
         </>
     );
-}
+};
 
 export default CustomFab;

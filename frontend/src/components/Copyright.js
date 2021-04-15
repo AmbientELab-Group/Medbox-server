@@ -5,15 +5,15 @@ import Link from "@material-ui/core/Link";
 
 const Copyright = () => {
     return (
-      <Typography variant="body2" color="textSecondary" align="center">
-        {'Copyright © '}
-        <Link color="inherit" component={RouterLink} to="/">
-          MedBox
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
+        <Typography variant="body2" color="textSecondary" align="center">
+            {"Copyright © "}
+            <Link color="inherit" component={RouterLink} to="/">
+                UbiComp
+            </Link>{" "}
+            {new Date().getFullYear()}
+            {"."}
+        </Typography>
     );
-}
+};
 
 export default Copyright;

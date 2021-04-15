@@ -1,6 +1,14 @@
 import React from "react";
 import clsx from "clsx";
-import { Checkbox, FormControlLabel, makeStyles, Select, Switch, TextField, Typography} from "@material-ui/core";
+import {
+    Checkbox,
+    FormControlLabel,
+    makeStyles,
+    Select,
+    Switch,
+    TextField,
+    Typography,
+} from "@material-ui/core";
 import { useSettings } from "../contexts/settingsProvider";
 
 const useStyles = makeStyles((theme) => ({
@@ -9,19 +17,19 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
     },
     sectionHeader: {
-        padding: theme.spacing(2)
+        padding: theme.spacing(2),
     },
     section: {
         display: "flex",
         flexDirection: "column",
-        padding: `0px  ${theme.spacing(4)}px`
+        padding: `0px  ${theme.spacing(4)}px`,
     },
     field: {
         margin: theme.spacing(2),
     },
     checkboxField: {
-        justifyContent: "space-between"
-    }
+        justifyContent: "space-between",
+    },
 }));
 
 const Profile = () => {
@@ -34,51 +42,98 @@ const Profile = () => {
             ...options,
             Profile: {
                 ...Profile,
-                [event.target.id]: event.target.value
-            }    
+                [event.target.id]: event.target.value,
+            },
         });
     };
 
     return (
         <div className={classes.root}>
-            <Typography variant="h3" color="primary" className={classes.sectionHeader}>Profile details</Typography>
+            <Typography
+                variant="h3"
+                color="primary"
+                className={classes.sectionHeader}
+            >
+                Profile details
+            </Typography>
             <div className={classes.section}>
-                <TextField id="email" label="Email" defaultValue={Profile.email} disabled className={classes.field} variant="outlined"/>
-                <TextField id="name" label="Name" value={Profile.name} onChange={handleChange} className={classes.field} variant="outlined"/>
-                <TextField id="surname" label="Surname" value={Profile.surname} onChange={handleChange} className={classes.field} variant="outlined"/>
+                <TextField
+                    id="email"
+                    label="Email"
+                    defaultValue={Profile.email}
+                    disabled
+                    className={classes.field}
+                    variant="outlined"
+                />
+                <TextField
+                    id="name"
+                    label="Name"
+                    value={Profile.name}
+                    onChange={handleChange}
+                    className={classes.field}
+                    variant="outlined"
+                />
+                <TextField
+                    id="surname"
+                    label="Surname"
+                    value={Profile.surname}
+                    onChange={handleChange}
+                    className={classes.field}
+                    variant="outlined"
+                />
             </div>
-            <Typography variant="h3" color="primary" className={classes.sectionHeader}>Change password</Typography>
+            <Typography
+                variant="h3"
+                color="primary"
+                className={classes.sectionHeader}
+            >
+                Change password
+            </Typography>
             <div className={classes.section}>
-                <TextField id="password-old" label="Current password" type="password" className={classes.field} variant="outlined"/>
-                <TextField id="password-new" label="New password" type="password" className={classes.field} variant="outlined"/>
-                <TextField id="password-new-confirm" label="Confirm new password" type="password" className={classes.field} variant="outlined"/>
+                <TextField
+                    id="password-old"
+                    label="Current password"
+                    type="password"
+                    className={classes.field}
+                    variant="outlined"
+                />
+                <TextField
+                    id="password-new"
+                    label="New password"
+                    type="password"
+                    className={classes.field}
+                    variant="outlined"
+                />
+                <TextField
+                    id="password-new-confirm"
+                    label="Confirm new password"
+                    type="password"
+                    className={classes.field}
+                    variant="outlined"
+                />
             </div>
         </div>
     );
-}
+};
 
 const Devices = () => {
     const classes = useStyles();
 
-    return (
-        <div className={classes.root}>
-            Devices
-        </div>
-    );
-}
+    return <div className={classes.root}>Devices</div>;
+};
 
 const Notifications = () => {
     const classes = useStyles();
     const [options, setOptions] = useSettings();
     const { Notifications } = options;
-    
+
     const handleOnToggle = () => {
         setOptions({
             ...options,
             Notifications: {
                 ...options.Notifications,
-                isOn: !options.Notifications.isOn
-            }
+                isOn: !options.Notifications.isOn,
+            },
         });
     };
 
@@ -89,9 +144,10 @@ const Notifications = () => {
                 ...options.Notifications,
                 notificationTypes: {
                     ...options.Notifications.notificationTypes,
-                    replenish: !options.Notifications.notificationTypes.replenish
-                }
-            }
+                    replenish: !options.Notifications.notificationTypes
+                        .replenish,
+                },
+            },
         });
     };
 
@@ -102,34 +158,46 @@ const Notifications = () => {
                 ...options.Notifications,
                 notificationTypes: {
                     ...options.Notifications.notificationTypes,
-                    administration: !options.Notifications.notificationTypes.administration
-                }
-            }
+                    administration: !options.Notifications.notificationTypes
+                        .administration,
+                },
+            },
         });
     };
 
-
     return (
         <div className={classes.root}>
-            <Typography variant="h3" color="primary" className={classes.sectionHeader}>Notifications</Typography>
+            <Typography
+                variant="h3"
+                color="primary"
+                className={classes.sectionHeader}
+            >
+                Notifications
+            </Typography>
             <div className={classes.section}>
                 <FormControlLabel
                     control={
-                        <Switch 
+                        <Switch
                             color="primary"
                             checked={Notifications.isOn}
                             onChange={handleOnToggle}
-                       />
+                        />
                     }
                     label="Turn off notifications"
                     labelPlacement="start"
                     className={clsx(classes.field, classes.checkboxField)}
                 />
             </div>
-            <Typography variant="h3" color="primary" className={classes.sectionHeader}>Type of notifications</Typography>
+            <Typography
+                variant="h3"
+                color="primary"
+                className={classes.sectionHeader}
+            >
+                Type of notifications
+            </Typography>
             <div className={classes.section}>
                 <FormControlLabel
-                    control={<Checkbox color="primary"/>}
+                    control={<Checkbox color="primary" />}
                     label="Medicines refill warning"
                     labelPlacement="start"
                     checked={Notifications.notificationTypes.replenish}
@@ -137,7 +205,7 @@ const Notifications = () => {
                     className={clsx(classes.field, classes.checkboxField)}
                 />
                 <FormControlLabel
-                    control={<Checkbox color="primary"/>}
+                    control={<Checkbox color="primary" />}
                     label="Medicine administration time"
                     labelPlacement="start"
                     checked={Notifications.notificationTypes.administration}
@@ -147,7 +215,7 @@ const Notifications = () => {
             </div>
         </div>
     );
-}
+};
 
 const Time = () => {
     const classes = useStyles();
@@ -159,8 +227,8 @@ const Time = () => {
             ...options,
             Time: {
                 ...options.Time,
-                isZoneAuto: !options.Time.isZoneAuto
-            }
+                isZoneAuto: !options.Time.isZoneAuto,
+            },
         });
     };
 
@@ -169,50 +237,65 @@ const Time = () => {
             ...options,
             Time: {
                 ...options.Time,
-                timeZone: JSON.parse(event.target.value)
-            }
+                timeZone: JSON.parse(event.target.value),
+            },
         });
     };
 
-
     return (
         <div className={classes.root}>
-            <Typography variant="h3" color="primary" className={classes.sectionHeader}>Time</Typography>
+            <Typography
+                variant="h3"
+                color="primary"
+                className={classes.sectionHeader}
+            >
+                Time
+            </Typography>
             <div className={classes.section}>
                 <FormControlLabel
                     control={
-                        <Switch 
+                        <Switch
                             color="primary"
                             checked={Time.isZoneAuto}
                             onChange={handleZoneAutoToggle}
-                       />
+                        />
                     }
                     label="Set time zone automatically"
                     labelPlacement="start"
                     className={clsx(classes.field, classes.checkboxField)}
                 />
             </div>
-            <Typography variant="h3" color="primary" className={classes.sectionHeader}>Change time zone</Typography>
+            <Typography
+                variant="h3"
+                color="primary"
+                className={classes.sectionHeader}
+            >
+                Change time zone
+            </Typography>
             <div className={classes.section}>
-                <Select native value={JSON.stringify(Time.timeZone)} onChange={handleChange} className={classes.field} disabled={Time.isZoneAuto}>
-                    { Time.timeZones.map((zone, idx) => (
-                        <option key={idx} value={JSON.stringify(zone)}>{zone.rawFormat}</option>
+                <Select
+                    native
+                    value={JSON.stringify(Time.timeZone)}
+                    onChange={handleChange}
+                    className={classes.field}
+                    disabled={Time.isZoneAuto}
+                >
+                    {Time.timeZones.map((zone, idx) => (
+                        <option key={idx} value={JSON.stringify(zone)}>
+                            {zone.rawFormat}
+                        </option>
                     ))}
                 </Select>
             </div>
         </div>
     );
-}
+};
 
 const Dashboard = () => {
     const classes = useStyles();
 
-    return (
-        <div className={classes.root}>
-            Dashboard
-        </div>
-    );
-}
+    return <div className={classes.root}>Dashboard</div>;
+};
 
 const Language = () => {
     const classes = useStyles();
@@ -224,64 +307,73 @@ const Language = () => {
             ...options,
             Language: {
                 ...Language,
-                chosen: event.target.value
-            }
+                chosen: event.target.value,
+            },
         });
     };
 
     return (
         <div className={classes.root}>
-            <Typography variant="h3" color="primary" className={classes.sectionHeader}>Language choice</Typography>
+            <Typography
+                variant="h3"
+                color="primary"
+                className={classes.sectionHeader}
+            >
+                Language choice
+            </Typography>
             <div className={classes.section}>
-                <Select native value={Language.chosen} onChange={handleChange} className={classes.field}>
-                    {Language.options.map((lang)=>(
-                        <option key={lang} value={lang}>{lang}</option>
+                <Select
+                    native
+                    value={Language.chosen}
+                    onChange={handleChange}
+                    className={classes.field}
+                >
+                    {Language.options.map((lang) => (
+                        <option key={lang} value={lang}>
+                            {lang}
+                        </option>
                     ))}
                 </Select>
             </div>
         </div>
     );
-}
+};
 
 const Help = () => {
     const classes = useStyles();
 
-    return (
-        <div className={classes.root}>
-            Help
-        </div>
-    );
-}
+    return <div className={classes.root}>Help</div>;
+};
 
 const settingTabs = [
     {
         name: "Profile",
-        component: <Profile/>
+        component: <Profile />,
     },
     {
         name: "Devices",
-        component: <Devices/>
+        component: <Devices />,
     },
     {
         name: "Notifications",
-        component: <Notifications/>
+        component: <Notifications />,
     },
     {
         name: "Time",
-        component: <Time/>
+        component: <Time />,
     },
     {
         name: "Dashboard",
-        component: <Dashboard/>
+        component: <Dashboard />,
     },
     {
         name: "Language",
-        component: <Language/>
+        component: <Language />,
     },
     {
         name: "Help",
-        component: <Help/>
-    }
+        component: <Help />,
+    },
 ];
 
 export default settingTabs;

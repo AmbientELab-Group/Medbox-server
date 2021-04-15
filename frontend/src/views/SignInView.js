@@ -13,7 +13,6 @@ import SignInForm from "../components/SignInForm";
 import { useForm } from "react-hook-form";
 import { login } from "../contexts/authProvider";
 import { publicAccountFetch } from "../api/publicFetch";
- 
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,7 +22,9 @@ const useStyles = makeStyles((theme) => ({
         backgroundImage: "url(https://source.unsplash.com/random)",
         backgroundRepeat: "no-repeat",
         backgroundColor:
-        theme.palette.type === "light" ? theme.palette.grey[50] : theme.palette.grey[900],
+            theme.palette.type === "light"
+                ? theme.palette.grey[50]
+                : theme.palette.grey[900],
         backgroundSize: "cover",
         backgroundPosition: "center",
     },
@@ -41,28 +42,27 @@ const useStyles = makeStyles((theme) => ({
 
 const SignInView = () => {
     const classes = useStyles();
-    const { register, handleSubmit, errors } = useForm({mode: "onBlur"});
-    const [ submitSuccess, setSubmitSuccess ] = useState("");
-    const [ submitError, setSubmitError ] = useState("");
-    const [ isLoading, setLoading ] = useState(false);
-    const [ connectionError, setConnectionError ] = useState(false);
+    const { register, handleSubmit, errors } = useForm({ mode: "onBlur" });
+    const [submitSuccess, setSubmitSuccess] = useState("");
+    const [submitError, setSubmitError] = useState("");
+    const [isLoading, setLoading] = useState(false);
+    const [connectionError, setConnectionError] = useState(false);
     const history = useHistory();
 
-    const onSubmit = async credentials => {
+    const onSubmit = async (credentials) => {
         try {
             setLoading(true);
             const { data } = await publicAccountFetch.post(
                 "/signin",
                 credentials
             );
-            
+
             login(data);
             setSubmitSuccess("Authentication successful!");
             setSubmitError("");
             setTimeout(async () => {
-                history.push('/dashboard');
+                history.push("/dashboard");
             }, 1000);
-
         } catch (error) {
             setLoading(false);
 
@@ -71,45 +71,55 @@ const SignInView = () => {
                 console.error(data.detail);
                 setSubmitError(data.detail);
                 setSubmitSuccess("");
-            }
-            else if (error.request) {
+            } else if (error.request) {
                 console.log("error request");
                 console.error(JSON.stringify(error));
                 setConnectionError(true);
-            }
-            else {
+            } else {
                 console.error("Uhh ohh! Something went a bit sideways...");
                 console.error(error);
             }
-        } 
-    }
+        }
+    };
 
     return (
         <Grid container component="main" className={classes.root}>
-        <ErrorSnack error={connectionError} setError={setConnectionError}>
-            Please check your internet connection and try again...
-        </ErrorSnack>
-        <Grid item xs={false} sm={4} md={7} className={classes.image} />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-            <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-                <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h3">
-                Sign in
-            </Typography>
-            <SignInForm 
-                onSubmit={onSubmit} 
-                authStateHooks={{submitSuccess, submitError, isLoading}}
-                formStateHooks={{register, handleSubmit, errors}}
-            />
-            <Box mt={5}>
-                <Copyright />
-            </Box>
-            </div>
-        </Grid>
+            <ErrorSnack error={connectionError} setError={setConnectionError}>
+                Please check your internet connection and try again...
+            </ErrorSnack>
+            <Grid item xs={false} sm={4} md={7} className={classes.image} />
+            <Grid
+                item
+                xs={12}
+                sm={8}
+                md={5}
+                component={Paper}
+                elevation={6}
+                square
+            >
+                <div className={classes.paper}>
+                    <Avatar className={classes.avatar}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h3">
+                        Sign in
+                    </Typography>
+                    <SignInForm
+                        onSubmit={onSubmit}
+                        authStateHooks={{
+                            submitSuccess,
+                            submitError,
+                            isLoading,
+                        }}
+                        formStateHooks={{ register, handleSubmit, errors }}
+                    />
+                    <Box mt={5}>
+                        <Copyright />
+                    </Box>
+                </div>
+            </Grid>
         </Grid>
     );
-}
+};
 
 export default SignInView;
