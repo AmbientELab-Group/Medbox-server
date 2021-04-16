@@ -34,6 +34,7 @@ jobs:
 
   Build:
     runs-on: ubuntu-20.04
+    needs: Test
     steps:
       - uses: actions/checkout@v2
       - name: Build the stack
