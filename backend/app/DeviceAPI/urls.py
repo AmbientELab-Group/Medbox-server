@@ -20,8 +20,8 @@ from DeviceAPI.views import (
 urlpatterns = [
     path("devices", DeviceList.as_view()),
     path("devices/<uuid:pk>", DeviceDetail.as_view()),
-    path("containers", ContainerListCreateView.as_view()),
-    path("containers/<uuid:pk>", ContainerDetailView.as_view()),
+    #path("containers", ContainerListCreateView.as_view()),
+    #path("containers/<uuid:pk>", ContainerDetailView.as_view()),
     path("pairing/", PairingInfoCreate.as_view()),
     path("devices/pairing/confirm/", PairingConfirm.as_view()),
     path("pairing/verify/<pk>", PairingVerify.as_view()),
