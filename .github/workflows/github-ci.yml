@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  build:
+  Test:
     runs-on: ubuntu-20.04
     env:
       SECRET_KEY: hoktr^5edgngixl%2o6_n)e8smv$7g73+geiwk01!v5veg^z&l
@@ -31,3 +31,12 @@ jobs:
       run: |
         python manage.py test
       working-directory: ${{env.WORKDIR}}/app
+
+  Build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the stack
+        run: docker-compose up -d
+
+  
