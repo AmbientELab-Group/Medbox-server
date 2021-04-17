@@ -1,6 +1,8 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.contrib.auth import get_user_model
+from django.db.models.functions import Cast
+from django.db.models import DateTimeField
 from rest_framework_simplejwt.tokens import RefreshToken
 from DeviceAPI.models import (
     Dose,
@@ -12,13 +14,13 @@ from DeviceAPI.models import (
     Container,
     ContainerVersion,
 )
-from DeviceAPI.serializers import ContainerSerializer
+from DeviceAPI.serializers import DoseSerializer
 from uuid import UUID
 from collections import OrderedDict
 
 
 class DoseViewTestCase(APITestCase):
-    doses_url = "/api/doses"
+    doses_url = "/api/doses/"
 
     def setUp(self):
         self.owner = get_user_model().objects.create(
@@ -27,7 +29,7 @@ class DoseViewTestCase(APITestCase):
         )
         tokens = RefreshToken.for_user(self.owner)
         self.client.credentials(
-            HTTP_AUTHORIZATION="Bearer " + str(tokens.acces_token)
+            HTTP_AUTHORIZATION="Bearer " + str(tokens.access_token)
         )
         self.device_version = DeviceVersion.objects.create(
             name="0.0",
@@ -76,10 +78,10 @@ class DoseViewTestCase(APITestCase):
             self.doses.append(
                 Dose.objects.create(
                     treatment=self.treatment,
-                    chamber=Chamber.objects.filter(container=self.container.uuid),
+                    chamber=Chamber.objects.filter(container=self.container.uuid).first(),
                     medicine=self.medicine,
-                    planned_administration_time="2021-04-18T12:12:10.612Z",
-                    number_of_pills=2,
+                    planned_administration_time="2021-04-18T12:12:10.612000Z",
+                    number_of_pills=2.0,
                     on_demand=True
                 )
             )
@@ -88,10 +90,10 @@ class DoseViewTestCase(APITestCase):
             self.additional_doses.append(
                 Dose.objects.create(
                     treatment=self.treatment,
-                    chamber=Chamber.objects.filter(container=self.additional_container.uuid),
+                    chamber=Chamber.objects.filter(container=self.additional_container.uuid).first(),
                     medicine=self.additional_medicine,
-                    planned_administration_time="2021-04-20T12:12:10.612Z",
-                    number_of_pills=2,
+                    planned_administration_time="2021-04-20T12:12:10.612000Z",
+                    number_of_pills=2.0,
                     on_demand=True
                 )
             )
@@ -128,31 +130,6 @@ class DoseViewTestCase(APITestCase):
         self.assertEqual(response.data, expected_data)
 
     def test_dose_retrieve(self):
-        expected_data = OrderedDict(
-            uuid=str(self.doses[0].uuid),
-            treatment=UUID(str(self.doses[0].treatment.uuid)),
-            chamber=UUID(str(self.doses[0].chamber.uuid)),
-            medicine=UUID(str(self.doses[0].medicine.uuid)),
-            planned_administration_time=self.doses[0].planned_administration_time,
-            number_of_pills=self.doses[0].number_of_pills,
-            on_demand=self.doses[0].on_demand,
-        )
-        response = self.client.get(
-            self.doses_url + f"/{doses[0].uuid}"
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, expected_data)
-
-    def test_dose_create(self):
-        input_data = {
-            "uuid": str(self.doses[0].uuid),
-            "treatment": UUID(str(self.doses[0].treatment.uuid)),
-            "chamber": UUID(str(self.doses[0].chamber.uuid)),
-            "medicine": UUID(str(self.doses[0].medicine.uuid)),
-            "planned_administration_time": self.doses[0].planned_administration_time,
-            "number_of_pills": self.doses[0].number_of_pills,
-            "on_demand": self.doses[0].on_demand,
-        }
         expected_data = {
             "uuid": str(self.doses[0].uuid),
             "treatment": UUID(str(self.doses[0].treatment.uuid)),
@@ -162,36 +139,76 @@ class DoseViewTestCase(APITestCase):
             "number_of_pills": self.doses[0].number_of_pills,
             "on_demand": self.doses[0].on_demand,
         }
+        response = self.client.get(
+            self.doses_url + f"{self.doses[0].uuid}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_data)
+
+    def test_dose_create(self):
+        input_data = {
+            "treatment": self.treatment.uuid,
+            "chamber": Chamber.objects.filter(container=self.additional_container.uuid).first().uuid,
+            "medicine": self.medicine.uuid,
+            "planned_administration_time": "2021-04-18T12:12:10.612000Z",
+            "number_of_pills": 3.0,
+            "on_demand": Treatment,
+        }
         response = self.client.post(
             self.doses_url,
             input_data,
             format="json"
         )
+        dose = Dose.objects.get(
+            treatment=self.treatment,
+            chamber=Chamber.objects.filter(container=self.container.uuid).first(),
+            medicine=self.medicine,
+            planned_administration_time="2021-04-18T12:12:10.612000Z",
+            number_of_pills=3.0,
+            on_demand=True
+        )
+        expected_data = {
+            "uuid": str(dose.uuid),
+            "treatment": self.treatment.uuid,
+            "chamber": Chamber.objects.filter(container=self.container.uuid).first().uuid,
+            "medicine": self.medicine.uuid,
+            "planned_administration_time": "2021-04-18T12:12:10.612000Z",
+            "number_of_pills": 3.0,
+            "on_demand": True,
+        }
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data, expected_data)
 
     def test_dose_update(self):
-        expected_data = OrderedDict(
-            uuid=str(self.doses[0].uuid),
-            treatment=UUID(str(self.doses[0].treatment.uuid)),
-            chamber=UUID(str(self.doses[0].chamber.uuid)),
-            medicine=UUID(str(self.doses[0].medicine.uuid)),
-            planned_administration_time=self.doses[0].planned_administration_time,
-            number_of_pills=0,
-            on_demand=self.doses[0].on_demand,
-        )
-        input_data = OrderedDict(
-            uuid=str(self.doses[0].uuid),
-            treatment=UUID(str(self.doses[0].treatment.uuid)),
-            chamber=UUID(str(self.doses[0].chamber.uuid)),
-            medicine=UUID(str(self.doses[0].medicine.uuid)),
-            planned_administration_time=self.doses[0].planned_administration_time,
-            number_of_pills=0,
-            on_demand=self.doses[0].on_demand,
-        )
+        dose = Dose.objects.create(
+            treatment=self.treatment,
+            chamber=Chamber.objects.filter(container=self.container.uuid).first(),
+            medicine=self.medicine,
+            planned_administration_time="2021-04-18T12:12:10.612000Z",
+            number_of_pills=2,
+            on_demand=True
+            )
+        expected_data = {
+            "uuid": str(dose.uuid),
+            "treatment": UUID(str(dose.treatment.uuid)),
+            "chamber": UUID(str(dose.chamber.uuid)),
+            "medicine": UUID(str(dose.medicine.uuid)),
+            "planned_administration_time": dose.planned_administration_time,
+            "number_of_pills": 0.0,
+            "on_demand": dose.on_demand,
+        }
+        input_data = {
+            "uuid": str(dose.uuid),
+            "treatment": UUID(str(dose.treatment.uuid)),
+            "chamber": UUID(str(dose.chamber.uuid)),
+            "medicine": UUID(str(dose.medicine.uuid)),
+            "planned_administration_time": dose.planned_administration_time,
+            "number_of_pills": 0.0,
+            "on_demand": dose.on_demand,
+        }
 
         response = self.client.put(
-            self.doses_url + f"/{self.doses[0].uuid}",
+            self.doses_url + f"{self.doses[0].uuid}",
             input_data,
             format="json"
         )
@@ -201,7 +218,6 @@ class DoseViewTestCase(APITestCase):
     def test_dose_destroy(self):
 
         response = self.client.delete(
-            self.doses_url + f"/{self.doses[0].uuid}"
+            self.doses_url + f"{self.doses[0].uuid}"
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        

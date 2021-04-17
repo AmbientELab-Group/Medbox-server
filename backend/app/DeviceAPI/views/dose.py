@@ -6,7 +6,6 @@ from DeviceAPI.models import (
     Dose,
     Treatment,
     Chamber,
-    Container,
     Medicine,
 )
 from django.db.models import Q
@@ -45,14 +44,13 @@ class DoseListCreateView(generics.ListCreateAPIView):
             if not requested_doses:
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
-            serializer = self.get_serializer(requested_containers, many=True)
+            serializer = self.get_serializer(requested_doses, many=True)
         return Response(serializer.data)
     
-    def create(self, response):
+    def create(self, request):
         """
         This endpoint allows to create new doses.
         """
-        doses = self.get_queryset()
         chamber_UUID = request.data.get("chamber")
         chamber = Chamber.objects.get(uuid=chamber_UUID)
         treatment_UUID = request.data.get("treatment")
@@ -74,3 +72,14 @@ class DoseDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     serializer_class = DoseSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """
+        Allows to show only owned or managed doses
+        """
+        user = self.request.user
+        managed_doses = Dose.objects.filter(
+            Q(chamber__container__device__owner=user) |
+            Q(chamber__container__device__in=user.supervised_devices.all())
+        )
+        return managed_doses
