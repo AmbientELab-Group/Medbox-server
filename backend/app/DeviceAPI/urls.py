@@ -15,6 +15,8 @@ from DeviceAPI.views import (
     ListContainerVersions,
     ChamberList,
     ChamberDetail,
+    DoseListCreateView,
+    DoseDetailView,
 )
 
 urlpatterns = [
@@ -31,5 +33,7 @@ urlpatterns = [
     path("versions/device", ListDeviceVersions.as_view()),
     path("versions/container", ListContainerVersions.as_view()),
     path("chambers", ChamberList.as_view()),
-    path("chambers/<uuid:pk>", ChamberDetail.as_view())
+    path("chambers/<uuid:pk>", ChamberDetail.as_view()),
+    path("doses/", DoseListCreateView.as_view()),
+    path("doses/<uuid:pk>", DoseDetailView.as_view())
 ]
