@@ -6,6 +6,7 @@ jobs:
   Deploy:
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v2
-      - run: |
-          echo ${GITHUB_ACTION}
+    - uses: actions/checkout@v2
+    - name: test 
+      run: |
+        echo ${GITHUB_ACTION}
