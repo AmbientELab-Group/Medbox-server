@@ -44,11 +44,11 @@ jobs:
           echo ${DOCKER_AUTH} | base64 -d | docker login -u _json_key --password-stdin https://eu.gcr.io
       - name: Build backend
         run: |
-          docker build -t eu.gcr.io/flowing-access-311114/medbox_backend-server:${GITHUB_RUN_ID} ./backend/
+          docker build -t eu.gcr.io/flowing-access-311114/medbox_backend-server:${GITHUB_RUN_ID} -f ./backend/Dockerfile.prod ./backend/
           docker push eu.gcr.io/flowing-access-311114/medbox_backend-server:${GITHUB_RUN_ID}
       - name: Build frontend
         run: |
-          docker build -t eu.gcr.io/flowing-access-311114/medbox_frontend-server:${GITHUB_RUN_ID} -f ./frontend/Dockerfile ./frontend/
+          docker build -t eu.gcr.io/flowing-access-311114/medbox_frontend-server:${GITHUB_RUN_ID} -f ./frontend/Dockerfile.prod ./frontend/
           docker push eu.gcr.io/flowing-access-311114/medbox_frontend-server:${GITHUB_RUN_ID}
 
   
