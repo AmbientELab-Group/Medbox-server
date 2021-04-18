@@ -1,4 +1,4 @@
-name: Deploy
+name: Dupsko
 
 on: workflow_dispatch
 
