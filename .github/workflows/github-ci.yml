@@ -39,10 +39,16 @@ jobs:
       DOCKER_AUTH: ${{ secrets.DOCKER_AUTH }}
     steps:
       - uses: actions/checkout@v2
-      - name: Build backend
+      - name: Authenticate
         run: |
           echo ${DOCKER_AUTH} | base64 -d | docker login -u _json_key --password-stdin https://eu.gcr.io
-          docker build -t gcr.io/ambient/medbox_backend-server:${GITHUB_RUN_ID} ./backend/
-          docker push gcr.io/ambient/medbox_backend-server:${GITHUB_RUN_ID}
+      - name: Build backend
+        run: |
+          docker build -t eu.gcr.io/flowing-access-311114/medbox_backend-server:${GITHUB_RUN_ID} ./backend/
+          docker push eu.gcr.io/flowing-access-311114/medbox_backend-server:${GITHUB_RUN_ID}
+      - name: Build frontend
+        run: |
+          docker build -t eu.gcr.io/flowing-access-311114/medbox_frontend-server:${GITHUB_RUN_ID} -f ./frontend/Dockerfile ./frontend/
+          docker push eu.gcr.io/flowing-access-311114/medbox_frontend-server:${GITHUB_RUN_ID}
 
   
