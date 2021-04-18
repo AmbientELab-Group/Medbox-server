@@ -42,7 +42,7 @@ jobs:
       - name: Build backend
         run: |
           echo ${DOCKER_AUTH} | base64 -d | docker login -u _json_key --password-stdin https://eu.gcr.io
-          docker build -t gcr.io/Ambient/medbox_backend-server:${GITHUB_RUN_ID} ./backend/
-          docker push gcr.io/Ambient/medbox_backend-server:${GITHUB_RUN_ID}
+          docker build -t gcr.io/ambient/medbox_backend-server:${GITHUB_RUN_ID} ./backend/
+          docker push gcr.io/ambient/medbox_backend-server:${GITHUB_RUN_ID}
 
   
