@@ -35,9 +35,14 @@ jobs:
   Build:
     runs-on: ubuntu-20.04
     needs: Test
+    env:
+      DOCKER_AUTH: ${{ secrets.DOCKER_AUTH }}
     steps:
       - uses: actions/checkout@v2
-      - name: Build the stack
-        run: docker-compose up -d
+      - name: Build backend
+        run: |
+          echo ${DOCKER_AUTH} | base64 -d | docker login -u _json_key --password-stdin https://eu.gcr.io
+          docker build -t gcr.io/Ambient/medbox_backend-server:${GITHUB_RUN_ID} ./backend/
+          docker push gcr.io/Ambient/medbox_backend-server:${GITHUB_RUN_ID}
 
   
