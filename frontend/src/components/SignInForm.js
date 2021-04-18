@@ -14,7 +14,6 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
-
 const useStyles = makeStyles((theme) => ({
     form: {
         width: "100%", // Fix IE 11 issue.
@@ -25,11 +24,11 @@ const useStyles = makeStyles((theme) => ({
     },
     submitErrorMessage: {
         color: theme.palette.error.main,
-        textAlign: "center"
+        textAlign: "center",
     },
     successMessage: {
         color: theme.palette.success.main,
-        textAlign: "center"
+        textAlign: "center",
     },
     wrapper: {
         position: "relative",
@@ -43,36 +42,36 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SignInForm = ({onSubmit, authStateHooks, formStateHooks}) => {
+const SignInForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
     const { submitSuccess, submitError, isLoading } = authStateHooks;
     const { register, handleSubmit, errors } = formStateHooks;
     const classes = useStyles();
-    const [ isPasswordHidden, setPasswordHidden ] = useState(true);
+    const [isPasswordHidden, setPasswordHidden] = useState(true);
 
     const validationSchemas = {
         email: {
-          required: "Email is required.",
-          maxLength: {
-            value: 128,
-            message: "Email can not be over 128 letters long."
-          },
-          pattern: {
-            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: "Please enter a valid email address"
-          }
+            required: "Email is required.",
+            maxLength: {
+                value: 128,
+                message: "Email can not be over 128 letters long.",
+            },
+            pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Please enter a valid email address",
+            },
         },
         password: {
-          required: "Password is required.",
-          minLength: {
-            value: 8,
-            message: "Password can not be shorter than 8 letters."
-          },
-          maxLength: {
-            value: 128,
-            message: "Password can not be over 128 letters long."
-          }
-        }
-      };
+            required: "Password is required.",
+            minLength: {
+                value: 8,
+                message: "Password can not be shorter than 8 letters.",
+            },
+            maxLength: {
+                value: 128,
+                message: "Password can not be over 128 letters long.",
+            },
+        },
+    };
 
     return (
         <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
@@ -103,33 +102,40 @@ const SignInForm = ({onSubmit, authStateHooks, formStateHooks}) => {
                 inputRef={register(validationSchemas.password)}
                 error={errors.password !== undefined}
                 helperText={errors?.password?.message}
-                InputProps={{ endAdornment: (
-                    <InputAdornment position="end">
-                        <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={() => setPasswordHidden(!isPasswordHidden)}
-                            onMouseDown={e => e.preventDefault()}
-                        >
-                        {isPasswordHidden ? <VisibilityOff/> : <Visibility/>}
-                        </IconButton>
-                    </InputAdornment>
-                    )
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={() =>
+                                    setPasswordHidden(!isPasswordHidden)
+                                }
+                                onMouseDown={(e) => e.preventDefault()}
+                            >
+                                {isPasswordHidden ? (
+                                    <VisibilityOff />
+                                ) : (
+                                    <Visibility />
+                                )}
+                            </IconButton>
+                        </InputAdornment>
+                    ),
                 }}
             />
             <FormControlLabel
-                control={<Checkbox value="remember" color="primary"/>}
+                control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
             />
-            { submitError && 
+            {submitError && (
                 <Typography className={classes.submitErrorMessage}>
                     {submitError}
                 </Typography>
-            }
-            { submitSuccess && 
+            )}
+            {submitSuccess && (
                 <Typography className={classes.successMessage}>
                     {submitSuccess}
                 </Typography>
-            }
+            )}
             <div className={classes.wrapper}>
                 <Button
                     type="submit"
@@ -141,22 +147,25 @@ const SignInForm = ({onSubmit, authStateHooks, formStateHooks}) => {
                 >
                     Sign In
                 </Button>
-                { isLoading && 
-                    <CircularProgress size={24} className={classes.buttonProgress}/>
-                }
+                {isLoading && (
+                    <CircularProgress
+                        size={24}
+                        className={classes.buttonProgress}
+                    />
+                )}
             </div>
             <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                      Forgot password?
-                </Link>
-              </Grid>
+                <Grid item xs>
+                    <Link href="#" variant="body2">
+                        Forgot password?
+                    </Link>
+                </Grid>
                 <Grid item>
                     <Link variant="body2" component={RouterLink} to="/signup">
                         Don't have an account? Sign Up
                     </Link>
                 </Grid>
-            </Grid> 
+            </Grid>
         </form>
     );
 };

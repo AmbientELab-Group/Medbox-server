@@ -5,119 +5,110 @@ import DeviceCard from "../components/DeviceCard";
 const boxes = [
     {
         id: "1",
-        name: "Box123456789qwertyuiop",
+        name: "Dozownik Janiny",
         state: {
             isOn: true,
-            lastSeen: Date.now()
+            lastSeen: Date.now(),
         },
-        owner: "Bob",
+        owner: "Janina",
         fill: 20,
         medicines: [
-            { 
-                name: "Medicine X",
-                doseAmount: 12
+            {
+                name: "Allosol",
+                doseAmount: 12,
             },
-            { 
-                name: "Medicine Y",
-                doseAmount: 4
+            {
+                name: "Sensistar",
+                doseAmount: 4,
             },
-            { 
-                name: "Medicine Z",
-                doseAmount: 25
-            }
+            {
+                name: "Invalin",
+                doseAmount: 25,
+            },
         ],
         containers: [
             {
-                id: 1
+                id: 0,
+                position: 0,
+                capacity: 8,
+                chambers: [],
             },
             {
-                id: 2
+                id: 1,
+                position: 1,
+                capacity: 16,
             },
             {
-                id: 3
-            }
+                id: 2,
+                position: 2,
+            },
         ],
     },
-    {   
+    {
         id: "2",
-        name: "Box2",
+        name: "Dozownik Henryka",
         state: {
             isOn: false,
-            lastSeen: Date.now()
+            lastSeen: Date.now(),
         },
-        owner: "Jack",
+        owner: "Henryk",
         fill: 50,
         medicines: [
-            { 
-                name: "Medicine X",
-                doseAmount: 12
+            {
+                name: "Allosol",
+                doseAmount: 12,
             },
-            { 
-                name: "Medicine Y",
-                doseAmount: 4
+            {
+                name: "Sensistar",
+                doseAmount: 4,
             },
-            { 
-                name: "Medicine Z",
-                doseAmount: 25
-            }
+            {
+                name: "Invalin",
+                doseAmount: 25,
+            },
         ],
         containers: [
             {
-                id: 1
+                id: 0,
+                position: 0,
             },
-            {
-                id: 2
-            },
-            {
-                id: 3
-            }
         ],
     },
     {
         id: "3",
-        name: "Box3",
+        name: "Dozownik Stefanii",
         state: {
             isOn: false,
-            lastSeen: Date.now()
+            lastSeen: Date.now(),
         },
-        owner: "Karen",
+        owner: "Stefania",
         fill: 80,
         medicines: [
-            { 
-                name: "Medicine X",
-                doseAmount: 12
+            {
+                name: "Allosol",
+                doseAmount: 12,
             },
-            { 
-                name: "Medicine Y",
-                doseAmount: 4
+            {
+                name: "Sensistar",
+                doseAmount: 4,
             },
-            { 
-                name: "Medicine Z",
-                doseAmount: 25
-            }
+            {
+                name: "Invalin",
+                doseAmount: 25,
+            },
         ],
-        containers: [
-            {
-                id: 1
-            },
-            {
-                id: 2
-            },
-            {
-                id: 3
-            }
-        ],
-    }
+        containers: [],
+    },
 ];
 
-const DevicesView = ({devices}) => (
+const DevicesView = ({ devices }) => (
     <Grid container spacing={3}>
         {console.log(devices[0])}
-        { boxes.map(box => (
+        {boxes.map((box) => (
             <Grid key={box.id} item xs={12}>
-                <DeviceCard device={box}/>
+                <DeviceCard device={box} />
             </Grid>
-        )) }
+        ))}
     </Grid>
 );
 

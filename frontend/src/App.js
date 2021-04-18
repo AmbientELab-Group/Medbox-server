@@ -3,18 +3,18 @@ import {
     Switch,
     Route,
     BrowserRouter as Router,
-    Redirect
+    Redirect,
 } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import HomeView from "./views/HomeView";
 import SignInView from "./views/SignInView";
-import SignUpView from	"./views/SignUpView";
+import SignUpView from "./views/SignUpView";
 import ProtectedRoute from "./components/ProtectedRoute";
 const ProtectedLayout = lazy(async () => {
     const [moduleExports] = await Promise.all([
         import("./views/ProtectedLayout"),
-        new Promise(resolve => setTimeout(resolve, 500))
+        new Promise((resolve) => setTimeout(resolve, 500)),
     ]);
     return moduleExports;
 });
@@ -25,39 +25,41 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-      }
+    },
 }));
 
-const App = props => {
+const App = (props) => {
     const classes = useStyles();
 
     return (
         <Router>
-            <Suspense fallback={
-                <div className={classes.suspenseWrapper}>
-                    <CircularProgress
-                        variant="indeterminate"
-                        size={80}
-                        thickness={4}
-                    />
-                </div>
-            }>
+            <Suspense
+                fallback={
+                    <div className={classes.suspenseWrapper}>
+                        <CircularProgress
+                            variant="indeterminate"
+                            size={80}
+                            thickness={4}
+                        />
+                    </div>
+                }
+            >
                 <Switch>
                     <Route path="/" exact>
-                        <HomeView/>
+                        <HomeView />
                     </Route>
                     <ProtectedRoute path="/dashboard" redirectPath="/signin">
-                        <ProtectedLayout/>
+                        <ProtectedLayout />
                     </ProtectedRoute>
-                    <Route path="/signin" component={SignInView}/>
-                    <Route path="/signup" component={SignUpView}/>
+                    <Route path="/signin" component={SignInView} />
+                    <Route path="/signup" component={SignUpView} />
                     <Route path="*">
-                        <Redirect to="/"/>
+                        <Redirect to="/" />
                     </Route>
                 </Switch>
             </Suspense>
         </Router>
-    )
+    );
 };
 
 export default App;

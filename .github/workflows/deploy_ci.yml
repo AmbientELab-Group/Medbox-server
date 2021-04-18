@@ -1,0 +1,30 @@
+name: Build and Deploy
+
+on: workflow_dispatch
+
+jobs:
+  Build:
+    runs-on: ubuntu-20.04
+    env:
+      DOCKER_AUTH: ${{ secrets.DOCKER_AUTH }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Authenticate
+        run: |
+          echo ${DOCKER_AUTH} | base64 -d | docker login -u _json_key --password-stdin https://eu.gcr.io
+      - name: Build backend
+        run: |
+          docker build -t eu.gcr.io/flowing-access-311114/medbox_backend-server:${GITHUB_RUN_ID} -f ./backend/Dockerfile.prod ./backend/
+          docker push eu.gcr.io/flowing-access-311114/medbox_backend-server:${GITHUB_RUN_ID}
+      - name: Build frontend
+        run: |
+          docker build -t eu.gcr.io/flowing-access-311114/medbox_frontend-server:${GITHUB_RUN_ID} -f ./frontend/Dockerfile.prod ./frontend/
+          docker push eu.gcr.io/flowing-access-311114/medbox_frontend-server:${GITHUB_RUN_ID}
+  Deploy:
+    runs-on: self-hosted
+    needs: Build
+    steps:
+    - uses: actions/checkout@v2
+    - name: test 
+      run: |
+        echo ${GITHUB_RUN_ID}

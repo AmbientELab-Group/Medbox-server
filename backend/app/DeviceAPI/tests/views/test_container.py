@@ -45,7 +45,6 @@ class ContainerViewTestCase(APITestCase):
             capacity=20
         )
 
-
         self.containers = []
 
         for position in range(3):
@@ -246,6 +245,8 @@ class ContainerViewTestCase(APITestCase):
 
         expected_containers = []
 
+        expected_containers.append(OrderedDict(expected_data))
+
         for pos in range(2):
             expected_containers.append(
                 OrderedDict(
@@ -257,7 +258,6 @@ class ContainerViewTestCase(APITestCase):
                     fill_status=self.additional_containers[pos].fill_status
                 )
             )
-        expected_containers.append(OrderedDict(expected_data))
 
         response = self.client.put(
             self.containers_url + f"/{self.containers[0].uuid}",

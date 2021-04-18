@@ -10,72 +10,70 @@ const boxes = [
         name: "Box123456789qwertyuiop",
         state: {
             isOn: true,
-            lastSeen: Date.now()
+            lastSeen: Date.now(),
         },
-        owner: "Bob",
+        owner: "Jan",
         fill: 20,
         medicines: [
-            { 
-                name: "Medicine X",
-                doseAmount: 12
+            {
+                name: "Allosol",
+                doseAmount: 12,
             },
-            { 
-                name: "Medicine Y",
-                doseAmount: 4
+            {
+                name: "Sensistar",
+                doseAmount: 4,
             },
-            { 
-                name: "Medicine Z",
-                doseAmount: 25
-            }
+            {
+                name: "Invalin",
+                doseAmount: 25,
+            },
         ],
         containers: [
             {
                 id: 0,
                 position: 0,
                 capacity: 8,
-                chambers: [
-                    
-                ]
+                chambers: [],
             },
             {
                 id: 1,
                 position: 1,
-                capacity: 16
+                capacity: 16,
             },
             {
                 id: 2,
-                position: 2
-            }
+                position: 2,
+            },
         ],
     },
-    {   
+    {
         id: "2",
         name: "Box2",
         state: {
             isOn: false,
-            lastSeen: Date.now()
+            lastSeen: Date.now(),
         },
-        owner: "Jack",
+        owner: "Tadeusz",
         fill: 50,
         medicines: [
-            { 
-                name: "Medicine X",
-                doseAmount: 12
+            {
+                name: "Allosol",
+                doseAmount: 12,
             },
-            { 
-                name: "Medicine Y",
-                doseAmount: 4
+            {
+                name: "Sensistar",
+                doseAmount: 4,
             },
-            { 
-                name: "Medicine Z",
-                doseAmount: 25
-            }
+            {
+                name: "Invalin",
+                doseAmount: 25,
+            },
         ],
         containers: [
             {
                 id: 0,
-                position: 0
-            }
+                position: 0,
+            },
         ],
     },
     {
@@ -83,39 +81,39 @@ const boxes = [
         name: "Box3",
         state: {
             isOn: false,
-            lastSeen: Date.now()
+            lastSeen: Date.now(),
         },
-        owner: "Karen",
+        owner: "Ilona",
         fill: 80,
         medicines: [
-            { 
-                name: "Medicine X",
-                doseAmount: 12
+            {
+                name: "Allosol",
+                doseAmount: 12,
             },
-            { 
-                name: "Medicine Y",
-                doseAmount: 4
+            {
+                name: "Sensistar",
+                doseAmount: 4,
             },
-            { 
-                name: "Medicine Z",
-                doseAmount: 25
-            }
+            {
+                name: "Invalin",
+                doseAmount: 25,
+            },
         ],
         containers: [],
-    }
+    },
 ];
 
 const SingleDeviceView = () => {
     const { id } = useParams();
-    const device = boxes.find((box)=>box.id===id);
+    const device = boxes.find((box) => box.id === id);
 
     return (
         <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={6}>
-                <DeviceInfoCard device={device}/>
+                <DeviceInfoCard device={device} />
             </Grid>
             <Grid item xs={12} md={6} lg={6}>
-                <DeviceContainerInfo device={device}/>
+                <DeviceContainerInfo device={device} />
             </Grid>
         </Grid>
     );

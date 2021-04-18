@@ -22,12 +22,12 @@ const createAuthProvider = () => {
             baseURL: API_URL,
             timeout: 1000,
             headers: {
-                "Authorization": `Bearer ${token}`
-            }
+                Authorization: `Bearer ${token}`,
+            },
         });
 
         return axiosInstance;
-    }
+    };
 
     const useAuth = () => {
         const [isLogged, setIsLogged] = useState(tokenProvider.isLoggedIn());
@@ -41,7 +41,7 @@ const createAuthProvider = () => {
 
             return () => {
                 tokenProvider.unsubscribe(listener);
-            }
+            };
         }, []);
 
         return [isLogged];
@@ -54,12 +54,14 @@ const createAuthProvider = () => {
         if (!isAuthenticated) {
             logout();
         }
-    }
+    };
 
     const updateUserInfo = async () => {
         const token = await tokenProvider.getAccessToken();
         const jwt = JSON.parse(atob(token.split(".")[1]));
-        const { data } = await (await authFetch()).get(`/account/users/${jwt.user_id}`);
+        const { data } = await (await authFetch()).get(
+            `/account/users/${jwt.user_id}`
+        );
         tokenProvider.setUserInfo(data);
     };
 
@@ -69,8 +71,15 @@ const createAuthProvider = () => {
         checkAuth,
         getUserInfo,
         login,
-        logout
-    }
-}
+        logout,
+    };
+};
 
-export const {useAuth, authFetch, checkAuth, getUserInfo, login, logout} = createAuthProvider();
+export const {
+    useAuth,
+    authFetch,
+    checkAuth,
+    getUserInfo,
+    login,
+    logout,
+} = createAuthProvider();

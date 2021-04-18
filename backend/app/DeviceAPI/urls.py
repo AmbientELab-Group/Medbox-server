@@ -13,6 +13,10 @@ from DeviceAPI.views import (
     DebugLogView,
     ListDeviceVersions,
     ListContainerVersions,
+    ChamberList,
+    ChamberDetail,
+    DoseListCreateView,
+    DoseDetailView,
 )
 
 urlpatterns = [
@@ -24,8 +28,12 @@ urlpatterns = [
     path("devices/pairing/confirm/", PairingConfirm.as_view()),
     path("pairing/verify/<pk>", PairingVerify.as_view()),
     path("telemetry", TelemetryLogView.as_view()),
-    path("pairing/checkPairingCode",PairingCodeCheck.as_view()),
+    path("pairing/checkPairingCode", PairingCodeCheck.as_view()),
     path("debug/logs", DebugLogView.as_view()),
     path("versions/device", ListDeviceVersions.as_view()),
     path("versions/container", ListContainerVersions.as_view()),
+    path("chambers", ChamberList.as_view()),
+    path("chambers/<uuid:pk>", ChamberDetail.as_view()),
+    path("doses/", DoseListCreateView.as_view()),
+    path("doses/<uuid:pk>", DoseDetailView.as_view())
 ]
