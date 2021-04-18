@@ -28,7 +28,7 @@ class DoseListCreateView(generics.ListCreateAPIView):
             Q(chamber__container__device__in=user.supervised_devices.all())
         )
         return managed_doses
-    
+
     def list(self, request):
         """
         This endpoint returns all owned or managed doses for authenticated
@@ -40,13 +40,13 @@ class DoseListCreateView(generics.ListCreateAPIView):
 
         if chamber_UUID is not None:
             requested_doses = doses.filter(chamber__uuid=chamber_UUID)
-        
+
             if not requested_doses:
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
             serializer = self.get_serializer(requested_doses, many=True)
         return Response(serializer.data)
-    
+
     def create(self, request):
         """
         This endpoint allows to create new doses.
@@ -60,12 +60,13 @@ class DoseListCreateView(generics.ListCreateAPIView):
 
         if not chamber or not treatment or not medicine:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
+
+
 class DoseDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     This is a view for managing a single dose (retrieve, update, destroy)
