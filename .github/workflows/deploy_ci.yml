@@ -22,6 +22,7 @@ jobs:
           docker push eu.gcr.io/flowing-access-311114/medbox_frontend-server:${GITHUB_RUN_ID}
   Deploy:
     runs-on: self-hosted
+    needs: Build
     steps:
     - uses: actions/checkout@v2
     - name: test 
