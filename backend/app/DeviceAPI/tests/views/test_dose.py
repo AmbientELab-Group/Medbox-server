@@ -1,6 +1,8 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+import datetime
 from rest_framework_simplejwt.tokens import RefreshToken
 from DeviceAPI.models import (
     Dose,
@@ -18,7 +20,7 @@ from collections import OrderedDict
 
 class DoseViewTestCase(APITestCase):
     doses_url = "/api/doses/"
-
+    date_time = datetime.datetime.now() + datetime.timedelta(days=1)
     def setUp(self):
         self.owner = get_user_model().objects.create(
             email="testemail@test.com",
@@ -77,7 +79,7 @@ class DoseViewTestCase(APITestCase):
                     treatment=self.treatment,
                     chamber=Chamber.objects.filter(container=self.container.uuid).first(),
                     medicine=self.medicine,
-                    planned_administration_time="2021-04-18T12:12:10.612000Z",
+                    planned_administration_time=self.date_time.isoformat()+'Z',
                     number_of_pills=2.0,
                     on_demand=True
                 )
@@ -89,7 +91,7 @@ class DoseViewTestCase(APITestCase):
                     treatment=self.treatment,
                     chamber=Chamber.objects.filter(container=self.additional_container.uuid).first(),
                     medicine=self.additional_medicine,
-                    planned_administration_time="2021-04-20T12:12:10.612000Z",
+                    planned_administration_time=self.date_time.isoformat()+'Z',
                     number_of_pills=2.0,
                     on_demand=True
                 )
@@ -148,7 +150,7 @@ class DoseViewTestCase(APITestCase):
             "treatment": self.treatment.uuid,
             "chamber": self.additional_doses[0].chamber.uuid,
             "medicine": self.medicine.uuid,
-            "planned_administration_time": "2021-04-18T12:12:10.612000Z",
+            "planned_administration_time": self.date_time.isoformat()+'Z',
             "number_of_pills": 3.0,
             "on_demand": True,
         }
@@ -165,7 +167,7 @@ class DoseViewTestCase(APITestCase):
             treatment=UUID(str(self.treatment.uuid)),
             chamber=Chamber.objects.filter(container=self.container.uuid).first().uuid,
             medicine=self.medicine.uuid,
-            planned_administration_time="2021-04-18T12:12:10.612000Z",
+            planned_administration_time=self.date_time.isoformat()+'Z',
             number_of_pills=2.0,
             on_demand=True
         )
@@ -173,7 +175,7 @@ class DoseViewTestCase(APITestCase):
             treatment=UUID(str(self.treatment.uuid)),
             chamber=Chamber.objects.filter(container=self.container.uuid).first().uuid,
             medicine=self.medicine.uuid,
-            planned_administration_time="2021-04-18T12:12:10.612000Z",
+            planned_administration_time=self.date_time.isoformat()+'Z',
             number_of_pills=2.0,
             on_demand=True
         )
