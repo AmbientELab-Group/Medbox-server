@@ -25,6 +25,12 @@ jobs:
     needs: Build
     steps:
     - uses: actions/checkout@v2
+    - name: Substitute envs
+      run: |
+        envsubst < "docker-compose.prod.yml" > docker-compose.final.yml
+    - name: Authenticate
+      run: |
+        echo ${DOCKER_AUTH} | base64 -d | docker login -u _json_key --password-stdin https://eu.gcr.io
     - name: test 
       run: |
-        echo ${GITHUB_RUN_ID}
+        docker-compose -f docker-compose.final.yml up
