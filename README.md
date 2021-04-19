@@ -1,6 +1,4 @@
-[![Django Tests](https://github.com/UbiCOMP-Group/Medbox-server/actions/workflows/tests.yml/badge.svg)](https://github.com/UbiCOMP-Group/Medbox-server/actions/workflows/tests.yml)
-[![Build application](https://github.com/UbiCOMP-Group/Medbox-server/actions/workflows/dev-build.yml/badge.svg)](https://github.com/UbiCOMP-Group/Medbox-server/actions/workflows/dev-build.yml)
-
+[![Django Tests](https://github.com/UbiCOMP-Group/Medbox-server/actions/workflows/github-ci.yml/badge.svg?branch=dev)](https://github.com/UbiCOMP-Group/Medbox-server/actions/workflows/github-ci.yml)
 
 # Medbox Server Side Software
 
