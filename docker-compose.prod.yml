@@ -13,7 +13,7 @@ services:
 
     medbox-backend_server:    
         image: eu.gcr.io/flowing-access-311114/medbox_backend-server:${GITHUB_RUN_ID}
-        container_name: medbox-backend_server
+        container_name: medbox-backend_server_prod
         environment: 
             - DEBUG=on
             - SECRET_KEY=${SECRET_KEY}
@@ -26,15 +26,15 @@ services:
             - DJANGO_SUPERUSER_PASSWORD=superpassword
         command: python manage.py runserver 0.0.0.0:8000
         depends_on:
-            - medbox-database_server_prod
+            - medbox-database_server
         ports:
             - "8000:8000"
             
     medbox-frontend_server:
         image: eu.gcr.io/flowing-access-311114/medbox_frontend-server:${GITHUB_RUN_ID}
-        container_name: medbox-frontend_server
+        container_name: medbox-frontend_server_prod
         depends_on:
-            - medbox-backend_server_prod
+            - medbox-backend_server
     
         ports:
             - 80:80
