@@ -13,7 +13,7 @@ services:
 
     medbox-backend_server:    
         image: eu.gcr.io/flowing-access-311114/medbox_backend-server:${GITHUB_RUN_ID}
-        container_name: medbox-backend_server_prod
+        container_name: medbox-backend_server
         environment: 
             - DEBUG=on
             - SECRET_KEY=${SECRET_KEY}
@@ -32,7 +32,7 @@ services:
             
     medbox-frontend_server:
         image: eu.gcr.io/flowing-access-311114/medbox_frontend-server:${GITHUB_RUN_ID}
-        container_name: medbox-frontend_server_prod
+        container_name: medbox-frontend_server
         depends_on:
             - medbox-backend_server_prod
     
