@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-    medbox-datasbase_server:
+    medbox-database_server:
         image: postgres:13.2
         container_name: medbox-database_server_prod
         environment:
