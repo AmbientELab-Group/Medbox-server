@@ -20,7 +20,7 @@ services:
             - DB_USER=postgres
             - DB_PASSWORD=postgres
             - DB_NAME=mainDB
-            - DB_HOST=medbox-database_server_prod
+            - DB_HOST=medbox-database_server
             - DB_PORT=5432
             - DJANGO_SUPERUSER_EMAIL=superemail@gmail.com
             - DJANGO_SUPERUSER_PASSWORD=superpassword
