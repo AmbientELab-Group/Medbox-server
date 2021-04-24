@@ -25,6 +25,8 @@ services:
             - DJANGO_SUPERUSER_EMAIL=superemail@gmail.com
             - DJANGO_SUPERUSER_PASSWORD=superpassword
         command: python manage.py runserver 0.0.0.0:8000
+        volumes:
+            - ./backend/app/:/usr/src/app/
         depends_on:
             - medbox-database_server
         ports:
@@ -33,6 +35,9 @@ services:
     medbox-frontend_server:
         image: eu.gcr.io/flowing-access-311114/medbox_frontend-server:${GITHUB_RUN_ID}
         container_name: medbox-frontend_server_prod
+        volumes:
+            - './frontend/:/app'
+            - '/app/node_modules'
         depends_on:
             - medbox-backend_server
     
