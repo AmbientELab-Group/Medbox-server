@@ -28,6 +28,7 @@ jobs:
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       DOCKER_AUTH: ${{ secrets.DOCKER_AUTH }}
+    needs: Build
     steps:
     - uses: actions/checkout@v2
     - name: Substitute envs
