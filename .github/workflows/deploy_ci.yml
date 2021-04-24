@@ -39,4 +39,4 @@ jobs:
         echo ${DOCKER_AUTH} | base64 -d | docker login -u _json_key --password-stdin https://eu.gcr.io
     - name: Start project 
       run: |
-        docker-compose -f docker-compose.final.yml up
+        docker-compose -d -f docker-compose.final.yml up
