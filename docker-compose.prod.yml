@@ -17,8 +17,8 @@ services:
         environment: 
             - DEBUG=on
             - SECRET_KEY=${SECRET_KEY}
-            - DB_USER=postgres
-            - DB_PASSWORD=postgres
+            - DB_USER=${POSTGRES_USER}
+            - DB_PASSWORD=${POSTGRES_PASSWORD}
             - DB_NAME=mainDB
             - DB_HOST=medbox-database_server
             - DB_PORT=5432
