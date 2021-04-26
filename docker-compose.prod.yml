@@ -35,11 +35,12 @@ services:
     medbox-frontend_server:
         image: eu.gcr.io/flowing-access-311114/medbox_frontend-server:${GITHUB_RUN_ID}
         container_name: medbox-frontend_server_prod
+        environment:
+            - REACT_APP_API_URL=http://34.118.83.186:8000/api
         volumes:
             - './frontend/:/app'
             - '/app/node_modules'
         depends_on:
             - medbox-backend_server
-    
         ports:
             - 80:80
