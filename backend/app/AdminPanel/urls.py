@@ -10,7 +10,9 @@ urlpatterns = [
     path("users/<uuid:pk>", UserViews.user_info),
     path("signup", UserViews.sign_up_view),
     path("signin", TokenObtainPairView.as_view()),
+    path("email-verify/", UserViews.verify_email),
     # JWT api
     path("token/refresh", TokenRefreshView.as_view()),
     path("token/verify", TokenVerifyView.as_view()),
+
 ]
