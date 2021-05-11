@@ -13,13 +13,15 @@ import SignInForm from "../components/SignInForm";
 import { useForm } from "react-hook-form";
 import { login } from "../contexts/authProvider";
 import { publicAccountFetch } from "../api/publicFetch";
+import background from "../assets/img/Sign_in.png";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         height: "100vh",
     },
     image: {
-        backgroundImage: "url(https://source.unsplash.com/random)",
+        backgroundImage: `url(${background})`,
         backgroundRepeat: "no-repeat",
         backgroundColor:
             theme.palette.type === "light"
@@ -27,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
                 : theme.palette.grey[900],
         backgroundSize: "cover",
         backgroundPosition: "center",
+        [theme.breakpoints.up("md")]: {
+            backgroundSize: "contain",
+        },
     },
     paper: {
         margin: theme.spacing(8, 4),
@@ -48,6 +53,7 @@ const SignInView = () => {
     const [isLoading, setLoading] = useState(false);
     const [connectionError, setConnectionError] = useState(false);
     const history = useHistory();
+    const { t } = useTranslation("account");
 
     const onSubmit = async (credentials) => {
         try {
@@ -58,7 +64,7 @@ const SignInView = () => {
             );
 
             login(data);
-            setSubmitSuccess("Authentication successful!");
+            setSubmitSuccess(t("successMessage"));
             setSubmitError("");
             setTimeout(async () => {
                 history.push("/dashboard");
@@ -72,11 +78,13 @@ const SignInView = () => {
                 setSubmitError(data.detail);
                 setSubmitSuccess("");
             } else if (error.request) {
-                console.log("error request");
+                console.log("Request error:");
                 console.error(JSON.stringify(error));
                 setConnectionError(true);
             } else {
-                console.error("Uhh ohh! Something went a bit sideways...");
+                setSubmitError(t("fatalError"));
+                setSubmitSuccess("");
+                console.error("Fatal error:");
                 console.error(error);
             }
         }
@@ -85,7 +93,7 @@ const SignInView = () => {
     return (
         <Grid container component="main" className={classes.root}>
             <ErrorSnack error={connectionError} setError={setConnectionError}>
-                Please check your internet connection and try again...
+                {t("connectionError")}
             </ErrorSnack>
             <Grid item xs={false} sm={4} md={7} className={classes.image} />
             <Grid
@@ -102,7 +110,7 @@ const SignInView = () => {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h3">
-                        Sign in
+                        {t("signIn")}
                     </Typography>
                     <SignInForm
                         onSubmit={onSubmit}

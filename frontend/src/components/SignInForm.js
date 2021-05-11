@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -13,6 +12,8 @@ import Typography from "@material-ui/core/Typography";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import PrimaryButton from "./PrimaryButton";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -47,29 +48,24 @@ const SignInForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
     const { register, handleSubmit, errors } = formStateHooks;
     const classes = useStyles();
     const [isPasswordHidden, setPasswordHidden] = useState(true);
+    const { t } = useTranslation("account");
 
     const validationSchemas = {
         email: {
-            required: "Email is required.",
-            maxLength: {
-                value: 128,
-                message: "Email can not be over 128 letters long.",
-            },
+            required: t("formValidation.required", {
+                field: t("formFields.email"),
+            }),
             pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Please enter a valid email address",
+                message: t("formValidation.invalid", {
+                    field: t("formFields.email"),
+                }),
             },
         },
         password: {
-            required: "Password is required.",
-            minLength: {
-                value: 8,
-                message: "Password can not be shorter than 8 letters.",
-            },
-            maxLength: {
-                value: 128,
-                message: "Password can not be over 128 letters long.",
-            },
+            required: t("formValidation.required", {
+                field: t("formFields.password"),
+            }),
         },
     };
 
@@ -81,7 +77,7 @@ const SignInForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label={t("formFields.email")}
                 name="email"
                 autoComplete="email"
                 autoFocus
@@ -95,7 +91,7 @@ const SignInForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label={t("formFields.password")}
                 type={isPasswordHidden ? "password" : "text"}
                 id="password"
                 autoComplete="current-password"
@@ -106,7 +102,7 @@ const SignInForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
                     endAdornment: (
                         <InputAdornment position="end">
                             <IconButton
-                                aria-label="toggle password visibility"
+                                aria-label={t("aria.passwordVisibilityToggle")}
                                 onClick={() =>
                                     setPasswordHidden(!isPasswordHidden)
                                 }
@@ -124,7 +120,7 @@ const SignInForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
             />
             <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
+                label={t("rememberMe")}
             />
             {submitError && (
                 <Typography className={classes.submitErrorMessage}>
@@ -137,16 +133,15 @@ const SignInForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
                 </Typography>
             )}
             <div className={classes.wrapper}>
-                <Button
+                <PrimaryButton
                     type="submit"
                     fullWidth
                     variant="contained"
-                    color="primary"
                     className={classes.submit}
                     disabled={isLoading}
                 >
-                    Sign In
-                </Button>
+                    {t("signIn")}
+                </PrimaryButton>
                 {isLoading && (
                     <CircularProgress
                         size={24}
@@ -157,12 +152,12 @@ const SignInForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
             <Grid container>
                 <Grid item xs>
                     <Link href="#" variant="body2">
-                        Forgot password?
+                        {t("passwordRecoveryLink")}
                     </Link>
                 </Grid>
                 <Grid item>
                     <Link variant="body2" component={RouterLink} to="/signup">
-                        Don't have an account? Sign Up
+                        {t("signUpLink")}
                     </Link>
                 </Grid>
             </Grid>

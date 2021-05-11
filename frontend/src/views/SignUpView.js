@@ -12,6 +12,7 @@ import SignUpForm from "../components/SignUpForm";
 import { login } from "../contexts/authProvider";
 import { publicAccountFetch } from "../api/publicFetch";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -36,6 +37,7 @@ const SignUpView = () => {
     const [isLoading, setLoading] = useState(false);
     const [connectionError, setConnectionError] = useState(false);
     const history = useHistory();
+    const { t } = useTranslation("account");
 
     const onSubmit = async (credentials) => {
         try {
@@ -56,7 +58,7 @@ const SignUpView = () => {
             if (error.response) {
                 const { data } = error.response;
                 console.error(data);
-                setSubmitError("Cannot create account.");
+                setSubmitError(t("createError"));
                 setSubmitSuccess("");
                 if (data) {
                     Object.entries(data).forEach((error) => {
@@ -75,7 +77,9 @@ const SignUpView = () => {
                 console.error(JSON.stringify(error));
                 setConnectionError(true);
             } else {
-                console.error("Uhh ohh! Something went a bit sideways...");
+                setSubmitError(t("fatalError"));
+                setSubmitSuccess("");
+                console.error("Fatal error:");
                 console.error(error);
             }
         }
@@ -84,14 +88,14 @@ const SignUpView = () => {
     return (
         <Container component="main" maxWidth="xs">
             <ErrorSnack error={connectionError} setError={setConnectionError}>
-                Please check your internet connection and try again...
+                {t("connectionError")}
             </ErrorSnack>
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h3">
-                    Sign up
+                    {t("signUp")}
                 </Typography>
                 <SignUpForm
                     onSubmit={onSubmit}

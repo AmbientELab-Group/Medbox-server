@@ -11,6 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -45,48 +46,77 @@ const SignUpForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
     const { register, handleSubmit, errors, getValues } = formStateHooks;
     const classes = useStyles();
     const [isPasswordHidden, setPasswordHidden] = useState(true);
+    const { t } = useTranslation("account");
 
     const validationSchemas = {
         first_name: {
-            required: "First name is required.",
+            required: t("formValidation.required", {
+                field: t("formFields.firstName"),
+            }),
             maxLength: {
                 value: 30,
-                message: "First name can not be over 30 letters long.",
+                message: t("formValidation.tooLong", {
+                    value: 30,
+                    field: t("formFields.firstName"),
+                }),
             },
         },
         last_name: {
-            required: "Last name is required.",
+            required: t("formValidation.required", {
+                field: t("formFields.lastName"),
+            }),
             maxLength: {
                 value: 150,
-                message: "Last name can not be over 150 letters long.",
+                message: t("formValidation.tooLong", {
+                    value: 150,
+                    field: t("formFields.lastName"),
+                }),
             },
         },
         email: {
-            required: "Email is required.",
+            required: t("formValidation.required", {
+                field: t("formFields.email"),
+            }),
             maxLength: {
                 value: 128,
-                message: "Email can not be over 128 letters long.",
+                message: t("formValidation.tooLong", {
+                    value: 128,
+                    field: t("formFields.email"),
+                }),
             },
             pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Please enter a valid email address",
+                message: t("formValidation.invalid", {
+                    field: t("formFields.email"),
+                }),
             },
         },
         password: {
-            required: "Password is required.",
+            required: t("formValidation.required", {
+                field: t("formFields.password"),
+            }),
             minLength: {
                 value: 8,
-                message: "Password can not be shorter than 8 letters.",
+                message: t("formValidation.tooShort", {
+                    value: 8,
+                    field: t("formFields.password"),
+                }),
             },
             maxLength: {
                 value: 128,
-                message: "Password can not be over 128 letters long.",
+                message: t("formValidation.tooLong", {
+                    value: 128,
+                    field: t("formFields.password"),
+                }),
             },
         },
         password2: {
-            required: "Confirmation is required.",
+            required: t("formValidation.required", {
+                field: t("formFields.passwordConfirm"),
+            }),
             validate: (value) =>
-                value === getValues("password") || "Passwords must match.",
+                value === getValues("password") ||
+                t("formValidation.passwordMatch"),
         },
     };
 
@@ -101,7 +131,7 @@ const SignUpForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
                         required
                         fullWidth
                         id="first_name"
-                        label="First Name"
+                        label={t("formFields.firstName")}
                         autoFocus
                         inputRef={register(validationSchemas.first_name)}
                         error={errors.first_name !== undefined}
@@ -114,7 +144,7 @@ const SignUpForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
                         required
                         fullWidth
                         id="last_name"
-                        label="Last Name"
+                        label={t("formFields.lastName")}
                         name="last_name"
                         autoComplete="lname"
                         inputRef={register(validationSchemas.last_name)}
@@ -128,7 +158,7 @@ const SignUpForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
                         required
                         fullWidth
                         id="email"
-                        label="Email Address"
+                        label={t("formFields.email")}
                         name="email"
                         autoComplete="email"
                         inputRef={register(validationSchemas.email)}
@@ -142,7 +172,7 @@ const SignUpForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
                         required
                         fullWidth
                         name="password"
-                        label="Password"
+                        label={t("formFields.password")}
                         type={isPasswordHidden ? "password" : "text"}
                         id="password"
                         autoComplete="new-password"
@@ -153,7 +183,9 @@ const SignUpForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
                             endAdornment: (
                                 <InputAdornment position="end">
                                     <IconButton
-                                        aria-label="toggle password visibility"
+                                        aria-label={t(
+                                            "aria.passwordVisibilityToggle"
+                                        )}
                                         onClick={() =>
                                             setPasswordHidden(!isPasswordHidden)
                                         }
@@ -176,7 +208,7 @@ const SignUpForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
                         required
                         fullWidth
                         name="password2"
-                        label="Confirm Password"
+                        label={t("formFields.passwordConfirm")}
                         type={isPasswordHidden ? "password" : "text"}
                         id="password2"
                         autoComplete="new-password"
@@ -187,7 +219,9 @@ const SignUpForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
                             endAdornment: (
                                 <InputAdornment position="end">
                                     <IconButton
-                                        aria-label="toggle password visibility"
+                                        aria-label={t(
+                                            "aria.passwordVisibilityToggle"
+                                        )}
                                         onClick={() =>
                                             setPasswordHidden(!isPasswordHidden)
                                         }
@@ -223,7 +257,7 @@ const SignUpForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
                     color="primary"
                     className={classes.submit}
                 >
-                    Sign Up
+                    {t("signUp")}
                 </Button>
                 {isLoading && (
                     <CircularProgress
@@ -235,7 +269,7 @@ const SignUpForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
             <Grid container justify="flex-end">
                 <Grid item>
                     <Link variant="body2" component={RouterLink} to="/signin">
-                        Already have an account? Sign in
+                        {t("signInLink")}
                     </Link>
                 </Grid>
             </Grid>
