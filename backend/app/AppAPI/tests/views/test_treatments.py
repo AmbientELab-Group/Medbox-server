@@ -1,4 +1,3 @@
-
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.contrib.auth import get_user_model
@@ -12,102 +11,139 @@ from collections import OrderedDict
 
 class TreatmentTestCase(APITestCase):
 
-    TreatmentUrl = "/api/treatments"
+    treatment_url = "/api/treatments"
 
     def setUp(self):
 
-        self.user = get_user_model().objects.create(
+        self.owner = get_user_model().objects.create(
             email="testemail@test.com",
             password="testpassword"
         )
 
-        tokens = RefreshToken.for_user(self.user)
+        tokens = RefreshToken.for_user(self.owner)
         self.client.credentials(
-            HTTP_AUTHORIZATION="bearer " + str(tokens.access_token)
+            HTTP_AUTHORIZATION="Bearer " + str(tokens.access_token)
         )
 
-        self.client.credentials(HTTP_AUTHORIZATION="bearer " + str(tokens.access_token))
-        
         self.treatments = []
 
         for i in range(3):
             self.treatments.append(
                 Treatment.objects.create(
-                    associated_user = self.user,
-                    name = "John's treatment",
+                    associated_user = self.owner,
+                    name = "John's treatment" + str(i),
                     beneficiary = "John"
                 )
             )
 
+    
     def test_get_all_treatments(self):
         # get api response
-        response = self.client.get(self.TreatmentUrl)
-        treatments = Treatment.objects.all()
-        serializer = TreatmentSerializer(treatments, many=True)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, serializer.data)
-
-        for treatment in self.treatments:
-
-            self.assertIn(
-                TreatmentSerializer(instance=treatement).data,
-                repsonse.data
+        expected_data = []
+        
+        for pos in range(3):
+            expected_data.append(
+                OrderedDict(
+                    uuid = Treatment.uuid,
+                    associated_user = str(Treatment.associated_user),
+                    name = "peter's treatment",
+                    beneficiary = "peter"
+                    )
             )
+        #print(expected_data)
+        response = self.client.get(self.treatment_url)
+        #print(response.data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_data)
+     
     
     def test_get_single_treatment(self):
-        expected_data = OrderedDict(
-            associated_user = self.treatments[0].associated_user,
-            name = self.treatments[0].name,
-            beneficiary = self.treatments[0].beneficiary
-            )
+       
+        expected_data = {
+            "uuid": str(self.treatments[0].uuid),
+            "associated_user" : self.treatments[0].associated_user,
+            "name" : self.treatments[0].name,
+            "beneficiary" : self.treatments[0].beneficiary
+        }
 
-        response = self.client.get(self.TreatmentUrl + f"{self.treatments[0].uuid}")
+        print(expected_data)
+        print("---------------------------------")
+        response = self.client.get(self.treatment_url + f"?treatment={self.treatments[0].uuid}")
+        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, expect_data)
-        
+        #self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data, expected_data)
+    
     def test_create_treatment(self):
 
         input_data = OrderedDict(
-                associated_user = self.treatments[0].associated_user,
-                name = self.treatments[0].name,
-                beneficiary = self.treatments[0].beneficiary
+                name = "peter's treatment",
+                beneficiary = "peter"
                 )
+        
+        response = self.client.post(
+            self.treatment_url, 
+            input_data,
+            format="json"
+            )
+        
+        test_data = OrderedDict(
+            uuid = Treatment.uuid,
+            associated_user = str(Treatment.associated_user),
+            name = "peter's treatment",
+            beneficiary = "peter"
+        )
+        
+        test_data = {
+            "uuid": str(self.treatments.uuid),
+            "associated_user" : self.treatments.associated_user,
+            "name" : self.treatments.name,
+            "beneficiaary" : self.treatments.beneficiary
+        }
 
-        response = self.client.post(self.TreatmentUrl, input_data)
+        print(response.data)
         self.assertEqual(response.status_code,status.HTTP_201_CREATED)
-        self.assertEqual(response.data, input_data)
+        self.assertEqual(response.data, test_data)
     
     def test_update_treatment(self):
 
-        expected_data = OrderedDict(
-            associated_user = self.treatments[0].associated_user,
-            name = self.treatments[0].name,
-            beneficiary = self.treatments[0].beneficiary
+        test_data = OrderedDict(
+            uuid = Treatment.uuid,
+            associated_user = str(Treatment.associated_user),
+            name = "peter's treatment",
+            beneficiary = "peter"
         )
-
         updated_data = OrderedDict(
-            associated_user = self.treatments[0].associated_user,
-            name = self.treatments[0].name,
-            beneficiary = self.treatments[0].beneficiary
+                name = "peter's treatment",
+                beneficiary = "peter"
         )
 
         response = self.client.put(
-            self.TreatmentUrl + f"{self.treatments[0].uuid}",
-            updated_data
+            self.treatment_url + f"/{self.treatments[0].uuid}",
+            updated_data,
+            format="json"
             )
-
+        print(response)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, updated_data)
-
-   
+        self.assertEqual(response.data, test_data)
+    
+    
     def test_destroy_treatment(self):
-        input_data = OrderedDict(
-            associated_user = self.treatments[0].associated_user,
-            name = self.treatments[0].name,
-            beneficiary = self.treatments[0].beneficiary
-            )
+        test_data = OrderedDict(
+            uuid = Treatment.uuid,
+            associated_user = str(Treatment.associated_user),
+            name = "peter's treatment",
+            beneficiary = "peter"
+        )
 
-        response = self.client.delete(self.TreatmentUrl + f"/{self.treatments[0].uuid}")
+        response = self.client.delete(self.treatment_url + f"/{self.treatments[0].uuid}")
+        print(response)
+        final_treatment = Treatment.objects.filter(
+            uuid = self.treatments[0].uuid
+        )
+        serializer = TreatmentSerializer(final_treatment, many=True)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(treatment.objects.filter(pk=self.treatement.id))
+        self.assertEqual(serializer.data, expected_containers)
+        """

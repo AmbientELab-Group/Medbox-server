@@ -5,6 +5,7 @@ from .views import (
 )
 
 urlpatterns = [
-    path("api/treatments", TreatmentsListCreateView.as_view()),
-    path("api/treatments/<pk>/", TreatmentsDetailView.as_view())
+    path("treatments", TreatmentsListCreateView.as_view()),
+    path("treatments/<pk>/", TreatmentsDetailView.as_view())
 ]
+ 
