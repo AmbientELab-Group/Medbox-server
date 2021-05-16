@@ -74,4 +74,4 @@ class TreatmentsDetailView(APIView):
     def delete(self, request, pk):
         treat = self.get_object(pk)
         treat.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
