@@ -11,7 +11,7 @@ from collections import OrderedDict
 
 class TreatmentTestCase(APITestCase):
 
-    treatment_url = "/api/treatments"
+    treatment_url = "/api/treatments/"
 
     def setUp(self):
 
@@ -24,40 +24,37 @@ class TreatmentTestCase(APITestCase):
         self.client.credentials(
             HTTP_AUTHORIZATION="Bearer " + str(tokens.access_token)
         )
+        
+        self.treatment1 = Treatment.objects.create(
+            associated_user = self.owner,
+            name = "John's treatment",
+            beneficiary = "John"
+        )
 
-        self.treatments = []
-
-        for i in range(3):
-            self.treatments.append(
-                Treatment.objects.create(
-                    associated_user = self.owner,
-                    name = "John's treatment" + str(i),
-                    beneficiary = "John"
-                )
-            )
-
-    
     def test_get_all_treatments(self):
         # get api response
-        expected_data = []
         
-        for pos in range(3):
-            expected_data.append(
-                OrderedDict(
-                    uuid = Treatment.uuid,
-                    associated_user = str(Treatment.associated_user),
-                    name = "peter's treatment",
-                    beneficiary = "peter"
+       
+
+        temp = OrderedDict(
+                    uuid = str(self.treatment1.uuid),
+                    associated_user = UUID(str(self.treatment1.associated_user.uuid)),
+                    name = self.treatment1.name,
+                    beneficiary = self.treatment1.beneficiary
                     )
-            )
-        #print(expected_data)
-        response = self.client.get(self.treatment_url)
-        #print(response.data)
+        
+        #print(temp)
+
+        expected_data = [temp]
+        
+        #print(Treatment.beneficiary) /api/treatments/?beneficiary=benef1
+        response = self.client.get(self.treatment_url, {"beneficiary": self.treatment1.beneficiary})
+        #response = self.client.get("/api/treatments/?beneficiary=John")
+        #print(f"""****\ncode: {response.status_code}\nresponse: {response.data}\n expected: {expected_data}\n****""")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_data)
-     
-    
+"""  
     def test_get_single_treatment(self):
        
         expected_data = {
@@ -74,8 +71,8 @@ class TreatmentTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         #self.assertEqual(len(response.data), 2)
         self.assertEqual(response.data, expected_data)
-    
-    def test_create_treatment(self):
+   
+   def test_create_treatment(self):
 
         input_data = OrderedDict(
                 name = "peter's treatment",
@@ -127,9 +124,8 @@ class TreatmentTestCase(APITestCase):
         print(response)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, test_data)
-    
-    
-    def test_destroy_treatment(self):
+     
+    def test_destroy_treatment(self): 
         test_data = OrderedDict(
             uuid = Treatment.uuid,
             associated_user = str(Treatment.associated_user),
