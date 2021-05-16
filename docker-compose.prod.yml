@@ -1,53 +1,46 @@
 version: '3.8'
 
 services:
-    medbox-datasbase_server:
-        image: postgres
+    medbox-database_server:
+        image: postgres:13.2
         container_name: medbox-database_server_prod
-
         environment:
             - POSTGRES_DB=mainDB
-            - POSTGRES_USER=postgres
-            - POSTGRES_PASSWORD=postgres
-
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
         volumes:
-            - ./_dbData/mainDB:/var/lib/postgresql/data
+            - /home/github/postgres-data:/var/lib/postgresql/data
 
-    medbox-backend_server:
-        build:
-            context: .
-            dockerfile: Dockerfile.prod
-        
-        image: medbox-backend_server_prod
+    medbox-backend_server:    
+        image: eu.gcr.io/flowing-access-311114/medbox_backend-server:${GITHUB_RUN_ID}
         container_name: medbox-backend_server_prod
+        environment: 
+            - DEBUG=on
+            - SECRET_KEY=${SECRET_KEY}
+            - DB_USER=${POSTGRES_USER}
+            - DB_PASSWORD=${POSTGRES_PASSWORD}
+            - DB_NAME=mainDB
+            - DB_HOST=medbox-database_server
+            - DB_PORT=5432
+            - DJANGO_SUPERUSER_EMAIL=superemail@gmail.com
+            - DJANGO_SUPERUSER_PASSWORD=superpassword
         command: python manage.py runserver 0.0.0.0:8000
-        
         volumes:
             - ./backend/app/:/usr/src/app/
-        
         depends_on:
-            - medbox-datasbase_server
-        
+            - medbox-database_server
         ports:
             - "8000:8000"
-        
-        env_file: 
-            - ./backend/app/.env.dev
-
+            
     medbox-frontend_server:
-        build:
-            context: .
-            dockerfile: Dockerfile.prod
-        
-        image: medbox-frontend_server_prod
+        image: eu.gcr.io/flowing-access-311114/medbox_frontend-server:${GITHUB_RUN_ID}
         container_name: medbox-frontend_server_prod
-
+        environment:
+            - REACT_APP_API_URL=http://34.118.83.186:8000/api
         volumes:
             - './frontend/:/app'
             - '/app/node_modules'
-        
         depends_on:
             - medbox-backend_server
-    
         ports:
             - 80:80

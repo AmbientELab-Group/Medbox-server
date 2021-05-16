@@ -20,11 +20,23 @@ jobs:
         run: |
           docker build -t eu.gcr.io/flowing-access-311114/medbox_frontend-server:${GITHUB_RUN_ID} -f ./frontend/Dockerfile.prod ./frontend/
           docker push eu.gcr.io/flowing-access-311114/medbox_frontend-server:${GITHUB_RUN_ID}
+
   Deploy:
     runs-on: self-hosted
+    env:
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      DOCKER_AUTH: ${{ secrets.DOCKER_AUTH }}
     needs: Build
     steps:
     - uses: actions/checkout@v2
-    - name: test 
+    - name: Substitute envs
       run: |
-        echo ${GITHUB_RUN_ID}
+        envsubst  < "docker-compose.prod.yml" > docker-compose.final.yml
+    - name: Authenticate
+      run: |
+        echo ${DOCKER_AUTH} | base64 -d | docker login -u _json_key --password-stdin https://eu.gcr.io
+    - name: Start project 
+      run: |
+        docker-compose -f docker-compose.final.yml up -d
