@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status, generics
+from rest_framework import status
 from AppAPI.models import Treatment
 from AppAPI.serializers import (
     TreatmentSerializer
@@ -29,7 +29,6 @@ class TreatmentsListCreateView(APIView):
         info = self.request.data
         info["associated_user"] = self.request.user.uuid
         serializer = TreatmentSerializer(data=info, many=False)
-        #serializer["associated_user"] = self.request.user
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
