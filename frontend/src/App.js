@@ -7,10 +7,10 @@ import {
 } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import HomeView from "./views/HomeView";
 import SignInView from "./views/SignInView";
 import SignUpView from "./views/SignUpView";
 import ProtectedRoute from "./components/ProtectedRoute";
+
 const ProtectedLayout = lazy(async () => {
     const [moduleExports] = await Promise.all([
         import("./views/ProtectedLayout"),
@@ -28,9 +28,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const App = (props) => {
+const App = () => {
     const classes = useStyles();
-
     return (
         <Router>
             <Suspense
@@ -45,8 +44,8 @@ const App = (props) => {
                 }
             >
                 <Switch>
-                    <Route path="/" exact>
-                        <HomeView />
+                    <Route exact path="/">
+                        <Redirect to="/dashboard" />
                     </Route>
                     <ProtectedRoute path="/dashboard" redirectPath="/signin">
                         <ProtectedLayout />
