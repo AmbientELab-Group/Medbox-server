@@ -21,8 +21,15 @@
     },
     "successMessage": "Sign in successful!",
     "connectionError": "Please check your internet connection and try again...",
+    "authError": "Invalid email and password combination.",
     "fatalError": "Uhh ohh! Something went a bit sideways... Please try again later.",
     "createError": "Can not create an account.",
+    "modal": {
+        "title": "Sign up unavailable",
+        "message": "Sorry, you can not create an account yet. If you are interested in testing our product, leave your email below so we can reach out to you when we finish working on our app.",
+        "cancel": "Cancel",
+        "accept": "Subscribe"
+    },
     "aria": {
         "passwordVisibilityToggle": "Toggle password visibility."
     }

@@ -1,53 +1,40 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import styled from "styled-components";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import { makeStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
-import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
 import Copyright from "../components/Copyright";
 import ErrorSnack from "../components/ErrorSnack";
 import SignInForm from "../components/SignInForm";
-import { useForm } from "react-hook-form";
+import Avatar from "../components/Forms/Avatar";
 import { login } from "../contexts/authProvider";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { publicAccountFetch } from "../api/publicFetch";
 import background from "../assets/img/Sign_in.png";
-import { useTranslation } from "react-i18next";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        height: "100vh",
-    },
-    image: {
-        backgroundImage: `url(${background})`,
-        backgroundRepeat: "no-repeat",
-        backgroundColor:
-            theme.palette.type === "light"
-                ? theme.palette.grey[50]
-                : theme.palette.grey[900],
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        [theme.breakpoints.up("md")]: {
-            backgroundSize: "contain",
-        },
-    },
-    paper: {
-        margin: theme.spacing(8, 4),
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
-    },
-}));
+const MainContainer = styled.main`
+    height: 100vh;
+`;
+
+const ImageWrapper = styled(Grid)`
+    background-image: url(${background});
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+
+    ${({ theme }) => theme.breakpoints.up("md")} {
+        background-size: contain;
+    }
+`;
 
 const SignInView = () => {
-    const classes = useStyles();
-    const { register, handleSubmit, errors } = useForm({ mode: "onBlur" });
+    const { register, handleSubmit, errors, setError } = useForm({
+        mode: "onBlur",
+    });
     const [submitSuccess, setSubmitSuccess] = useState("");
     const [submitError, setSubmitError] = useState("");
     const [isLoading, setLoading] = useState(false);
@@ -77,6 +64,10 @@ const SignInView = () => {
                 console.error(data.detail);
                 setSubmitError(data.detail);
                 setSubmitSuccess("");
+                setError("email", {
+                    type: "manual",
+                    message: t("authError"),
+                });
             } else if (error.request) {
                 console.log("Request error:");
                 console.error(JSON.stringify(error));
@@ -91,11 +82,11 @@ const SignInView = () => {
     };
 
     return (
-        <Grid container component="main" className={classes.root}>
+        <Grid container component={MainContainer}>
             <ErrorSnack error={connectionError} setError={setConnectionError}>
                 {t("connectionError")}
             </ErrorSnack>
-            <Grid item xs={false} sm={4} md={7} className={classes.image} />
+            <ImageWrapper item xs={false} sm={4} md={7} />
             <Grid
                 item
                 xs={12}
@@ -105,26 +96,45 @@ const SignInView = () => {
                 elevation={6}
                 square
             >
-                <div className={classes.paper}>
-                    <Avatar className={classes.avatar}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h3">
-                        {t("signIn")}
-                    </Typography>
-                    <SignInForm
-                        onSubmit={onSubmit}
-                        authStateHooks={{
-                            submitSuccess,
-                            submitError,
-                            isLoading,
-                        }}
-                        formStateHooks={{ register, handleSubmit, errors }}
-                    />
-                    <Box mt={5}>
-                        <Copyright />
-                    </Box>
-                </div>
+                <Box p={4}>
+                    <Grid
+                        container
+                        spacing={3}
+                        direction="column"
+                        justify="flex-start"
+                        alignItems="center"
+                    >
+                        <Grid
+                            item
+                            container
+                            direction="column"
+                            alignItems="center"
+                        >
+                            <Avatar>
+                                <LockOutlinedIcon />
+                            </Avatar>
+                            <Typography variant="h2">{t("signIn")}</Typography>
+                        </Grid>
+                        <Grid item>
+                            <SignInForm
+                                onSubmit={onSubmit}
+                                authStateHooks={{
+                                    submitSuccess,
+                                    submitError,
+                                    isLoading,
+                                }}
+                                formStateHooks={{
+                                    register,
+                                    handleSubmit,
+                                    errors,
+                                }}
+                            />
+                        </Grid>
+                        <Grid item container justify="center">
+                            <Copyright />
+                        </Grid>
+                    </Grid>
+                </Box>
             </Grid>
         </Grid>
     );

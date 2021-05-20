@@ -21,8 +21,15 @@
     },
     "successMessage": "Logowanie zakończone sukcesem!",
     "connectionError": "Sprawdź czy masz internet i spróbuj ponownie...",
+    "authError": "Nieprawidłowa kombinacja emaila i hasła.",
     "fatalError": "Oj oj! Coś się popsuło... Spróbuj ponownie za parę minut.",
     "createError": "Nie można utworzyć konta.",
+    "modal": {
+        "title": "Rejestracja niedostępna",
+        "message": "Przepraszamy, nie ma jeszcze możliwości utworzenia konta. Jeśli jesteś zainteresowany/a testowaniem naszego produktu, zostaw nam swój adres email, żebyśmy byli w stanie skontaktować się z Tobą po skończeniu prac nad aplikacją.",
+        "cancel": "Anuluj",
+        "accept": "Zapisz się"
+    },
     "aria": {
         "passwordVisibilityToggle": "Zmień widoczność hasła."
     }

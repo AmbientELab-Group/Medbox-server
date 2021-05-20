@@ -1,63 +1,28 @@
+import * as serviceWorker from "./serviceWorker";
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
-import * as serviceWorker from "./serviceWorker";
+import {
+    ThemeProvider as MuiThemeProvider,
+    StylesProvider,
+} from "@material-ui/core/styles";
+import { ThemeProvider as StyledComponentsThemeProvider } from "styled-components";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core";
-
+import App from "./App";
+import CustomTheme from "./globalCss";
 import "./i18n";
-
-const theme = createMuiTheme({
-    palette: {
-        // primary: {
-        //     light: "#34c5d0",
-        //     main: "#358184",
-        //     dark: "#1f4a4c"
-        // },
-        primary: {
-            light: "#b7f6fa",
-            main: "#2be2f0",
-            dark: "#10c8d5",
-        },
-        background: {
-            paper: "#fdfdfd",
-            default: "#f0f0f0",
-        },
-    },
-    typography: {
-        h1: {
-            fontSize: "3rem",
-        },
-        h2: {
-            fontSize: "1.625rem",
-        },
-        h3: {
-            fontSize: "1.2rem",
-        },
-        h4: {
-            fontSize: "1.0625rem",
-        },
-        h5: {
-            fontSize: "0.75rem",
-        },
-        h6: {
-            fontSize: "0.625rem",
-        },
-    },
-    shape: {
-        borderRadius: 20,
-    },
-    drawerWidth: 240,
-});
 
 ReactDOM.render(
     <React.StrictMode>
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Suspense fallback={<h1>...Loading</h1>}>
-                <App />
-            </Suspense>
-        </ThemeProvider>
+        <MuiThemeProvider theme={CustomTheme}>
+            <StyledComponentsThemeProvider theme={CustomTheme}>
+                <StylesProvider injectFirst>
+                    <CssBaseline />
+                    <Suspense fallback={<h1>...Loading</h1>}>
+                        <App />
+                    </Suspense>
+                </StylesProvider>
+            </StyledComponentsThemeProvider>
+        </MuiThemeProvider>
     </React.StrictMode>,
     document.getElementById("root")
 );

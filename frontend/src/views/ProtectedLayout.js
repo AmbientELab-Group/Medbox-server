@@ -11,10 +11,10 @@ import TreatmentsView from "./TreatmentsView";
 import Copyright from "../components/Copyright";
 import CustomAppBar from "../components/CustomAppBar";
 import CustomDrawer from "../components/CustomDrawer";
-import CustomFab from "../components/CustomFab";
 import SettingsView from "./SettingsView";
 import { SettingsProvider } from "../contexts/settingsProvider";
 import useDevicesData from "../hooks/useDevicesData";
+// import CustomFab from "../components/CustomFab";
 
 const useStyles = makeStyles((theme) => ({
     root: {
