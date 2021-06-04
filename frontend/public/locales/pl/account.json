@@ -1,0 +1,36 @@
+{
+    "signIn": "Zaloguj się",
+    "signUp": "Zarejestruj się",
+    "rememberMe": "Zapamiętaj mnie",
+    "passwordRecoveryLink": "Nie pamiętasz hasła?",
+    "signUpLink": "Nie masz konta? Zarejestruj się",
+    "signInLink": "Masz już konto? Zaloguj się",
+    "formFields": {
+        "email": "Adres email",
+        "password": "Hasło",
+        "firstName": "Imię",
+        "lastName": "Nazwisko",
+        "passwordConfirm": "Potwierdzenie hasła"
+    },
+    "formValidation": {
+        "required": "Pole \"{{field}}\" jest wymagane.",
+        "invalid": "Pole \"{{field}}\" ma zły format.",
+        "tooLong": "Pole \"{{field}}\" musi zawierać mniej niż {{value}} liter.",
+        "tooShort": "Pole \"{{field}}\" musi zawierać co najmniej {{value}} liter.",
+        "passwordMatch": "Hasła nie są identyczne."
+    },
+    "successMessage": "Logowanie zakończone sukcesem!",
+    "connectionError": "Sprawdź czy masz internet i spróbuj ponownie...",
+    "authError": "Nieprawidłowa kombinacja emaila i hasła.",
+    "fatalError": "Oj oj! Coś się popsuło... Spróbuj ponownie za parę minut.",
+    "createError": "Nie można utworzyć konta.",
+    "modal": {
+        "title": "Rejestracja niedostępna",
+        "message": "Przepraszamy, nie ma jeszcze możliwości utworzenia konta. Jeśli jesteś zainteresowany/a testowaniem naszego produktu, zostaw nam swój adres email, żebyśmy byli w stanie skontaktować się z Tobą po skończeniu prac nad aplikacją.",
+        "cancel": "Anuluj",
+        "accept": "Zapisz się"
+    },
+    "aria": {
+        "passwordVisibilityToggle": "Zmień widoczność hasła."
+    }
+}

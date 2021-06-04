@@ -1,0 +1,36 @@
+{
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "rememberMe": "Remember me",
+    "passwordRecoveryLink": "Forgot password?",
+    "signUpLink": "Don't have an account? Sign up",
+    "signInLink": "Already have an account? Sign in",
+    "formFields": {
+        "email": "Email address",
+        "password": "Password",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "passwordConfirm": "Confirm password"
+    },
+    "formValidation": {
+        "required": "{{field}} is required.",
+        "invalid": "Please enter a valid \"{{field}}\" field.",
+        "tooLong": "{{field}} can not be over {{value}} letters long.",
+        "tooShort": "{{field}} can not be shorter than {{value}} letters.",
+        "passwordMatch": "Passwords are not the same."
+    },
+    "successMessage": "Sign in successful!",
+    "connectionError": "Please check your internet connection and try again...",
+    "authError": "Invalid email and password combination.",
+    "fatalError": "Uhh ohh! Something went a bit sideways... Please try again later.",
+    "createError": "Can not create an account.",
+    "modal": {
+        "title": "Sign up unavailable",
+        "message": "Sorry, you can not create an account yet. If you are interested in testing our product, leave your email below so we can reach out to you when we finish working on our app.",
+        "cancel": "Cancel",
+        "accept": "Subscribe"
+    },
+    "aria": {
+        "passwordVisibilityToggle": "Toggle password visibility."
+    }
+}

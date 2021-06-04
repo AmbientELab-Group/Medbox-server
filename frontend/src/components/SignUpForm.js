@@ -1,245 +1,188 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import TextField from "./Forms/TextField";
+import PasswordField from "./Forms/PasswordField";
+import SubmitMessage from "./Forms/SubmitMessage";
+import { useTranslation } from "react-i18next";
+import LoadingButton from "./LoadingButton";
+import styled from "styled-components";
 
-const useStyles = makeStyles((theme) => ({
-    form: {
-        width: "100%", // Fix IE 11 issue.
-        marginTop: theme.spacing(3),
-    },
-    submit: {
-        margin: theme.spacing(2, 0, 2),
-    },
-    submitErrorMessage: {
-        color: theme.palette.error.main,
-        textAlign: "center",
-    },
-    successMessage: {
-        color: theme.palette.success.main,
-        textAlign: "center",
-    },
-    wrapper: {
-        position: "relative",
-    },
-    buttonProgress: {
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        marginTop: "-12px",
-        marginLeft: "-12px",
-    },
-}));
+const StyledForm = styled.form`
+    width: 100%;
+`;
 
 const SignUpForm = ({ onSubmit, authStateHooks, formStateHooks }) => {
     const { submitSuccess, submitError, isLoading } = authStateHooks;
     const { register, handleSubmit, errors, getValues } = formStateHooks;
-    const classes = useStyles();
-    const [isPasswordHidden, setPasswordHidden] = useState(true);
+    const { t } = useTranslation("account");
 
     const validationSchemas = {
         first_name: {
-            required: "First name is required.",
+            required: t("formValidation.required", {
+                field: t("formFields.firstName"),
+            }),
             maxLength: {
                 value: 30,
-                message: "First name can not be over 30 letters long.",
+                message: t("formValidation.tooLong", {
+                    value: 30,
+                    field: t("formFields.firstName"),
+                }),
             },
         },
         last_name: {
-            required: "Last name is required.",
+            required: t("formValidation.required", {
+                field: t("formFields.lastName"),
+            }),
             maxLength: {
                 value: 150,
-                message: "Last name can not be over 150 letters long.",
+                message: t("formValidation.tooLong", {
+                    value: 150,
+                    field: t("formFields.lastName"),
+                }),
             },
         },
         email: {
-            required: "Email is required.",
+            required: t("formValidation.required", {
+                field: t("formFields.email"),
+            }),
             maxLength: {
                 value: 128,
-                message: "Email can not be over 128 letters long.",
+                message: t("formValidation.tooLong", {
+                    value: 128,
+                    field: t("formFields.email"),
+                }),
             },
             pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Please enter a valid email address",
+                message: t("formValidation.invalid", {
+                    field: t("formFields.email"),
+                }),
             },
         },
         password: {
-            required: "Password is required.",
+            required: t("formValidation.required", {
+                field: t("formFields.password"),
+            }),
             minLength: {
                 value: 8,
-                message: "Password can not be shorter than 8 letters.",
+                message: t("formValidation.tooShort", {
+                    value: 8,
+                    field: t("formFields.password"),
+                }),
             },
             maxLength: {
                 value: 128,
-                message: "Password can not be over 128 letters long.",
+                message: t("formValidation.tooLong", {
+                    value: 128,
+                    field: t("formFields.password"),
+                }),
             },
         },
         password2: {
-            required: "Confirmation is required.",
+            required: t("formValidation.required", {
+                field: t("formFields.passwordConfirm"),
+            }),
             validate: (value) =>
-                value === getValues("password") || "Passwords must match.",
+                value === getValues("password") ||
+                t("formValidation.passwordMatch"),
         },
     };
 
     return (
-        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={2}>
+        <StyledForm onSubmit={handleSubmit(onSubmit)}>
+            <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        autoComplete="fname"
-                        name="first_name"
-                        variant="outlined"
-                        required
-                        fullWidth
                         id="first_name"
-                        label="First Name"
-                        autoFocus
+                        name="first_name"
+                        autoComplete="fname"
+                        label={t("formFields.firstName")}
                         inputRef={register(validationSchemas.first_name)}
                         error={errors.first_name !== undefined}
                         helperText={errors?.first_name?.message}
+                        required
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        variant="outlined"
-                        required
-                        fullWidth
                         id="last_name"
-                        label="Last Name"
                         name="last_name"
                         autoComplete="lname"
+                        label={t("formFields.lastName")}
                         inputRef={register(validationSchemas.last_name)}
                         error={errors.last_name !== undefined}
                         helperText={errors?.last_name?.message}
+                        required
                     />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
-                        variant="outlined"
-                        required
-                        fullWidth
                         id="email"
-                        label="Email Address"
                         name="email"
                         autoComplete="email"
+                        label={t("formFields.email")}
                         inputRef={register(validationSchemas.email)}
                         error={errors.email !== undefined}
                         helperText={errors?.email?.message}
+                        required
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField
-                        variant="outlined"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type={isPasswordHidden ? "password" : "text"}
+                    <PasswordField
                         id="password"
+                        name="password"
                         autoComplete="new-password"
+                        label={t("formFields.password")}
                         inputRef={register(validationSchemas.password)}
                         error={errors.password !== undefined}
                         helperText={errors?.password?.message}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={() =>
-                                            setPasswordHidden(!isPasswordHidden)
-                                        }
-                                        onMouseDown={(e) => e.preventDefault()}
-                                    >
-                                        {isPasswordHidden ? (
-                                            <VisibilityOff />
-                                        ) : (
-                                            <Visibility />
-                                        )}
-                                    </IconButton>
-                                </InputAdornment>
-                            ),
-                        }}
+                        required
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField
-                        variant="outlined"
-                        required
-                        fullWidth
-                        name="password2"
-                        label="Confirm Password"
-                        type={isPasswordHidden ? "password" : "text"}
+                    <PasswordField
                         id="password2"
+                        name="password2"
                         autoComplete="new-password"
+                        label={t("formFields.passwordConfirm")}
                         inputRef={register(validationSchemas.password2)}
                         error={errors.password2 !== undefined}
                         helperText={errors?.password2?.message}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={() =>
-                                            setPasswordHidden(!isPasswordHidden)
-                                        }
-                                        onMouseDown={(e) => e.preventDefault()}
-                                    >
-                                        {isPasswordHidden ? (
-                                            <VisibilityOff />
-                                        ) : (
-                                            <Visibility />
-                                        )}
-                                    </IconButton>
-                                </InputAdornment>
-                            ),
-                        }}
+                        required
                     />
                 </Grid>
-            </Grid>
-            {submitError && (
-                <Typography className={classes.submitErrorMessage}>
-                    {submitError}
-                </Typography>
-            )}
-            {submitSuccess && (
-                <Typography className={classes.successMessage}>
-                    {submitSuccess}
-                </Typography>
-            )}
-            <div className={classes.wrapper}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                >
-                    Sign Up
-                </Button>
-                {isLoading && (
-                    <CircularProgress
-                        size={24}
-                        className={classes.buttonProgress}
-                    />
-                )}
-            </div>
-            <Grid container justify="flex-end">
-                <Grid item>
-                    <Link variant="body2" component={RouterLink} to="/signin">
-                        Already have an account? Sign in
-                    </Link>
+                <Grid item xs={12}>
+                    <SubmitMessage $error={!!submitError}>
+                        {submitError}
+                    </SubmitMessage>
+                    <SubmitMessage $success={!!submitSuccess}>
+                        {submitSuccess}
+                    </SubmitMessage>
+                </Grid>
+                <Grid item xs={12}>
+                    <LoadingButton
+                        type="submit"
+                        fullWidth
+                        isLoading={isLoading}
+                    >
+                        {t("signUp")}
+                    </LoadingButton>
+                </Grid>
+                <Grid item container justify="flex-end">
+                    <Grid item>
+                        <Link
+                            variant="body2"
+                            component={RouterLink}
+                            to="/signin"
+                        >
+                            {t("signInLink")}
+                        </Link>
+                    </Grid>
                 </Grid>
             </Grid>
-        </form>
+        </StyledForm>
     );
 };
 
