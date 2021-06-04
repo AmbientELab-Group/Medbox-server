@@ -167,8 +167,12 @@ STATICFILES_DIRS = []
 # lifetime of the pairing codes in minutes
 PAIRING_CODE_LIFETIME = 5
 
+# email settings, need to setup mailing server
+EMAIL_USE_SSL = False
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smpt.gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
+# those are credentials to my 'private test account', so please don't mess with it
 EMAIL_HOST_USER = 'testsender2137@gmail.com'
-EMAIL_HOST_USER = 'testsender123!'
+EMAIL_HOST_PASSWORD = 'testsender123!'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
