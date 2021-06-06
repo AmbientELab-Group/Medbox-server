@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from AppAPI.models import Medecine
+from AppAPI.models import Medicine
 
 
-class MedecineSerializer(serializers.ModelSerializer):
+class MedicineSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Medecine
+        model = Medicine
         fields = [
             "uuid",
             "name",
