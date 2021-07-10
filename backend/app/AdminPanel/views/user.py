@@ -58,7 +58,7 @@ def sign_up_view(request):
         )
 
         send_mail(
-            subject="verify your Ambient account",
+            subject="Verify your Ambient account",
             message=email_body,
             from_email=None,
             recipient_list=[user.email],
