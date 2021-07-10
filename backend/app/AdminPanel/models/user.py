@@ -17,6 +17,8 @@ class User(AbstractUser):
         unique=True
     )
 
+    is_verified = models.BooleanField(default=False)
+
     # remove username field
     username = None
 
