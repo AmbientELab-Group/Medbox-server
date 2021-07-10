@@ -46,7 +46,7 @@ def sign_up_view(request):
 
         email_token = RefreshToken.for_user(user).access_token
         abs_url = (
-            "http://" + current_site + relative_link + "?token=" + str(email_token)
+            "https://" + current_site + relative_link + "?token=" + str(email_token)
         )
 
         # todo: make it prettier
