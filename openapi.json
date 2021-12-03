@@ -1,0 +1,3072 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Ambient API Documentation",
+    "description": "This document should act as a guidelane in implementing and using Ambient API.",
+    "version": "0.1"
+  },
+  "tags": [
+    {
+      "name": "Account",
+      "description": "Managing users, tokens and permissions."
+    },
+    {
+      "name": "Devices",
+      "description": "Managing devices."
+    },
+    {
+      "name": "Containers",
+      "description": "Managing containers."
+    },
+    {
+      "name": "Chambers",
+      "description": "Managing chambers."
+    },
+    {
+      "name": "Treatments",
+      "description": "Managing treatments."
+    },
+    {
+      "name": "Doses",
+      "description": "Managing doses."
+    },
+    {
+      "name": "Medicines",
+      "description": "Managing medicines."
+    },
+    {
+      "name": "Versions",
+      "description": "Info about available models."
+    },
+    {
+      "name": "Internal device API",
+      "description": "Endpoints for server-device communication, not publicly available."
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:8000/api",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/account/signup": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "SignUp",
+        "description": "This endpoint allows to create user account in the system. Returns refresh and access jwt tokens used to authenticate API calls.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/User"
+                  }
+                ],
+                "required": [
+                  "email",
+                  "first_name",
+                  "last_name",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/RefreshToken"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AccessToken"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "User created successfully."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/account/signin": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "SignIn",
+        "description": "Takes a set of user credentials and returns an access and refresh JSON web token pair to prove the authentication of those credentials.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/RefreshToken"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AccessToken"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Successful sign in request."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        }
+      }
+    },
+    "/account/users/{uuid}": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "RetrieveUserInfo",
+        "description": "Gets a `User` by ID. Only authenticated clients may see their details.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "UUID of requested user",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            },
+            "description": "Successful request."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/account/token/refresh": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "RefreshAccessToken",
+        "description": "Takes a `Refresh Token` and returns an access type JSON web token if the provided one was valid.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refresh": {
+                    "type": "string",
+                    "format": "jwt",
+                    "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NTUxOTc5LCJqdGkiOiI2NTcyNTY5ZThhMWQ0YzlkYmNjM2ZhZTFiNGE3N2M3OCIsInVzZXJfaWQiOiJiY2ZlMDg2Zi1kODI4LTQ1YzgtYWU3Mi1kZjdlMmRkN2IxNGUifQ.1HWYdfySr5I7COXHlbxnVc9JsJ8L15k0e4UGYFYYEus"
+                  }
+                },
+                "required": [
+                  "refresh"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "access": {
+                      "type": "string",
+                      "format": "jwt",
+                      "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NTUxOTc5LCJqdGkiOiI2NTcyNTY5ZThhMWQ0YzlkYmNjM2ZhZTFiNGE3N2M3OCIsInVzZXJfaWQiOiJiY2ZlMDg2Zi1kODI4LTQ1YzgtYWU3Mi1kZjdlMmRkN2IxNGUifQ.1HWYdfySr5I7COXHlbxnVc9JsJ8L15k0e4UGYFYYEus"
+                    }
+                  },
+                  "required": [
+                    "access"
+                  ]
+                }
+              }
+            },
+            "description": "Successfully refreshed."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        }
+      }
+    },
+    "/account/token/verify": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "VerifyToken",
+        "description": "Takes an `Access Token` and indicates if it is valid. This view provides no information about a token's fitness for a particular use.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "format": "jwt"
+                  }
+                },
+                "required": [
+                  "token"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token is valid."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        }
+      }
+    },
+    "/devices": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "ListDevices",
+        "description": "This endpoint returns all available `Devices` managed by the authenticated user.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Device"
+                  }
+                }
+              }
+            },
+            "description": "Successful reqeust."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Devices"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "CreateDevice",
+        "description": "This endpoint allows to create a `Device`. Assigns authenticated user as an owner.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Device"
+                  }
+                ],
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Device"
+                }
+              }
+            },
+            "description": "Successfully created."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        }
+      }
+    },
+    "/devices/{uuid}": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "operationId": "RetrieveDevice",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "This endpoint allows to retrive information on `Device` identified with uuid passed as a path parameter.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this device.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Device"
+                }
+              }
+            },
+            "description": "Successful request."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Devices"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "UpdateDevice",
+        "description": "This endpoint allows to perform update on specified `Device`.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this device.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Device"
+                  }
+                ],
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Device"
+                }
+              }
+            },
+            "description": "Successful update."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Devices"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "PartialUpdateDevice",
+        "description": "This endpoint allows to perform partial update on specified `Device`.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this device.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Device"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Device"
+                }
+              }
+            },
+            "description": "Successful partial update."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Devices"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "DestroyDevice",
+        "description": "This endpoint removes sepcified `Device`.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this device.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfuly deleted."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/containers": {
+      "get": {
+        "tags": [
+          "Containers"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "ListContainers",
+        "description": "This endpoint retrives all of the `Containers` managed by authenticated user or those from the device specified in query parameter.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "device",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            },
+            "description": "Device to get containers from."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Container"
+                  }
+                }
+              }
+            },
+            "description": "Successful request."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Containers"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "CreateContainer",
+        "description": "This endpoint allows to create `Container`. <br/><br/> Inserting container in between other contaieners will move them up by one position. <br/><br/> When position parameter is not provided, the container is placed on the first available position (top).",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Container"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "device": {
+                        "readOnly": false,
+                        "description": "Device to add the new container to."
+                      },
+                      "version": {
+                        "type": "string",
+                        "readOnly": false,
+                        "example": "0.1",
+                        "description": "The name of the container version."
+                      }
+                    }
+                  }
+                ],
+                "required": [
+                  "device",
+                  "version"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            },
+            "description": "Successfully created."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        }
+      }
+    },
+    "/containers/{uuid}": {
+      "get": {
+        "tags": [
+          "Containers"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "RetrieveContainer",
+        "description": "This allows to get a single `Container` specified by its uuid.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this container.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            },
+            "description": "Successful request."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Containers"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "UpdateContainer",
+        "description": "This endpoint allows to update specified `Container`. <br/><br/> Updating container's position may force other containers to change positions. Inserting container in between other contaieners will move them up by one position. <br/><br/> When position parameter is not provided, the container is placed on the first available position (top).",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this container.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Container"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "device": {
+                        "readOnly": false,
+                        "description": "Device to add the new container to."
+                      }
+                    }
+                  }
+                ],
+                "required": [
+                  "device",
+                  "position"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            },
+            "description": "Successful update."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Containers"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "PartialUpdateContainer",
+        "description": "This endpoint allows to partially update specified `Container`. <br/><br/> Updating container's position may force other containers to change positions. Inserting container in between other contaieners will move them up by one position. <br/><br/> When position parameter is not provided, the container is placed on the first available position (top).",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this container.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Container"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "device": {
+                        "readOnly": false,
+                        "description": "Device to add the new container to."
+                      }
+                    }
+                  }
+                ],
+                "required": [
+                  "device",
+                  "position"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Container"
+                }
+              }
+            },
+            "description": "Successful partial update."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Containers"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "DestroyContainer",
+        "description": "This endpoint allows to destroy specified `Container`. <br/><br/> Deleting container that was positioned in between other containers will force upper ones to go down one position each and fill up the empty space.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this container.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/devices/pairing/confirm": {
+      "post": {
+        "tags": [
+          "Devices"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "ConfirmPairing",
+        "description": "If successful it binds `serial_number` to `device_uuid` (and implicitly a particular user). Should be called during paring procedure from the application.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pairing_code": {
+                    "type": "integer",
+                    "description": "Random 6-digit pairing code. uint32_t",
+                    "example": 123456
+                  },
+                  "device_uuid": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "c24205cc-96fa-4a17-8b2a-890d10b01980"
+                  }
+                },
+                "required": [
+                  "pairing_code",
+                  "device_uuid"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pairing code submitted."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/chambers": {
+      "get": {
+        "tags": [
+          "Chambers"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "ListChambers",
+        "description": "This endpoint retrives all of the `Chambers` managed by authenticated user or those from the container specified in query parameter.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "container",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            },
+            "description": "Container to get chambers from."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Chamber"
+                  }
+                }
+              }
+            },
+            "description": "Successful request."
+          }
+        }
+      }
+    },
+    "/chambers/{uuid}": {
+      "get": {
+        "tags": [
+          "Chambers"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "RetrieveChamber",
+        "description": "This allows to get a single `Chamber` specified by its uuid.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this chamber.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Chamber"
+                }
+              }
+            },
+            "description": "Successful request."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/treatments": {
+      "get": {
+        "tags": [
+          "Treatments"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "ListTreatments",
+        "description": "This endpoint retrives all of the `Treatments` managed by authenticated user.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beneficiary",
+            "schema": {
+              "$ref": "#/components/schemas/beneficiary"
+            },
+            "description": "Beneficiary associated with the treatments to get."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Treatment"
+                  }
+                }
+              }
+            },
+            "description": "Successful request."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Treatments"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "CreateTreatment",
+        "description": "This endpoint allows to create `Treatment`.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Treatment"
+                  }
+                ],
+                "required": [
+                  "name",
+                  "beneficiary"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Treatment"
+                }
+              }
+            },
+            "description": "Successfully created."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        }
+      }
+    },
+    "/treatments/{uuid}": {
+      "get": {
+        "tags": [
+          "Treatments"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "RetrieveTreatment",
+        "description": "This allows to get a single `Treatment` specified by its uuid.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this treatment.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Treatment"
+                }
+              }
+            },
+            "description": "Successful request."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Treatments"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "UpdateTreatment",
+        "description": "This endpoint allows to update specified `Treatment`.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this treatment.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Treatment"
+                  }
+                ],
+                "required": [
+                  "name",
+                  "beneficiary"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Treatment"
+                }
+              }
+            },
+            "description": "Successful update."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Treatments"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "PartialUpdateTreatment",
+        "description": "This endpoint allows to partially update specified `Treatment`.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this treatment.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Treatment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Treatment"
+                }
+              }
+            },
+            "description": "Successful partial update."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Treatments"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "DestroyTreatment",
+        "description": "This endpoint allows to destroy specified `Treatment`.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this treatment.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/doses": {
+      "get": {
+        "tags": [
+          "Doses"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "ListDoses",
+        "description": "This endpoint retrives all of the `Doses` managed by authenticated user.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beneficiary",
+            "schema": {
+              "$ref": "#/components/schemas/beneficiary"
+            },
+            "description": "Beneficiary associated with the doses."
+          },
+          {
+            "in": "query",
+            "name": "treatment",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            },
+            "description": "Treatment returned doses belong to."
+          },
+          {
+            "in": "query",
+            "name": "medicine",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            },
+            "description": "Medicine the doses contain."
+          },
+          {
+            "in": "query",
+            "name": "on_demand",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Type associated with the doses."
+          },
+          {
+            "in": "query",
+            "name": "administration_time_start",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2021-01-01T12:00:00.0Z"
+            },
+            "description": "Doses to be administered starting from this time on (inclusive)."
+          },
+          {
+            "in": "query",
+            "name": "administration_time_end",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2021-01-01T12:00:00.0Z"
+            },
+            "description": "Doses to be administered before this time (exclusive)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Dose"
+                  }
+                }
+              }
+            },
+            "description": "Successful request."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Doses"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "CreateDose",
+        "description": "This endpoint allows to create `Dose`.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Dose"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "treatment": {
+                        "readOnly": false
+                      },
+                      "chamber": {
+                        "readOnly": false
+                      },
+                      "medicine": {
+                        "readOnly": false
+                      }
+                    }
+                  }
+                ],
+                "required": [
+                  "treatment",
+                  "chamber",
+                  "medicine",
+                  "planned_administration_time",
+                  "number_of_pills",
+                  "on_demand"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dose"
+                }
+              }
+            },
+            "description": "Successfully created."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        }
+      }
+    },
+    "/doses/{uuid}": {
+      "get": {
+        "tags": [
+          "Doses"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "RetrieveDose",
+        "description": "This allows to get a single `Dose` specified by its uuid.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this dose.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dose"
+                }
+              }
+            },
+            "description": "Successful request."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Doses"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "UpdateDose",
+        "description": "This endpoint allows to update specified `Dose`.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this dose.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Dose"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "treatment": {
+                        "readOnly": false
+                      },
+                      "chamber": {
+                        "readOnly": false
+                      },
+                      "medicine": {
+                        "readOnly": false
+                      }
+                    }
+                  }
+                ],
+                "required": [
+                  "treatment",
+                  "chamber",
+                  "medicine",
+                  "planned_administration_time",
+                  "number_of_pills",
+                  "on_demand"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dose"
+                }
+              }
+            },
+            "description": "Successful update."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Doses"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "PartialUpdateDose",
+        "description": "This endpoint allows to partially update specified `Dose`.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this dose.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Dose"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "treatment": {
+                        "readOnly": false
+                      },
+                      "chamber": {
+                        "readOnly": false
+                      },
+                      "medicine": {
+                        "readOnly": false
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dose"
+                }
+              }
+            },
+            "description": "Successful partial update."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Doses"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "DestroyDose",
+        "description": "This endpoint allows to destroy specified `Dose`.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this dose.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/medicines": {
+      "get": {
+        "tags": [
+          "Medicines"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "ListMedicines",
+        "description": "This endpoint retrives all of the `Medicines` managed by authenticated user.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "producer",
+            "schema": {
+              "type": "string",
+              "example": "Medex"
+            },
+            "description": "Medicine producer."
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Medicine"
+                  }
+                }
+              }
+            },
+            "description": "Successful request."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Medicines"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "CreateMedicine",
+        "description": "This endpoint allows to create `Medicine`.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Medicine"
+                  }
+                ],
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Medicine"
+                }
+              }
+            },
+            "description": "Successfully created."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        }
+      }
+    },
+    "/medicines/{uuid}": {
+      "get": {
+        "tags": [
+          "Medicines"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "RetrieveMedicine",
+        "description": "This allows to get a single `Medicine` specified by its uuid.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this medicine.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Medicine"
+                }
+              }
+            },
+            "description": "Successful request."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Medicines"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "UpdateMedicine",
+        "description": "This endpoint allows to update specified `Medicine`.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this medicine.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Medicine"
+                  }
+                ],
+                "required": [
+                  "name",
+                  "producer"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Medicine"
+                }
+              }
+            },
+            "description": "Successful update."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Medicines"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "PartialUpdateMedicine",
+        "description": "This endpoint allows to partially update specified `Medicine`.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this medicine.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Medicine"
+                  }
+                ],
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Medicine"
+                }
+              }
+            },
+            "description": "Successful partial update."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Medicines"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "DestroyMedicine",
+        "description": "This endpoint allows to destroy specified `Medicine`.",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "required": true,
+            "description": "A UUID string identifying this medicine.",
+            "schema": {
+              "$ref": "#/components/schemas/uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/versions/device": {
+      "get": {
+        "tags": [
+          "Versions"
+        ],
+        "operationId": "ListDeviceVersions",
+        "description": "Request all available models of `Device`.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeviceVersion"
+                  }
+                }
+              }
+            },
+            "description": "Successful request."
+          }
+        }
+      }
+    },
+    "/versions/container": {
+      "get": {
+        "tags": [
+          "Versions"
+        ],
+        "operationId": "ListContainerVersions",
+        "description": "Request all available models of `Container`.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContainerVersion"
+                  }
+                }
+              }
+            },
+            "description": "Successful request."
+          }
+        }
+      }
+    },
+    "/pairing": {
+      "post": {
+        "tags": [
+          "Internal device API"
+        ],
+        "operationId": "CreatePairingCode",
+        "description": "Initiates pairing procedure. Creates PairingInfo object and returns a pairing code.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "serial_number": {
+                    "type": "string",
+                    "format": "uuid",
+                    "minLength": 37,
+                    "maxLength": 37,
+                    "description": "37 characters."
+                  },
+                  "device_version": {
+                    "type": "string",
+                    "description": "major.minor.patch"
+                  },
+                  "firmware_version": {
+                    "type": "string",
+                    "description": "major.minor.patch"
+                  }
+                },
+                "required": [
+                  "serial_number",
+                  "device_version",
+                  "firmware_version"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PairingCode"
+                }
+              }
+            },
+            "description": "Pairing initiated."
+          }
+        }
+      }
+    },
+    "/pairing/verify/{pairing_code}": {
+      "get": {
+        "tags": [
+          "Internal device API"
+        ],
+        "operationId": "VerifyPairing",
+        "description": "This endpoint allows a device to get information about outcome of a pairing procedure. If the procedure is successful, it returns api token for a device to authenticate itself. This call can only be successful when there is pending pairing procedure (pairing code has not expired).",
+        "parameters": [
+          {
+            "name": "pairing_code",
+            "in": "path",
+            "required": true,
+            "description": "Paring code for which the verification is performed.",
+            "schema": {
+              "$ref": "#/components/schemas/pairing_code"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceApiToken"
+                }
+              }
+            },
+            "description": "Pairing successfull."
+          },
+          "401": {
+            "description": "User has not entered the code yet, please retry later."
+          },
+          "403": {
+            "description": "Pairing code expired. Please restart pairing procedure."
+          }
+        }
+      }
+    },
+    "/debug/logs": {
+      "post": {
+        "tags": [
+          "Internal device API"
+        ],
+        "security": [
+          {
+            "tokenAuth": []
+          }
+        ],
+        "operationId": "CreateLog",
+        "description": "Create new log from device.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DebugLog"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resource created."
+          },
+          "400": {
+            "description": "Bad request."
+          }
+        }
+      }
+    },
+    "/clock": {
+      "get": {
+        "tags": [
+          "Internal device API"
+        ],
+        "security": [
+          {
+            "tokenAuth": []
+          }
+        ],
+        "operationId": "GetNTPServerAddress",
+        "description": "Gets ip address of NTP server.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ntp_address": {
+                      "type": "string",
+                      "format": "ipv4"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Successful request."
+          }
+        }
+      }
+    },
+    "/telemetry": {
+      "post": {
+        "tags": [
+          "Internal device API"
+        ],
+        "security": [
+          {
+            "tokenAuth": []
+          }
+        ],
+        "operationId": "CreateHealthCheckReport",
+        "description": "Reports status of the device. The maintanance instructions can be returned as a response.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "timestamp": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Unix time (Time_t or uint32_t)"
+                  },
+                  "battery_status": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100,
+                    "description": "0-0%, 100-100%, uint8_t"
+                  },
+                  "signal_strength": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100,
+                    "description": "Link quality, 0-0%, 1-100%, uint8_t"
+                  },
+                  "device_status": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Device status code, 0-OK, other code is error, uint8_t"
+                  },
+                  "battery_voltage": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Battery voltage in volts."
+                  }
+                },
+                "required": [
+                  "unix_time",
+                  "battery_status",
+                  "signal_strength",
+                  "device_status"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Report created."
+          },
+          "400": {
+            "description": "Bad request."
+          }
+        }
+      }
+    },
+    "/program/plannedDoses/count": {
+      "get": {
+        "tags": [
+          "Internal device API"
+        ],
+        "security": [
+          {
+            "tokenAuth": []
+          }
+        ],
+        "operationId": "GetPlannedDosesCount",
+        "description": "Requests number of planned doses in the scheduled treatments for this devices.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "count"
+                  ]
+                }
+              }
+            },
+            "description": "Successful response."
+          }
+        }
+      }
+    },
+    "/program/plannedDoses/{index}": {
+      "get": {
+        "tags": [
+          "Internal device API"
+        ],
+        "security": [
+          {
+            "tokenAuth": []
+          }
+        ],
+        "operationId": "GetPlannedDose",
+        "description": "Requests a planned dose to be saved in a device memory. Queries a {index} dose from admission time sorted treatments.",
+        "parameters": [
+          {
+            "name": "index",
+            "in": "path",
+            "required": true,
+            "description": "Index of the dose to fetch.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "container_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "chamber_index": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "admission_time": {
+                      "type": "integer",
+                      "description": "Unix timestamp"
+                    }
+                  },
+                  "required": [
+                    "container_id",
+                    "chamber_index",
+                    "admission_time"
+                  ]
+                }
+              }
+            },
+            "description": "Successful request."
+          },
+          "400": {
+            "description": "Bad request. Index out of range."
+          }
+        }
+      }
+    },
+    "/program/onDemand/count": {
+      "get": {
+        "tags": [
+          "Internal device API"
+        ],
+        "security": [
+          {
+            "tokenAuth": []
+          }
+        ],
+        "operationId": "GetOnDemandDosesCount",
+        "description": "Requests number of on demand doses.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "count"
+                  ]
+                }
+              }
+            },
+            "description": "Successful request."
+          }
+        }
+      }
+    },
+    "/program/onDemand/{index}": {
+      "get": {
+        "tags": [
+          "Internal device API"
+        ],
+        "security": [
+          {
+            "tokenAuth": []
+          }
+        ],
+        "operationId": "GetOnDemandBatch",
+        "description": "Requests on demand doses batch to be saved in a device memory. Queries a {index} batch from SOMEHOW sorted batches.",
+        "parameters": [
+          {
+            "name": "index",
+            "in": "path",
+            "required": true,
+            "description": "Index of the batch to fetch.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "container_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "chambers_range_start": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "chambers_range_end": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "button_id": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "container_id",
+                    "chambers_range_start",
+                    "chambers_range_end",
+                    "button_id"
+                  ]
+                }
+              }
+            },
+            "description": "Successful request."
+          },
+          "400": {
+            "description": "Bad request. Index out of range."
+          }
+        }
+      }
+    },
+    "/program/hash": {
+      "get": {
+        "tags": [
+          "Internal device API"
+        ],
+        "security": [
+          {
+            "tokenAuth": []
+          }
+        ],
+        "operationId": "GetProgramHash",
+        "description": "Requests program hash to validate update validity.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "hash": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "hash"
+                  ]
+                }
+              }
+            },
+            "description": "Successful request."
+          }
+        }
+      }
+    },
+    "/refill/confirmation": {
+      "post": {
+        "tags": [
+          "Internal device API"
+        ],
+        "security": [
+          {
+            "tokenAuth": []
+          }
+        ],
+        "operationId": "RefillConfirmation",
+        "description": "Sends refill confirmation to ensure operation is successfully completed.",
+        "responses": {
+          "200": {
+            "description": "Successful request."
+          }
+        }
+      }
+    },
+    "/events/container": {
+      "post": {
+        "tags": [
+          "Internal device API"
+        ],
+        "security": [
+          {
+            "tokenAuth": []
+          }
+        ],
+        "operationId": "CreateNewContainerEvent",
+        "description": "Sends new container event to be stored in event logs.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "timestamp": {
+                    "type": "integer",
+                    "description": "Unix timestamp"
+                  },
+                  "removed": {
+                    "type": "boolean"
+                  },
+                  "inserted": {
+                    "type": "boolean"
+                  },
+                  "configuration_hash": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "timestamp",
+                  "configuration_hash"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "update_required": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "update_required"
+                  ]
+                }
+              }
+            },
+            "description": "Event created."
+          },
+          "400": {
+            "description": "Bad request."
+          }
+        }
+      }
+    },
+    "/events/dose": {
+      "post": {
+        "tags": [
+          "Internal device API"
+        ],
+        "security": [
+          {
+            "tokenAuth": []
+          }
+        ],
+        "operationId": "CreateNewDoseEvent",
+        "description": "Sends new dose event to be stored in event logs. In request body either dispensed or skipped flag must be set.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "timestamp": {
+                    "type": "integer",
+                    "description": "Unix timestamp"
+                  },
+                  "container_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "chamber_id": {
+                    "type": "integer"
+                  },
+                  "dispensed": {
+                    "type": "boolean"
+                  },
+                  "skipped": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "timestamp",
+                  "container_id",
+                  "chamber_id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Event created."
+          },
+          "400": {
+            "description": "Bad request."
+          }
+        }
+      }
+    },
+    "/events/user": {
+      "post": {
+        "tags": [
+          "Internal device API"
+        ],
+        "security": [
+          {
+            "tokenAuth": []
+          }
+        ],
+        "operationId": "CreateNewUserEvent",
+        "description": "Sends new user event to be stored in event logs. Information about user interaction with device.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "timestamp": {
+                    "type": "integer",
+                    "description": "Unix timestamp"
+                  },
+                  "action_type": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Enum action type."
+                  }
+                },
+                "required": [
+                  "timestamp",
+                  "action_type"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Event created."
+          },
+          "400": {
+            "description": "Bad request."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "tokenAuth": {
+        "type": "http",
+        "scheme": "token"
+      }
+    },
+    "responses": {
+      "Ok": {
+        "description": "Successful request."
+      },
+      "Unauthenticated": {
+        "description": "Access token is missing or invalid."
+      },
+      "Unauthorized": {
+        "description": "You have no access to this resource."
+      },
+      "NotFound": {
+        "description": "Resource not found."
+      },
+      "BadRequest": {
+        "description": "There was a problem with request data. (Possible error messages in the response body)"
+      }
+    },
+    "schemas": {
+      "uuid": {
+        "type": "string",
+        "format": "uuid",
+        "example": "c24205cc-96fa-4a17-8b2a-890d10b01980",
+        "readOnly": true
+      },
+      "beneficiary": {
+        "type": "string",
+        "example": "Johnny"
+      },
+      "pairing_code": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Random 6-digit pairing code. uint32_t",
+        "example": 123456
+      },
+      "PairingCode": {
+        "type": "object",
+        "properties": {
+          "pairing_code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Random 6-digit pairing code. uint32_t",
+            "example": 123456
+          }
+        }
+      },
+      "DeviceApiToken": {
+        "type": "object",
+        "properties": {
+          "api_token": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 32,
+            "description": "API token, 32 character.",
+            "example": "2425b8b80fe725f575c33ac96afff9aa"
+          }
+        }
+      },
+      "RefreshToken": {
+        "type": "object",
+        "properties": {
+          "refresh_token": {
+            "type": "string",
+            "format": "jwt",
+            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYwNTYzNjU3OSwianRpIjoiYmYyZmQ5ZTY5MzY1NGUxZmFjZGI5Y2QzNzZiZWQyNmQiLCJ1c2VyX2lkIjoiYmNmZTA4NmYtZDgyOC00NWM4LWFlNzItZGY3ZTJkZDdiMTRlIn0.izJVDI6wCRxsBxY4Mx12__XJLVsy2xsywBbtsfiQYIA"
+          }
+        }
+      },
+      "AccessToken": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "format": "jwt",
+            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA1NTUxOTc5LCJqdGkiOiI2NTcyNTY5ZThhMWQ0YzlkYmNjM2ZhZTFiNGE3N2M3OCIsInVzZXJfaWQiOiJiY2ZlMDg2Zi1kODI4LTQ1YzgtYWU3Mi1kZjdlMmRkN2IxNGUifQ.1HWYdfySr5I7COXHlbxnVc9JsJ8L15k0e4UGYFYYEus"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "apiTestAccount@test.com"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "TestName"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "TestLastName"
+          },
+          "password": {
+            "writeOnly": true,
+            "type": "string",
+            "example": "secret"
+          },
+          "supervised_devices": {
+            "readOnly": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/uuid"
+            },
+            "description": "UUIDs of supervised devices."
+          }
+        }
+      },
+      "DeviceVersion": {
+        "type": "object",
+        "readOnly": true,
+        "properties": {
+          "name": {
+            "readOnly": true,
+            "type": "string",
+            "example": "v1.0"
+          },
+          "capacity": {
+            "readOnly": true,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 32767,
+            "example": 3
+          },
+          "latest_firmware_version": {
+            "readOnly": true,
+            "type": "string",
+            "example": "0.1.3"
+          }
+        }
+      },
+      "Device": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "version": {
+            "$ref": "#/components/schemas/DeviceVersion"
+          },
+          "name": {
+            "type": "string",
+            "example": "TestBox",
+            "maxLength": 100
+          },
+          "fill_status": {
+            "readOnly": true,
+            "type": "integer",
+            "example": 80,
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Percentage of whole summed capacity of all filled containers in this device."
+          }
+        }
+      },
+      "ContainerVersion": {
+        "type": "object",
+        "readOnly": true,
+        "properties": {
+          "name": {
+            "readOnly": true,
+            "type": "string",
+            "example": "v1.0"
+          },
+          "capacity": {
+            "readOnly": true,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 32767,
+            "example": 3
+          }
+        }
+      },
+      "Container": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "version": {
+            "$ref": "#/components/schemas/ContainerVersion"
+          },
+          "device": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "position": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 32767,
+            "example": 2,
+            "description": "Unique position of this container in device, starting from the bottom 0 index."
+          },
+          "last_refill": {
+            "readOnly": true,
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "fill_status": {
+            "readOnly": true,
+            "type": "integer",
+            "example": 80,
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Percentage of whole summed capacity of all filled chambers in this container."
+          }
+        }
+      },
+      "Chamber": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "container": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "position": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 32767,
+            "example": 2,
+            "description": "Unique position of this chamber in container."
+          },
+          "is_full": {
+            "type": "boolean",
+            "example": true
+          },
+          "real_administration_time": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "Treatment": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "associated_user": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "Johnny's treatment"
+          },
+          "beneficiary": {
+            "type": "string",
+            "example": "Johnny"
+          }
+        }
+      },
+      "Dose": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "treatment": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "chamber": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "medicine": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "planned_administration_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "number_of_pills": {
+            "type": "number",
+            "format": "float"
+          },
+          "on_demand": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Medicine": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "$ref": "#/components/schemas/uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "Iraflex"
+          },
+          "producer": {
+            "type": "string",
+            "example": "Medex"
+          }
+        }
+      },
+      "DebugLog": {
+        "type": "object",
+        "properties": {
+          "severity": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4,
+            "example": 1,
+            "description": "0-debug, 1-notice, 2-warning, 3-error, 4-critical error, uint8_t"
+          },
+          "message_code": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Message code, uint16_t."
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "Time_t or uint32_t"
+          },
+          "details": {
+            "type": "string",
+            "maxLength": 64
+          }
+        },
+        "required": [
+          "severity",
+          "message_code",
+          "timestamp"
+        ]
+      }
+    }
+  }
+}
