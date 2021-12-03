@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+
+    medbox-backend_server:
+        build:
+            context: .
+        container_name: medbox-backend_server
+        restart: always
+        env_file: 
+            - ./app/.env.prod
+        volumes:
+            - ./app:/usr/src/app
+        ports: 
+            - "8000:8000"
